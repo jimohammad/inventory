@@ -77,3 +77,7 @@
 - [x] Frontend: Fast/slow moving items report with filters
 - [x] Frontend: Weekly/monthly sales quantity analysis
 - [x] Calculate item movement based on PO quantities
+
+## UX Improvements
+
+- [x] Add Import Stock button to Inventory Analysis page for quick access

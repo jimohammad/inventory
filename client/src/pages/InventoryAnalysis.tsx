@@ -3,10 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, TrendingDown, Minus, Loader2, Package } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Loader2, Package, Upload } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 
 export default function InventoryAnalysis() {
+  const [, setLocation] = useLocation();
   const [period, setPeriod] = useState<"week" | "month">("week");
   const [filter, setFilter] = useState<"all" | "fast" | "medium" | "slow" | "none">("all");
 
@@ -58,6 +60,10 @@ export default function InventoryAnalysis() {
           <h1 className="text-3xl font-bold tracking-tight">Inventory Analysis</h1>
           <p className="text-muted-foreground mt-1">Track item movement and identify fast/slow movers</p>
         </div>
+        <Button onClick={() => setLocation("/items/import")}>
+          <Upload className="w-4 h-4 mr-2" />
+          Import Stock Data
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
