@@ -3,16 +3,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, TrendingDown, Minus, Loader2, Package, Upload } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Loader2, Package, Upload, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { Streamdown } from "streamdown";
+import { toast } from "sonner";
 
 export default function InventoryAnalysis() {
   const [, setLocation] = useLocation();
   const [period, setPeriod] = useState<"week" | "month">("week");
   const [filter, setFilter] = useState<"all" | "fast" | "medium" | "slow" | "none">("all");
+  const [aiInsights, setAiInsights] = useState<string | null>(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
 
   const { data: analysis, isLoading } = trpc.items.getMovementAnalysis.useQuery({ period });
+  const aiMutation = trpc.items.getAIInsights.useMutation();
+
+  const handleGetAIInsights = async () => {
+    setIsLoadingAI(true);
+    try {
+      const result = await aiMutation.mutateAsync({ period });
+      setAiInsights(typeof result.insights === 'string' ? result.insights : JSON.stringify(result.insights));
+    } catch (error) {
+      toast.error("Failed to generate AI insights");
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
 
   const filteredAnalysis = analysis?.filter(item => 
     filter === "all" || item.movementCategory === filter
@@ -65,6 +82,49 @@ export default function InventoryAnalysis() {
           Import Stock Data
         </Button>
       </div>
+
+      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+              <CardTitle>AI-Powered Insights</CardTitle>
+            </div>
+            <Button 
+              onClick={handleGetAIInsights}
+              disabled={isLoadingAI || !analysis || analysis.length === 0}
+              size="sm"
+            >
+              {isLoadingAI ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Generate Insights
+                </>
+              )}
+            </Button>
+          </div>
+          <CardDescription>
+            Get AI-powered recommendations based on your inventory movement data
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {aiInsights ? (
+            <div className="prose prose-sm max-w-none">
+              <Streamdown>{aiInsights}</Streamdown>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>Click "Generate Insights" to get AI-powered analysis of your inventory</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 md:grid-cols-4">
         <Card>

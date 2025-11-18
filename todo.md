@@ -81,3 +81,13 @@
 ## UX Improvements
 
 - [x] Add Import Stock button to Inventory Analysis page for quick access
+
+## AI-Powered Analysis Features
+
+- [x] Backend API endpoint for AI inventory analysis
+- [x] LLM integration to analyze movement data
+- [x] Frontend: AI Insights card on Inventory Analysis page
+- [x] Display AI-generated recommendations
+- [x] Identify trends and patterns
+- [x] Predict slow-moving items
+- [x] Suggest optimal reorder quantities

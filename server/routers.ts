@@ -535,6 +535,118 @@ export const appRouter = router({
 
         return analysis.sort((a, b) => b.soldQty - a.soldQty);
       }),
+
+    getAIInsights: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          period: "week" | "month";
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { invokeLLM } = await import("./_core/llm");
+        const { getUserItems, getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return { insights: "Database not available" };
+
+        const allItems = await getUserItems(ctx.user.id);
+        const now = new Date();
+        const startDate = new Date();
+        
+        if (input.period === "week") {
+          startDate.setDate(now.getDate() - 7);
+        } else {
+          startDate.setMonth(now.getMonth() - 1);
+        }
+
+        // Get purchase order items in the period
+        const { purchaseOrders: pos, purchaseOrderItems: poi } = await import("../drizzle/schema");
+        const { and: andOp, eq: eqOp, gte } = await import("drizzle-orm");
+        
+        const orderItems = await db.select({
+          itemName: poi.itemName,
+          quantity: poi.quantity,
+          orderDate: pos.orderDate,
+        })
+        .from(poi)
+        .innerJoin(pos, eqOp(poi.purchaseOrderId, pos.id))
+        .where(
+          andOp(
+            eqOp(pos.userId, ctx.user.id),
+            gte(pos.orderDate, startDate)
+          )
+        );
+
+        // Aggregate by item name
+        const itemStats = new Map<string, { totalQty: number; orderCount: number; availableQty: number }>();
+        
+        orderItems.forEach(oi => {
+          const existing = itemStats.get(oi.itemName) || { totalQty: 0, orderCount: 0, availableQty: 0 };
+          existing.totalQty += oi.quantity;
+          existing.orderCount += 1;
+          itemStats.set(oi.itemName, existing);
+        });
+
+        // Add available quantities
+        allItems.forEach(item => {
+          const stats = itemStats.get(item.itemName);
+          if (stats) {
+            stats.availableQty = item.availableQty || 0;
+          } else {
+            itemStats.set(item.itemName, {
+              totalQty: 0,
+              orderCount: 0,
+              availableQty: item.availableQty || 0,
+            });
+          }
+        });
+
+        // Prepare data for AI analysis
+        const analysisData = Array.from(itemStats.entries()).map(([name, stats]) => ({
+          item: name,
+          soldQty: stats.totalQty,
+          orders: stats.orderCount,
+          available: stats.availableQty,
+          avgPerDay: (stats.totalQty / (input.period === "week" ? 7 : 30)).toFixed(2),
+        }));
+
+        const topMovers = analysisData.filter(i => i.soldQty > 0).sort((a, b) => b.soldQty - a.soldQty).slice(0, 10);
+        const noMovement = analysisData.filter(i => i.soldQty === 0 && i.available > 0);
+        const lowStock = analysisData.filter(i => i.available < 10 && i.soldQty > 0);
+
+        const prompt = `You are an inventory management analyst. Analyze the following inventory data for the past ${input.period === "week" ? "week" : "month"} and provide actionable insights.
+
+Top Moving Items:
+${topMovers.map(i => `- ${i.item}: ${i.soldQty} units sold, ${i.available} available, avg ${i.avgPerDay}/day`).join('\n')}
+
+Items with No Movement (${noMovement.length} items):
+${noMovement.slice(0, 5).map(i => `- ${i.item}: ${i.available} units in stock`).join('\n')}
+
+Low Stock Items:
+${lowStock.map(i => `- ${i.item}: only ${i.available} units left, selling ${i.avgPerDay}/day`).join('\n')}
+
+Provide:
+1. Key trends and patterns
+2. Items at risk of stockout
+3. Slow-moving items that may need attention
+4. Specific recommendations for reordering
+5. Any unusual patterns or concerns
+
+Keep the response concise, actionable, and focused on business decisions.`;
+
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: "You are a helpful inventory analyst providing clear, actionable insights." },
+            { role: "user", content: prompt },
+          ],
+        });
+
+        return {
+          insights: response.choices[0].message.content,
+        };
+      }),
   }),
 });
 
