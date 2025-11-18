@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Link, useLocation } from "wouter";
-import { Plus, Search, Loader2, Pencil, Trash2, Package } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -77,12 +77,20 @@ export default function ItemList() {
           <h1 className="text-3xl font-bold tracking-tight">Items</h1>
           <p className="text-muted-foreground mt-1">Manage your inventory items</p>
         </div>
-        <Link href="/items/new">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Item
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/items/import">
+            <Button variant="outline">
+              <Upload className="w-4 h-4 mr-2" />
+              Import Stock
+            </Button>
+          </Link>
+          <Link href="/items/new">
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Item
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
@@ -139,12 +147,22 @@ export default function ItemList() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
+                        {item.itemCode && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Code</span>
+                            <span className="font-mono text-xs">{item.itemCode}</span>
+                          </div>
+                        )}
                         {item.defaultUnitPrice && (
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Default Price</span>
                             <span className="font-medium">{item.defaultUnitPrice}</span>
                           </div>
                         )}
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">Available</span>
+                          <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
+                        </div>
                         {item.notes && (
                           <div className="text-sm text-muted-foreground pt-2 border-t">
                             {item.notes}

@@ -13,9 +13,11 @@ import SupplierList from "./pages/SupplierList";
 import CreateSupplier from "./pages/CreateSupplier";
 import EditSupplier from "./pages/EditSupplier";
 import SupplierDetails from "./pages/SupplierDetails";
-import ItemList from "./pages/ItemList";
-import CreateItem from "./pages/CreateItem";
-import EditItem from "./pages/EditItem";
+import ItemList from "@/pages/ItemList";
+import CreateItem from "@/pages/CreateItem";
+import EditItem from "@/pages/EditItem";
+import StockImport from "@/pages/StockImport";
+import InventoryAnalysis from "@/pages/InventoryAnalysis";
 
 function Router() {
   return (
@@ -73,6 +75,16 @@ function Router() {
       <Route path="/items/:id/edit" component={() => (
         <DashboardLayout>
           <EditItem />
+        </DashboardLayout>
+      )} />
+      <Route path="/items/import" component={() => (
+        <DashboardLayout>
+          <StockImport />
+        </DashboardLayout>
+      )} />
+      <Route path="/inventory-analysis" component={() => (
+        <DashboardLayout>
+          <InventoryAnalysis />
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />

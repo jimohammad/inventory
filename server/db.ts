@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, purchaseOrders, InsertPurchaseOrder, purchaseOrderItems, InsertPurchaseOrderItem, documents, InsertDocument, suppliers, InsertSupplier, items, InsertItem } from "../drizzle/schema";
+import { InsertUser, users, purchaseOrders, InsertPurchaseOrder, purchaseOrderItems, InsertPurchaseOrderItem, documents, InsertDocument, suppliers, InsertSupplier, items, InsertItem, stockHistory, InsertStockHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -275,4 +275,47 @@ export async function deleteItem(id: number, userId: number) {
   
   await db.delete(items)
     .where(and(eq(items.id, id), eq(items.userId, userId)));
+}
+
+// Stock history queries
+export async function addStockHistory(history: InsertStockHistory) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(stockHistory).values(history);
+  return result[0].insertId;
+}
+
+export async function getStockHistory(itemId: number, userId: number, limit: number = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(stockHistory)
+    .where(and(eq(stockHistory.itemId, itemId), eq(stockHistory.userId, userId)))
+    .orderBy(desc(stockHistory.createdAt))
+    .limit(limit);
+}
+
+export async function getItemMovementStats(userId: number, startDate: Date, endDate: Date) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get all items with their total quantity changes in the period
+  const history = await db.select({
+    itemId: stockHistory.itemId,
+    changeType: stockHistory.changeType,
+    totalQty: stockHistory.quantityChange,
+    createdAt: stockHistory.createdAt,
+  })
+  .from(stockHistory)
+  .where(
+    and(
+      eq(stockHistory.userId, userId),
+      and(
+        eq(stockHistory.changeType, "purchase"),
+      )
+    )
+  );
+  
+  return history;
 }

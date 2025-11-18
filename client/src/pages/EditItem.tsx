@@ -12,20 +12,24 @@ import { toast } from "sonner";
 export default function EditItem() {
   const { id } = useParams();
   const [, setLocation] = useLocation();
+  const [itemCode, setItemCode] = useState("");
   const [itemName, setItemName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [defaultUnitPrice, setDefaultUnitPrice] = useState("");
+  const [availableQty, setAvailableQty] = useState("0");
   const [notes, setNotes] = useState("");
 
   const { data: item, isLoading } = trpc.items.getById.useQuery({ id: parseInt(id!) });
 
   useEffect(() => {
     if (item) {
+      setItemCode(item.itemCode || "");
       setItemName(item.itemName);
       setCategory(item.category || "");
       setDescription(item.description || "");
       setDefaultUnitPrice(item.defaultUnitPrice || "");
+      setAvailableQty(item.availableQty?.toString() || "0");
       setNotes(item.notes || "");
     }
   }, [item]);
@@ -50,10 +54,12 @@ export default function EditItem() {
 
     updateMutation.mutate({
       id: parseInt(id!),
+      itemCode: itemCode.trim() || undefined,
       itemName: itemName.trim(),
       category: category.trim() || undefined,
       description: description.trim() || undefined,
       defaultUnitPrice: defaultUnitPrice.trim() || undefined,
+      availableQty: parseInt(availableQty) || 0,
       notes: notes.trim() || undefined,
     });
   };
@@ -106,7 +112,16 @@ export default function EditItem() {
           <CardTitle>Item Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="itemCode">Item Code</Label>
+              <Input
+                id="itemCode"
+                value={itemCode}
+                onChange={(e) => setItemCode(e.target.value)}
+                placeholder="e.g., ITM-001"
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="itemName">Item Name *</Label>
               <Input
@@ -137,14 +152,27 @@ export default function EditItem() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="defaultUnitPrice">Default Unit Price</Label>
-            <Input
-              id="defaultUnitPrice"
-              value={defaultUnitPrice}
-              onChange={(e) => setDefaultUnitPrice(e.target.value)}
-              placeholder="e.g., 100.00"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="defaultUnitPrice">Default Unit Price</Label>
+              <Input
+                id="defaultUnitPrice"
+                value={defaultUnitPrice}
+                onChange={(e) => setDefaultUnitPrice(e.target.value)}
+                placeholder="e.g., 100.00"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="availableQty">Available Quantity</Label>
+              <Input
+                id="availableQty"
+                type="number"
+                min="0"
+                value={availableQty}
+                onChange={(e) => setAvailableQty(e.target.value)}
+                placeholder="0"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">

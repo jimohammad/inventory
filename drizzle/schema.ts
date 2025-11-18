@@ -114,10 +114,12 @@ export type InsertSupplier = typeof suppliers.$inferInsert;
 export const items = mysqlTable("items", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
+  itemCode: varchar("itemCode", { length: 100 }),
   itemName: varchar("itemName", { length: 255 }).notNull(),
   category: varchar("category", { length: 100 }),
   description: text("description"),
   defaultUnitPrice: varchar("defaultUnitPrice", { length: 20 }),
+  availableQty: int("availableQty").default(0).notNull(),
   notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -125,3 +127,22 @@ export const items = mysqlTable("items", {
 
 export type Item = typeof items.$inferSelect;
 export type InsertItem = typeof items.$inferInsert;
+
+/**
+ * Stock history table
+ * Tracks all stock quantity changes for inventory analysis
+ */
+export const stockHistory = mysqlTable("stockHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  itemId: int("itemId").notNull(),
+  changeType: mysqlEnum("changeType", ["purchase", "sale", "adjustment", "import"]).notNull(),
+  quantityChange: int("quantityChange").notNull(),
+  quantityAfter: int("quantityAfter").notNull(),
+  purchaseOrderId: int("purchaseOrderId"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type StockHistory = typeof stockHistory.$inferSelect;
+export type InsertStockHistory = typeof stockHistory.$inferInsert;

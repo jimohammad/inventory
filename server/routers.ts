@@ -331,10 +331,12 @@ export const appRouter = router({
           throw new Error("Invalid input");
         }
         return raw as {
+          itemCode?: string;
           itemName: string;
           category?: string;
           description?: string;
           defaultUnitPrice?: string;
+          availableQty?: number;
           notes?: string;
         };
       })
@@ -354,20 +356,24 @@ export const appRouter = router({
         }
         return raw as {
           id: number;
+          itemCode?: string;
           itemName: string;
           category?: string;
           description?: string;
           defaultUnitPrice?: string;
+          availableQty?: number;
           notes?: string;
         };
       })
       .mutation(async ({ ctx, input }) => {
         const { updateItem } = await import("./db");
         await updateItem(input.id, ctx.user.id, {
+          itemCode: input.itemCode,
           itemName: input.itemName,
           category: input.category,
           description: input.description,
           defaultUnitPrice: input.defaultUnitPrice,
+          availableQty: input.availableQty,
           notes: input.notes,
         });
         return { success: true };
@@ -396,6 +402,138 @@ export const appRouter = router({
       .query(async ({ ctx, input }) => {
         const { getItemById } = await import("./db");
         return getItemById(input.id, ctx.user.id);
+      }),
+
+    importStock: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          items: Array<{
+            itemCode: string;
+            quantity: number;
+          }>;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { getUserItems, updateItem, addStockHistory, getItemById } = await import("./db");
+        const allItems = await getUserItems(ctx.user.id);
+        const results = { updated: 0, notFound: [] as string[] };
+
+        for (const stockItem of input.items) {
+          const item = allItems.find(i => i.itemCode === stockItem.itemCode);
+          if (item) {
+            const oldQty = item.availableQty || 0;
+            const newQty = stockItem.quantity;
+            const change = newQty - oldQty;
+
+            await updateItem(item.id, ctx.user.id, {
+              availableQty: newQty,
+            });
+
+            await addStockHistory({
+              userId: ctx.user.id,
+              itemId: item.id,
+              changeType: "import",
+              quantityChange: change,
+              quantityAfter: newQty,
+              notes: input.notes,
+            });
+
+            results.updated++;
+          } else {
+            results.notFound.push(stockItem.itemCode);
+          }
+        }
+
+        return results;
+      }),
+
+    getMovementAnalysis: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          period: "week" | "month";
+        };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getUserItems, getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return [];
+
+        const allItems = await getUserItems(ctx.user.id);
+        const now = new Date();
+        const startDate = new Date();
+        
+        if (input.period === "week") {
+          startDate.setDate(now.getDate() - 7);
+        } else {
+          startDate.setMonth(now.getMonth() - 1);
+        }
+
+        // Get purchase order items in the period
+        const { purchaseOrders: pos, purchaseOrderItems: poi } = await import("../drizzle/schema");
+        const { and: andOp, eq: eqOp, gte } = await import("drizzle-orm");
+        
+        const orderItems = await db.select({
+          itemName: poi.itemName,
+          quantity: poi.quantity,
+          orderDate: pos.orderDate,
+        })
+        .from(poi)
+        .innerJoin(pos, eqOp(poi.purchaseOrderId, pos.id))
+        .where(
+          andOp(
+            eqOp(pos.userId, ctx.user.id),
+            gte(pos.orderDate, startDate)
+          )
+        );
+
+        // Aggregate by item name
+        const itemStats = new Map<string, { totalQty: number; orderCount: number }>();
+        
+        orderItems.forEach(oi => {
+          const existing = itemStats.get(oi.itemName) || { totalQty: 0, orderCount: 0 };
+          existing.totalQty += oi.quantity;
+          existing.orderCount += 1;
+          itemStats.set(oi.itemName, existing);
+        });
+
+        // Combine with item details
+        const analysis = allItems.map(item => {
+          const stats = itemStats.get(item.itemName) || { totalQty: 0, orderCount: 0 };
+          const daysInPeriod = input.period === "week" ? 7 : 30;
+          const avgPerDay = stats.totalQty / daysInPeriod;
+          
+          let movementCategory: "fast" | "medium" | "slow" | "none";
+          if (stats.totalQty === 0) {
+            movementCategory = "none";
+          } else if (avgPerDay >= 5) {
+            movementCategory = "fast";
+          } else if (avgPerDay >= 1) {
+            movementCategory = "medium";
+          } else {
+            movementCategory = "slow";
+          }
+
+          return {
+            id: item.id,
+            itemCode: item.itemCode,
+            itemName: item.itemName,
+            category: item.category,
+            availableQty: item.availableQty,
+            soldQty: stats.totalQty,
+            orderCount: stats.orderCount,
+            avgPerDay: parseFloat(avgPerDay.toFixed(2)),
+            movementCategory,
+          };
+        });
+
+        return analysis.sort((a, b) => b.soldQty - a.soldQty);
       }),
   }),
 });

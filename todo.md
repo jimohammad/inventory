@@ -62,3 +62,18 @@
 - [x] Remove manual supplier entry from PO forms
 - [x] Update PO forms to use item dropdown selection
 - [x] Add category filter for items
+
+## Inventory Tracking & Analysis Features
+
+- [x] Add item code field to items table
+- [x] Add available quantity field to items table
+- [x] Create stock history table for tracking changes
+- [x] Backend API for CSV import of stock data
+- [x] Backend API for stock movement analysis
+- [x] Backend API for fast/slow moving item reports
+- [x] Frontend: Add item code and quantity fields to item forms
+- [x] Frontend: CSV import interface for weekly stock updates
+- [x] Frontend: Inventory analysis dashboard
+- [x] Frontend: Fast/slow moving items report with filters
+- [x] Frontend: Weekly/monthly sales quantity analysis
+- [x] Calculate item movement based on PO quantities
