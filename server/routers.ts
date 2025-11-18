@@ -1,7 +1,8 @@
 import { COOKIE_NAME } from "@shared/const";
+import { TRPCError } from "@trpc/server";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -17,12 +18,198 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  purchaseOrders: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getPurchaseOrdersByUserId } = await import("./db");
+      return await getPurchaseOrdersByUserId(ctx.user.id);
+    }),
+
+    getById: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getPurchaseOrderById, getPurchaseOrderItems, getDocuments } = await import("./db");
+        const order = await getPurchaseOrderById(input.id, ctx.user.id);
+        if (!order) return null;
+        
+        const items = await getPurchaseOrderItems(input.id);
+        const docs = await getDocuments(input.id);
+        
+        return { ...order, items, documents: docs };
+      }),
+
+    create: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          poNumber: string;
+          supplier: string;
+          currency: "USD" | "AED";
+          exchangeRate: string;
+          totalAmount: string;
+          notes?: string;
+          status: "draft" | "confirmed" | "completed" | "cancelled";
+          orderDate: Date;
+          items: Array<{
+            itemName: string;
+            description?: string;
+            quantity: number;
+            unitPrice: string;
+            totalPrice: string;
+          }>;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { createPurchaseOrder, createPurchaseOrderItem } = await import("./db");
+        
+        const orderId = await createPurchaseOrder({
+          userId: ctx.user.id,
+          poNumber: input.poNumber,
+          supplier: input.supplier,
+          currency: input.currency,
+          exchangeRate: input.exchangeRate,
+          totalAmount: input.totalAmount,
+          notes: input.notes,
+          status: input.status,
+          orderDate: input.orderDate,
+        });
+        
+        for (const item of input.items) {
+          await createPurchaseOrderItem({
+            purchaseOrderId: orderId,
+            itemName: item.itemName,
+            description: item.description,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice,
+          });
+        }
+        
+        return { id: orderId };
+      }),
+
+    update: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          id: number;
+          poNumber: string;
+          supplier: string;
+          currency: "USD" | "AED";
+          exchangeRate: string;
+          totalAmount: string;
+          notes?: string;
+          status: "draft" | "confirmed" | "completed" | "cancelled";
+          orderDate: Date;
+          items: Array<{
+            itemName: string;
+            description?: string;
+            quantity: number;
+            unitPrice: string;
+            totalPrice: string;
+          }>;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { updatePurchaseOrder, deletePurchaseOrderItems, createPurchaseOrderItem } = await import("./db");
+        
+        await updatePurchaseOrder(input.id, ctx.user.id, {
+          poNumber: input.poNumber,
+          supplier: input.supplier,
+          currency: input.currency,
+          exchangeRate: input.exchangeRate,
+          totalAmount: input.totalAmount,
+          notes: input.notes,
+          status: input.status,
+          orderDate: input.orderDate,
+        });
+        
+        // Delete existing items and recreate
+        await deletePurchaseOrderItems(input.id);
+        
+        for (const item of input.items) {
+          await createPurchaseOrderItem({
+            purchaseOrderId: input.id,
+            itemName: item.itemName,
+            description: item.description,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice,
+          });
+        }
+        
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { deletePurchaseOrder } = await import("./db");
+        await deletePurchaseOrder(input.id, ctx.user.id);
+        return { success: true };
+      }),
+  }),
+
+  documents: router({
+    upload: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          purchaseOrderId: number;
+          documentType: "delivery_note" | "invoice" | "payment_tt";
+          fileName: string;
+          fileUrl: string;
+          fileKey: string;
+          mimeType: string;
+          fileSize: number;
+        };
+      })
+      .mutation(async ({ input }) => {
+        const { createDocument } = await import("./db");
+        await createDocument(input);
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .mutation(async ({ input }) => {
+        const { deleteDocument } = await import("./db");
+        await deleteDocument(input.id);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

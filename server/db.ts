@@ -89,4 +89,100 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Purchase Order queries
+import { documents, InsertDocument, purchaseOrderItems, InsertPurchaseOrderItem, purchaseOrders, InsertPurchaseOrder } from "../drizzle/schema";
+import { desc, and } from "drizzle-orm";
+
+export async function createPurchaseOrder(order: InsertPurchaseOrder) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(purchaseOrders).values(order);
+  return result[0].insertId;
+}
+
+export async function createPurchaseOrderItem(item: InsertPurchaseOrderItem) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(purchaseOrderItems).values(item);
+}
+
+export async function createDocument(doc: InsertDocument) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(documents).values(doc);
+}
+
+export async function getPurchaseOrdersByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(purchaseOrders)
+    .where(eq(purchaseOrders.userId, userId))
+    .orderBy(desc(purchaseOrders.createdAt));
+}
+
+export async function getPurchaseOrderById(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(purchaseOrders)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getPurchaseOrderItems(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(purchaseOrderItems)
+    .where(eq(purchaseOrderItems.purchaseOrderId, purchaseOrderId));
+}
+
+export async function getDocuments(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(documents)
+    .where(eq(documents.purchaseOrderId, purchaseOrderId));
+}
+
+export async function updatePurchaseOrder(id: number, userId: number, updates: Partial<InsertPurchaseOrder>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(purchaseOrders)
+    .set(updates)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)));
+}
+
+export async function deletePurchaseOrder(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete related items and documents first
+  await db.delete(purchaseOrderItems).where(eq(purchaseOrderItems.purchaseOrderId, id));
+  await db.delete(documents).where(eq(documents.purchaseOrderId, id));
+  
+  // Delete the purchase order
+  await db.delete(purchaseOrders)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)));
+}
+
+export async function deletePurchaseOrderItems(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(purchaseOrderItems).where(eq(purchaseOrderItems.purchaseOrderId, purchaseOrderId));
+}
+
+export async function deleteDocument(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(documents).where(eq(documents.id, id));
+}
