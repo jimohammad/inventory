@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, purchaseOrders, InsertPurchaseOrder, purchaseOrderItems, InsertPurchaseOrderItem, documents, InsertDocument, suppliers, InsertSupplier, items, InsertItem } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -90,8 +90,7 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // Purchase Order queries
-import { documents, InsertDocument, purchaseOrderItems, InsertPurchaseOrderItem, purchaseOrders, InsertPurchaseOrder } from "../drizzle/schema";
-import { desc, and } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 
 export async function createPurchaseOrder(order: InsertPurchaseOrder) {
   const db = await getDb();
@@ -188,7 +187,6 @@ export async function deleteDocument(id: number) {
 }
 
 // Supplier queries
-import { suppliers, InsertSupplier } from "../drizzle/schema";
 
 export async function createSupplier(supplier: InsertSupplier) {
   const db = await getDb();
@@ -233,4 +231,48 @@ export async function deleteSupplier(id: number, userId: number) {
   
   await db.delete(suppliers)
     .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)));
+}
+
+// Items queries
+export async function createItem(item: InsertItem) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(items).values(item);
+  return result[0].insertId;
+}
+
+export async function getUserItems(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(items).where(eq(items.userId, userId)).orderBy(items.itemName);
+}
+
+export async function getItemById(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(items)
+    .where(and(eq(items.id, id), eq(items.userId, userId)))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateItem(id: number, userId: number, data: Partial<InsertItem>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(items)
+    .set({ ...data, updatedAt: new Date() })
+    .where(and(eq(items.id, id), eq(items.userId, userId)));
+}
+
+export async function deleteItem(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(items)
+    .where(and(eq(items.id, id), eq(items.userId, userId)));
 }

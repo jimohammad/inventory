@@ -29,6 +29,13 @@
       "when": 1763447125393,
       "tag": "0003_elite_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1763448108913,
+      "tag": "0004_dazzling_sentry",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,9 @@ import SupplierList from "./pages/SupplierList";
 import CreateSupplier from "./pages/CreateSupplier";
 import EditSupplier from "./pages/EditSupplier";
 import SupplierDetails from "./pages/SupplierDetails";
+import ItemList from "./pages/ItemList";
+import CreateItem from "./pages/CreateItem";
+import EditItem from "./pages/EditItem";
 
 function Router() {
   return (
@@ -55,6 +58,21 @@ function Router() {
       <Route path="/suppliers/:id" component={() => (
         <DashboardLayout>
           <SupplierDetails />
+        </DashboardLayout>
+      )} />
+      <Route path="/items" component={() => (
+        <DashboardLayout>
+          <ItemList />
+        </DashboardLayout>
+      )} />
+      <Route path="/items/new" component={() => (
+        <DashboardLayout>
+          <CreateItem />
+        </DashboardLayout>
+      )} />
+      <Route path="/items/:id/edit" component={() => (
+        <DashboardLayout>
+          <EditItem />
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />

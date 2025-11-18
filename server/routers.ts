@@ -318,6 +318,86 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  items: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getUserItems } = await import("./db");
+      return getUserItems(ctx.user.id);
+    }),
+
+    create: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          itemName: string;
+          category?: string;
+          description?: string;
+          defaultUnitPrice?: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { createItem } = await import("./db");
+        const id = await createItem({
+          userId: ctx.user.id,
+          ...input,
+        });
+        return { id };
+      }),
+
+    update: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          id: number;
+          itemName: string;
+          category?: string;
+          description?: string;
+          defaultUnitPrice?: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { updateItem } = await import("./db");
+        await updateItem(input.id, ctx.user.id, {
+          itemName: input.itemName,
+          category: input.category,
+          description: input.description,
+          defaultUnitPrice: input.defaultUnitPrice,
+          notes: input.notes,
+        });
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as { id: number };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { deleteItem } = await import("./db");
+        await deleteItem(input.id, ctx.user.id);
+        return { success: true };
+      }),
+
+    getById: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as { id: number };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getItemById } = await import("./db");
+        return getItemById(input.id, ctx.user.id);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

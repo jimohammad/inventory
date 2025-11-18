@@ -48,3 +48,17 @@
 - [x] Add supplier invoice number to PO forms
 - [x] Create purchase history view for suppliers
 - [x] Display total spending per supplier
+
+## Items Management Features
+
+- [x] Create items database table with category field
+- [x] Backend API for creating items
+- [x] Backend API for listing items
+- [x] Backend API for updating items
+- [x] Backend API for deleting items
+- [x] Frontend: Items management page
+- [x] Frontend: Add item form with category
+- [x] Frontend: Edit item form
+- [x] Remove manual supplier entry from PO forms
+- [x] Update PO forms to use item dropdown selection
+- [x] Add category filter for items

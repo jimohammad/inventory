@@ -11,7 +11,9 @@ import { toast } from "sonner";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 
 type Item = {
+  itemId?: number;
   itemName: string;
+  category?: string;
   description: string;
   quantity: string;
   unitPrice: string;
@@ -38,6 +40,7 @@ export default function EditPurchaseOrder() {
 
   const { data: order, isLoading } = trpc.purchaseOrders.getById.useQuery({ id: parseInt(id!) });
   const { data: suppliers } = trpc.suppliers.list.useQuery();
+  const { data: availableItems } = trpc.items.list.useQuery();
   
   useEffect(() => {
     if (order) {
@@ -84,9 +87,9 @@ export default function EditPurchaseOrder() {
     }
   };
 
-  const updateItem = (index: number, field: keyof Item, value: string) => {
+  const updateItem = (index: number, field: keyof Item, value: string | number) => {
     const newItems = [...items];
-    newItems[index][field] = value;
+    (newItems[index][field] as any) = value;
     
     if (field === "quantity" || field === "unitPrice") {
       const qty = parseFloat(newItems[index].quantity) || 0;
@@ -220,40 +223,27 @@ export default function EditPurchaseOrder() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="supplier">Supplier *</Label>
-              <div className="flex gap-2">
-                <Select
-                  value={selectedSupplierId}
-                  onValueChange={(value) => {
-                    setSelectedSupplierId(value);
-                    const selected = suppliers?.find(s => s.id.toString() === value);
-                    if (selected) {
-                      setSupplier(selected.name);
-                    }
-                  }}
-                >
-                  <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Select a supplier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {suppliers?.map(s => (
-                      <SelectItem key={s.id} value={s.id.toString()}>
-                        {s.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Input
-                  id="supplier"
-                  value={supplier}
-                  onChange={(e) => {
-                    setSupplier(e.target.value);
-                    setSelectedSupplierId("");
-                  }}
-                  placeholder="Or type manually"
-                  className="flex-1"
-                  required
-                />
-              </div>
+              <Select
+                value={selectedSupplierId}
+                onValueChange={(value) => {
+                  setSelectedSupplierId(value);
+                  const selected = suppliers?.find(s => s.id.toString() === value);
+                  if (selected) {
+                    setSupplier(selected.name);
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a supplier" />
+                </SelectTrigger>
+                <SelectContent>
+                  {suppliers?.map(s => (
+                    <SelectItem key={s.id} value={s.id.toString()}>
+                      {s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -361,18 +351,43 @@ export default function EditPurchaseOrder() {
               
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
-                  <Label>Item Name *</Label>
-                  <Input
-                    value={item.itemName}
-                    onChange={(e) => updateItem(index, "itemName", e.target.value)}
-                    required
-                  />
+                  <Label>Item *</Label>
+                  <Select
+                    value={item.itemId?.toString() || ""}
+                    onValueChange={(value) => {
+                      const selected = availableItems?.find(i => i.id.toString() === value);
+                      if (selected) {
+                        updateItem(index, "itemId", parseInt(value));
+                        updateItem(index, "itemName", selected.itemName);
+                        updateItem(index, "category", selected.category || "");
+                        updateItem(index, "description", selected.description || "");
+                        updateItem(index, "unitPrice", selected.defaultUnitPrice || "0");
+                        const qty = parseFloat(item.quantity) || 0;
+                        const price = parseFloat(selected.defaultUnitPrice || "0") || 0;
+                        updateItem(index, "totalPrice", (qty * price).toFixed(2));
+                      }
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an item" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableItems?.map(i => (
+                        <SelectItem key={i.id} value={i.id.toString()}>
+                          {i.itemName} {i.category && `(${i.category})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Description</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, "description", e.target.value)}
+                    placeholder="Auto-filled from item"
+                    readOnly
+                    className="bg-muted"
                   />
                 </div>
               </div>
