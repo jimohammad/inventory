@@ -186,3 +186,51 @@ export async function deleteDocument(id: number) {
   
   await db.delete(documents).where(eq(documents.id, id));
 }
+
+// Supplier queries
+import { suppliers, InsertSupplier } from "../drizzle/schema";
+
+export async function createSupplier(supplier: InsertSupplier) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(suppliers).values(supplier);
+  return result[0].insertId;
+}
+
+export async function getSuppliersByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(suppliers)
+    .where(eq(suppliers.userId, userId))
+    .orderBy(suppliers.name);
+}
+
+export async function getSupplierById(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(suppliers)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateSupplier(id: number, userId: number, updates: Partial<InsertSupplier>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(suppliers)
+    .set(updates)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)));
+}
+
+export async function deleteSupplier(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(suppliers)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)));
+}

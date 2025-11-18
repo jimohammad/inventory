@@ -9,6 +9,9 @@ import PurchaseOrderList from "./pages/PurchaseOrderList";
 import CreatePurchaseOrder from "./pages/CreatePurchaseOrder";
 import EditPurchaseOrder from "./pages/EditPurchaseOrder";
 import ViewPurchaseOrder from "./pages/ViewPurchaseOrder";
+import SupplierList from "./pages/SupplierList";
+import CreateSupplier from "./pages/CreateSupplier";
+import EditSupplier from "./pages/EditSupplier";
 
 function Router() {
   return (
@@ -31,6 +34,21 @@ function Router() {
       <Route path="/purchase-orders/:id" component={() => (
         <DashboardLayout>
           <ViewPurchaseOrder />
+        </DashboardLayout>
+      )} />
+      <Route path="/suppliers" component={() => (
+        <DashboardLayout>
+          <SupplierList />
+        </DashboardLayout>
+      )} />
+      <Route path="/suppliers/new" component={() => (
+        <DashboardLayout>
+          <CreateSupplier />
+        </DashboardLayout>
+      )} />
+      <Route path="/suppliers/:id/edit" component={() => (
+        <DashboardLayout>
+          <EditSupplier />
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />

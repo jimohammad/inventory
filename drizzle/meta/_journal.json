@@ -15,6 +15,13 @@
       "when": 1763443718550,
       "tag": "0001_sticky_domino",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1763446341431,
+      "tag": "0002_silly_dagger",
+      "breakpoints": true
     }
   ]
 }

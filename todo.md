@@ -20,3 +20,16 @@
 - [x] Frontend: Multi-item management in forms
 - [x] Testing and bug fixes
 - [x] Initial checkpoint and deployment
+
+## Supplier Management Features
+
+- [x] Database schema for suppliers with contact information
+- [x] Backend API for creating suppliers
+- [x] Backend API for listing suppliers
+- [x] Backend API for updating suppliers
+- [x] Backend API for deleting suppliers
+- [x] Frontend: Suppliers list page
+- [x] Frontend: Add supplier form
+- [x] Frontend: Edit supplier form
+- [x] Frontend: Integrate supplier selection in purchase order forms
+- [x] Frontend: Auto-fill supplier details when selected

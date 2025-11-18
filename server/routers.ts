@@ -210,6 +210,102 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  suppliers: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getSuppliersByUserId } = await import("./db");
+      return await getSuppliersByUserId(ctx.user.id);
+    }),
+
+    getById: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getSupplierById } = await import("./db");
+        return await getSupplierById(input.id, ctx.user.id);
+      }),
+
+    create: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          name: string;
+          contactPerson?: string;
+          phone?: string;
+          email?: string;
+          address?: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { createSupplier } = await import("./db");
+        const id = await createSupplier({
+          userId: ctx.user.id,
+          name: input.name,
+          contactPerson: input.contactPerson,
+          phone: input.phone,
+          email: input.email,
+          address: input.address,
+          notes: input.notes,
+        });
+        return { id };
+      }),
+
+    update: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          id: number;
+          name: string;
+          contactPerson?: string;
+          phone?: string;
+          email?: string;
+          address?: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { updateSupplier } = await import("./db");
+        await updateSupplier(input.id, ctx.user.id, {
+          name: input.name,
+          contactPerson: input.contactPerson,
+          phone: input.phone,
+          email: input.email,
+          address: input.address,
+          notes: input.notes,
+        });
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { deleteSupplier } = await import("./db");
+        await deleteSupplier(input.id, ctx.user.id);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

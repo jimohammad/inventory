@@ -29,6 +29,7 @@ export default function CreatePurchaseOrder() {
   const [, setLocation] = useLocation();
   const [poNumber, setPoNumber] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [selectedSupplierId, setSelectedSupplierId] = useState<string>("");
   const [currency, setCurrency] = useState<"USD" | "AED">("USD");
   const [exchangeRate, setExchangeRate] = useState("1.0");
   const [orderDate, setOrderDate] = useState(new Date().toISOString().split("T")[0]);
@@ -89,6 +90,7 @@ export default function CreatePurchaseOrder() {
   });
 
   const utils = trpc.useUtils();
+  const { data: suppliers } = trpc.suppliers.list.useQuery();
 
   const addItem = () => {
     setItems([...items, { itemName: "", description: "", quantity: "1", unitPrice: "0", totalPrice: "0" }]);
@@ -218,13 +220,40 @@ export default function CreatePurchaseOrder() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="supplier">Supplier *</Label>
-              <Input
-                id="supplier"
-                value={supplier}
-                onChange={(e) => setSupplier(e.target.value)}
-                placeholder="Supplier name"
-                required
-              />
+              <div className="flex gap-2">
+                <Select
+                  value={selectedSupplierId}
+                  onValueChange={(value) => {
+                    setSelectedSupplierId(value);
+                    const selected = suppliers?.find(s => s.id.toString() === value);
+                    if (selected) {
+                      setSupplier(selected.name);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="Select a supplier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {suppliers?.map(s => (
+                      <SelectItem key={s.id} value={s.id.toString()}>
+                        {s.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="supplier"
+                  value={supplier}
+                  onChange={(e) => {
+                    setSupplier(e.target.value);
+                    setSelectedSupplierId("");
+                  }}
+                  placeholder="Or type manually"
+                  className="flex-1"
+                  required
+                />
+              </div>
             </div>
           </div>
 
