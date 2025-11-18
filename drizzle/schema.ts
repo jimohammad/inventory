@@ -34,9 +34,12 @@ export const purchaseOrders = mysqlTable("purchaseOrders", {
   userId: int("userId").notNull(),
   poNumber: varchar("poNumber", { length: 100 }).notNull(),
   supplier: varchar("supplier", { length: 255 }).notNull(),
-  currency: mysqlEnum("currency", ["USD", "AED"]).notNull(),
+  supplierInvoiceNumber: varchar("supplierInvoiceNumber", { length: 100 }),
+  currency: mysqlEnum("currency", ["USD", "AED", "KWD"]).notNull(),
   exchangeRate: varchar("exchangeRate", { length: 20 }).notNull(), // Store as string to preserve precision
+  exchangeRateKWD: varchar("exchangeRateKWD", { length: 20 }), // Exchange rate to KWD
   totalAmount: varchar("totalAmount", { length: 20 }).notNull(), // Store as string to preserve precision
+  bankName: mysqlEnum("bankName", ["National Bank of Kuwait", "Commercial Bank of Kuwait"]),
   notes: text("notes"),
   status: mysqlEnum("status", ["draft", "confirmed", "completed", "cancelled"]).default("draft").notNull(),
   orderDate: timestamp("orderDate").notNull(),

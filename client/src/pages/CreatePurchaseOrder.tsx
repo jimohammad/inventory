@@ -30,7 +30,10 @@ export default function CreatePurchaseOrder() {
   const [poNumber, setPoNumber] = useState("");
   const [supplier, setSupplier] = useState("");
   const [selectedSupplierId, setSelectedSupplierId] = useState<string>("");
-  const [currency, setCurrency] = useState<"USD" | "AED">("USD");
+  const [currency, setCurrency] = useState<"USD" | "AED" | "KWD">("USD");
+  const [exchangeRateKWD, setExchangeRateKWD] = useState("1.0");
+  const [bankName, setBankName] = useState<"National Bank of Kuwait" | "Commercial Bank of Kuwait" | "">("");
+  const [supplierInvoiceNumber, setSupplierInvoiceNumber] = useState("");
   const [exchangeRate, setExchangeRate] = useState("1.0");
   const [orderDate, setOrderDate] = useState(new Date().toISOString().split("T")[0]);
   const [notes, setNotes] = useState("");
@@ -162,9 +165,12 @@ export default function CreatePurchaseOrder() {
     createMutation.mutate({
       poNumber,
       supplier,
+      supplierInvoiceNumber: supplierInvoiceNumber.trim() || undefined,
       currency,
       exchangeRate,
+      exchangeRateKWD: exchangeRateKWD || undefined,
       totalAmount: calculateTotal(),
+      bankName: bankName || undefined,
       notes: notes.trim() || undefined,
       status,
       orderDate: new Date(orderDate),
@@ -207,9 +213,32 @@ export default function CreatePurchaseOrder() {
           <CardTitle>Basic Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="supplierInvoiceNumber">Supplier Invoice Number</Label>
+            <Input
+              id="supplierInvoiceNumber"
+              value={supplierInvoiceNumber}
+              onChange={(e) => setSupplierInvoiceNumber(e.target.value)}
+              placeholder="INV-2024-001"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="bankName">Bank Name</Label>
+            <Select value={bankName} onValueChange={(value) => setBankName(value as typeof bankName)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select bank" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="National Bank of Kuwait">National Bank of Kuwait</SelectItem>
+                <SelectItem value="Commercial Bank of Kuwait">Commercial Bank of Kuwait</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="poNumber">PO Number *</Label>
+              <Label htmlFor="orderDate">Order Date *</Label>
               <Input
                 id="poNumber"
                 value={poNumber}
@@ -259,25 +288,38 @@ export default function CreatePurchaseOrder() {
 
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency</Label>
-              <Select value={currency} onValueChange={(v) => setCurrency(v as "USD" | "AED")}>
+              <Label htmlFor="currency">Currency *</Label>
+              <Select value={currency} onValueChange={(value) => setCurrency(value as "USD" | "AED" | "KWD")}>
                 <SelectTrigger id="currency">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="USD">USD</SelectItem>
                   <SelectItem value="AED">AED</SelectItem>
+                  <SelectItem value="KWD">KWD</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="exchangeRate">Exchange Rate</Label>
+              <Label htmlFor="exchangeRate">Exchange Rate *</Label>
               <Input
                 id="exchangeRate"
                 type="number"
                 step="0.0001"
                 value={exchangeRate}
                 onChange={(e) => setExchangeRate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="exchangeRateKWD">Exchange Rate to KWD</Label>
+              <Input
+                id="exchangeRateKWD"
+                type="number"
+                step="0.0001"
+                value={exchangeRateKWD}
+                onChange={(e) => setExchangeRateKWD(e.target.value)}
+                placeholder="Optional"
               />
             </div>
             <div className="space-y-2">

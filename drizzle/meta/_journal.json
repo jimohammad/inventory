@@ -22,6 +22,13 @@
       "when": 1763446341431,
       "tag": "0002_silly_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1763447125393,
+      "tag": "0003_elite_crystal",
+      "breakpoints": true
     }
   ]
 }

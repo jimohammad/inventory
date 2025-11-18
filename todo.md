@@ -33,3 +33,18 @@
 - [x] Frontend: Edit supplier form
 - [x] Frontend: Integrate supplier selection in purchase order forms
 - [x] Frontend: Auto-fill supplier details when selected
+
+## Dashboard & Enhancement Features
+
+- [x] Add KWD currency support to database schema
+- [x] Add bank name field to purchase orders
+- [x] Add supplier invoice number field to purchase orders
+- [x] Update backend API to support new fields
+- [x] Create dashboard page with PO summary cards
+- [x] Add KWD conversion display in dashboard
+- [x] Add bank selection dropdown (NBK/CBK)
+- [x] Implement advanced search (item, supplier, date, invoice number)
+- [x] Add large font search field for better visibility
+- [x] Add supplier invoice number to PO forms
+- [x] Create purchase history view for suppliers
+- [x] Display total spending per supplier

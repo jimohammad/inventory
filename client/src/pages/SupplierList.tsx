@@ -97,7 +97,8 @@ export default function SupplierList() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {filteredSuppliers.map((supplier) => (
-            <Card key={supplier.id}>
+            <Link key={supplier.id} href={`/suppliers/${supplier.id}`}>
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
@@ -150,6 +151,7 @@ export default function SupplierList() {
                 )}
               </CardContent>
             </Card>
+            </Link>
           ))}
         </div>
       )}

@@ -54,9 +54,12 @@ export const appRouter = router({
         return raw as {
           poNumber: string;
           supplier: string;
-          currency: "USD" | "AED";
+          supplierInvoiceNumber?: string;
+          currency: "USD" | "AED" | "KWD";
           exchangeRate: string;
+          exchangeRateKWD?: string;
           totalAmount: string;
+          bankName?: "National Bank of Kuwait" | "Commercial Bank of Kuwait";
           notes?: string;
           status: "draft" | "confirmed" | "completed" | "cancelled";
           orderDate: Date;
@@ -76,9 +79,12 @@ export const appRouter = router({
           userId: ctx.user.id,
           poNumber: input.poNumber,
           supplier: input.supplier,
+          supplierInvoiceNumber: input.supplierInvoiceNumber,
           currency: input.currency,
           exchangeRate: input.exchangeRate,
+          exchangeRateKWD: input.exchangeRateKWD,
           totalAmount: input.totalAmount,
+          bankName: input.bankName,
           notes: input.notes,
           status: input.status,
           orderDate: input.orderDate,
@@ -107,9 +113,12 @@ export const appRouter = router({
           id: number;
           poNumber: string;
           supplier: string;
-          currency: "USD" | "AED";
+          supplierInvoiceNumber?: string;
+          currency: "USD" | "AED" | "KWD";
           exchangeRate: string;
+          exchangeRateKWD?: string;
           totalAmount: string;
+          bankName?: "National Bank of Kuwait" | "Commercial Bank of Kuwait";
           notes?: string;
           status: "draft" | "confirmed" | "completed" | "cancelled";
           orderDate: Date;
@@ -128,9 +137,12 @@ export const appRouter = router({
         await updatePurchaseOrder(input.id, ctx.user.id, {
           poNumber: input.poNumber,
           supplier: input.supplier,
+          supplierInvoiceNumber: input.supplierInvoiceNumber,
           currency: input.currency,
           exchangeRate: input.exchangeRate,
+          exchangeRateKWD: input.exchangeRateKWD,
           totalAmount: input.totalAmount,
+          bankName: input.bankName,
           notes: input.notes,
           status: input.status,
           orderDate: input.orderDate,
