@@ -648,6 +648,57 @@ Keep the response concise, actionable, and focused on business decisions.`;
         };
       }),
   }),
+
+  googleSheets: router({
+    getConfig: protectedProcedure.query(async ({ ctx }) => {
+      const { getGoogleSheetConfig } = await import("./db");
+      return await getGoogleSheetConfig(ctx.user.id);
+    }),
+
+    saveConfig: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          spreadsheetId: string;
+          sheetName: string;
+          serviceAccountKey: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { upsertGoogleSheetConfig } = await import("./db");
+        const { testGoogleSheetConnection } = await import("./googleSheets");
+
+        // Test connection first
+        const isValid = await testGoogleSheetConnection(input);
+        if (!isValid) {
+          throw new Error("Failed to connect to Google Sheets. Please check your credentials and spreadsheet ID.");
+        }
+
+        await upsertGoogleSheetConfig({
+          userId: ctx.user.id,
+          ...input,
+          isActive: 1,
+        });
+
+        return { success: true };
+      }),
+
+    syncNow: protectedProcedure.mutation(async ({ ctx }) => {
+      const { syncInventoryForUser } = await import("./syncScheduler");
+      const result = await syncInventoryForUser(ctx.user.id);
+      if (!result.success) {
+        throw new Error(result.error || "Sync failed");
+      }
+      return result;
+    }),
+
+    getSyncLogs: protectedProcedure.query(async ({ ctx }) => {
+      const { getSyncLogs } = await import("./db");
+      return await getSyncLogs(ctx.user.id, 20);
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

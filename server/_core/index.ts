@@ -60,8 +60,12 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
-  server.listen(port, () => {
+  server.listen(port, async () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // Start Google Sheets sync scheduler
+    const { startSyncScheduler } = await import('../syncScheduler');
+    startSyncScheduler();
   });
 }
 

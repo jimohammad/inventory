@@ -18,6 +18,7 @@ import CreateItem from "@/pages/CreateItem";
 import EditItem from "@/pages/EditItem";
 import StockImport from "@/pages/StockImport";
 import InventoryAnalysis from "@/pages/InventoryAnalysis";
+import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 
 function Router() {
   return (
@@ -85,6 +86,11 @@ function Router() {
       <Route path="/inventory-analysis" component={() => (
         <DashboardLayout>
           <InventoryAnalysis />
+        </DashboardLayout>
+      )} />
+      <Route path="/google-sheets" component={() => (
+        <DashboardLayout>
+          <GoogleSheetsConfig />
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />

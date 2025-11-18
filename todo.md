@@ -91,3 +91,15 @@
 - [x] Identify trends and patterns
 - [x] Predict slow-moving items
 - [x] Suggest optimal reorder quantities
+
+## Google Sheets Integration
+
+- [x] Add Google Sheets API integration
+- [x] Backend: Google Sheets import service
+- [x] Backend: Scheduled daily sync job
+- [x] Frontend: Google Sheets configuration page
+- [x] Frontend: Manual sync trigger button
+- [x] Store Google Sheets URL and credentials
+- [x] Map sheet columns to item codes and quantities
+- [x] Add sync status and last sync time display
+- [x] Add sync history/logs

@@ -146,3 +146,30 @@ export const stockHistory = mysqlTable("stockHistory", {
 
 export type StockHistory = typeof stockHistory.$inferSelect;
 export type InsertStockHistory = typeof stockHistory.$inferInsert;
+
+export const googleSheetConfig = mysqlTable("googleSheetConfig", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  spreadsheetId: varchar("spreadsheetId", { length: 255 }).notNull(),
+  sheetName: varchar("sheetName", { length: 255 }).notNull(),
+  serviceAccountKey: text("serviceAccountKey").notNull(), // JSON string
+  isActive: int("isActive").default(1).notNull(), // 1 = active, 0 = inactive
+  lastSyncAt: timestamp("lastSyncAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GoogleSheetConfig = typeof googleSheetConfig.$inferSelect;
+export type InsertGoogleSheetConfig = typeof googleSheetConfig.$inferInsert;
+
+export const syncLogs = mysqlTable("syncLogs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  status: varchar("status", { length: 50 }).notNull(), // success, failed
+  itemsUpdated: int("itemsUpdated").default(0).notNull(),
+  errorMessage: text("errorMessage"),
+  syncedAt: timestamp("syncedAt").defaultNow().notNull(),
+});
+
+export type SyncLog = typeof syncLogs.$inferSelect;
+export type InsertSyncLog = typeof syncLogs.$inferInsert;

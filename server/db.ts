@@ -319,3 +319,70 @@ export async function getItemMovementStats(userId: number, startDate: Date, endD
   
   return history;
 }
+
+// Google Sheets configuration
+export async function getGoogleSheetConfig(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const { googleSheetConfig } = await import("../drizzle/schema");
+  const result = await db.select().from(googleSheetConfig).where(eq(googleSheetConfig.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function upsertGoogleSheetConfig(config: any) {
+  const db = await getDb();
+  if (!db) return;
+  const { googleSheetConfig } = await import("../drizzle/schema");
+  
+  const existing = await getGoogleSheetConfig(config.userId);
+  if (existing) {
+    await db.update(googleSheetConfig)
+      .set(config)
+      .where(eq(googleSheetConfig.userId, config.userId));
+  } else {
+    await db.insert(googleSheetConfig).values(config);
+  }
+}
+
+export async function updateLastSyncTime(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  const { googleSheetConfig } = await import("../drizzle/schema");
+  await db.update(googleSheetConfig)
+    .set({ lastSyncAt: new Date() })
+    .where(eq(googleSheetConfig.userId, userId));
+}
+
+// Sync logs
+export async function createSyncLog(log: any) {
+  const db = await getDb();
+  if (!db) return;
+  const { syncLogs } = await import("../drizzle/schema");
+  await db.insert(syncLogs).values(log);
+}
+
+export async function getSyncLogs(userId: number, limit: number = 10) {
+  const db = await getDb();
+  if (!db) return [];
+  const { syncLogs } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  return await db.select().from(syncLogs)
+    .where(eq(syncLogs.userId, userId))
+    .orderBy(desc(syncLogs.syncedAt))
+    .limit(limit);
+}
+
+// Update item quantity by item code
+export async function updateItemQuantity(userId: number, itemCode: string, quantity: number) {
+  const db = await getDb();
+  if (!db) return;
+  const { items } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  
+  await db.update(items)
+    .set({ availableQty: quantity })
+    .where(and(
+      eq(items.userId, userId),
+      eq(items.itemCode, itemCode)
+    ));
+}
