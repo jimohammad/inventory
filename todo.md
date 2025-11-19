@@ -248,3 +248,10 @@
 - [x] Remove purchase price from internal catalog as well
 - [x] Redesign catalog item cards for better visual appeal and conciseness
 - [x] Increase category badge size and font for better navigation
+
+## UI/UX Improvements
+
+- [x] Add item count badges to category filters (e.g., "Samsung (16)")
+- [x] Redesign app color scheme with appealing palette for better user experience
+- [x] Update primary colors, backgrounds, and accent colors
+- [x] Ensure consistent color theme across all pages

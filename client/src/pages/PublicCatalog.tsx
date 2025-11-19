@@ -25,6 +25,11 @@ export default function PublicCatalog() {
     return Array.from(cats);
   }, [items]);
 
+  const getCategoryCount = (category: string) => {
+    if (!items) return 0;
+    return items.filter(item => item.category === category).length;
+  };
+
   const filteredItems = useMemo(() => {
     if (!items) return [];
     
@@ -75,19 +80,21 @@ export default function PublicCatalog() {
               <div className="flex flex-wrap gap-3">
                 <Badge
                   variant={selectedCategory === null ? "default" : "outline"}
-                  className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform"
+                  className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform flex items-center gap-2"
                   onClick={() => setSelectedCategory(null)}
                 >
-                  All Categories
+                  <span>All Categories</span>
+                  <span className="bg-white/20 px-2 py-0.5 rounded-full text-sm">{items?.length || 0}</span>
                 </Badge>
                 {categories.map(cat => (
                   <Badge
                     key={cat}
                     variant={selectedCategory === cat ? "default" : "outline"}
-                    className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform"
+                    className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform flex items-center gap-2"
                     onClick={() => setSelectedCategory(cat)}
                   >
-                    {cat}
+                    <span>{cat}</span>
+                    <span className="bg-white/20 px-2 py-0.5 rounded-full text-sm">{cat ? getCategoryCount(cat) : 0}</span>
                   </Badge>
                 ))}
               </div>
