@@ -263,3 +263,11 @@
 - [x] Implement item suggestions dropdown showing matching items
 - [x] Use larger font size for better visibility
 - [x] Navigate to item details on selection
+
+## Items Page Search Enhancement
+
+- [x] Add Mac-style animated search field to Items page
+- [x] Implement smooth expand/collapse animations
+- [x] Use larger font size for better readability
+- [x] Add autocomplete dropdown with item suggestions
+- [x] Apply Mac-inspired design with subtle shadows and blur effects
