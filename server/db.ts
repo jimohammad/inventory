@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, items, InsertItem, stockHistory, InsertStockHistory } from "../drizzle/schema";
+import { InsertUser, users, purchaseOrders, InsertPurchaseOrder, purchaseOrderItems, InsertPurchaseOrderItem, documents, InsertDocument, suppliers, InsertSupplier, items, InsertItem, stockHistory, InsertStockHistory } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,7 +89,149 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+// Purchase Order queries
 import { desc } from "drizzle-orm";
+
+export async function createPurchaseOrder(order: InsertPurchaseOrder) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(purchaseOrders).values(order);
+  return result[0].insertId;
+}
+
+export async function createPurchaseOrderItem(item: InsertPurchaseOrderItem) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(purchaseOrderItems).values(item);
+}
+
+export async function createDocument(doc: InsertDocument) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(documents).values(doc);
+}
+
+export async function getPurchaseOrdersByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(purchaseOrders)
+    .where(eq(purchaseOrders.userId, userId))
+    .orderBy(desc(purchaseOrders.createdAt));
+}
+
+export async function getPurchaseOrderById(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(purchaseOrders)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getPurchaseOrderItems(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(purchaseOrderItems)
+    .where(eq(purchaseOrderItems.purchaseOrderId, purchaseOrderId));
+}
+
+export async function getDocuments(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(documents)
+    .where(eq(documents.purchaseOrderId, purchaseOrderId));
+}
+
+export async function updatePurchaseOrder(id: number, userId: number, updates: Partial<InsertPurchaseOrder>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(purchaseOrders)
+    .set(updates)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)));
+}
+
+export async function deletePurchaseOrder(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Delete related items and documents first
+  await db.delete(purchaseOrderItems).where(eq(purchaseOrderItems.purchaseOrderId, id));
+  await db.delete(documents).where(eq(documents.purchaseOrderId, id));
+  
+  // Delete the purchase order
+  await db.delete(purchaseOrders)
+    .where(and(eq(purchaseOrders.id, id), eq(purchaseOrders.userId, userId)));
+}
+
+export async function deletePurchaseOrderItems(purchaseOrderId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(purchaseOrderItems).where(eq(purchaseOrderItems.purchaseOrderId, purchaseOrderId));
+}
+
+export async function deleteDocument(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(documents).where(eq(documents.id, id));
+}
+
+// Supplier queries
+
+export async function createSupplier(supplier: InsertSupplier) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(suppliers).values(supplier);
+  return result[0].insertId;
+}
+
+export async function getSuppliersByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(suppliers)
+    .where(eq(suppliers.userId, userId))
+    .orderBy(suppliers.name);
+}
+
+export async function getSupplierById(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(suppliers)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateSupplier(id: number, userId: number, updates: Partial<InsertSupplier>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(suppliers)
+    .set(updates)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)));
+}
+
+export async function deleteSupplier(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.delete(suppliers)
+    .where(and(eq(suppliers.id, id), eq(suppliers.userId, userId)));
+}
 
 // Items queries
 export async function createItem(item: InsertItem) {
