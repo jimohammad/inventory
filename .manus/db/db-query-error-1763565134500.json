@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE items ADD COLUMN name VARCHAR(255) NOT NULL UNIQUE AFTER itemCode",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute ALTER TABLE items ADD COLUMN name VARCHAR(255) NOT NULL UNIQUE AFTER itemCode",
+  "returncode": 1,
+  "logs": [
+    "ERROR 8200 (HY000) at line 1: unsupported add column 'name' constraint UNIQUE KEY when altering 'RJnuvqs68igmigugNEp5S4.items'"
+  ]
+}

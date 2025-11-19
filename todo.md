@@ -212,3 +212,7 @@
 - [x] Implement broadcast dialog with contact selection
 - [x] Add sequential WhatsApp link opening functionality
 - [x] Add navigation menu item for WhatsApp Contacts
+
+## Bug Fixes
+
+- [x] Fix bulk CSV item import - items not showing after import (fixed missing 'name' column in database)
