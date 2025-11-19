@@ -173,3 +173,20 @@ export const syncLogs = mysqlTable("syncLogs", {
 
 export type SyncLog = typeof syncLogs.$inferSelect;
 export type InsertSyncLog = typeof syncLogs.$inferInsert;
+
+/**
+ * WhatsApp Contacts table
+ * Stores sales team contacts for catalog broadcasting
+ */
+export const whatsappContacts = mysqlTable("whatsappContacts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  phoneNumber: varchar("phoneNumber", { length: 50 }).notNull(), // Format: +96512345678
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type WhatsappContact = typeof whatsappContacts.$inferSelect;
+export type InsertWhatsappContact = typeof whatsappContacts.$inferInsert;

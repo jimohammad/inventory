@@ -940,6 +940,69 @@ Keep the response concise, actionable, and focused on business decisions.`;
       return await getSyncLogs(ctx.user.id, 20);
     }),
   }),
+
+  whatsappContacts: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getWhatsappContacts } = await import("./db");
+      return await getWhatsappContacts(ctx.user.id);
+    }),
+
+    create: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          name: string;
+          phoneNumber: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { createWhatsappContact } = await import("./db");
+        return await createWhatsappContact({
+          userId: ctx.user.id,
+          ...input,
+        });
+      }),
+
+    update: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          id: number;
+          name: string;
+          phoneNumber: string;
+          notes?: string;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { updateWhatsappContact } = await import("./db");
+        return await updateWhatsappContact(input.id, ctx.user.id, {
+          name: input.name,
+          phoneNumber: input.phoneNumber,
+          notes: input.notes,
+        });
+      }),
+
+    delete: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
+          throw new Error("Invalid input: id is required");
+        }
+        const { id } = raw as { id: unknown };
+        if (typeof id !== "number") {
+          throw new Error("Invalid input: id must be a number");
+        }
+        return { id };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { deleteWhatsappContact } = await import("./db");
+        return await deleteWhatsappContact(input.id, ctx.user.id);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

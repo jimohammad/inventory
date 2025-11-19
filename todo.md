@@ -203,3 +203,12 @@
 ## Search Field Font Size
 
 - [x] Increase Items page search field font size to 25px
+
+## WhatsApp Broadcast Feature
+
+- [x] Create WhatsApp contacts database table (name, phone number, notes)
+- [x] Add backend procedures for WhatsApp contacts CRUD operations
+- [x] Build WhatsApp Contacts management page with add/edit/delete functionality
+- [x] Implement broadcast dialog with contact selection
+- [x] Add sequential WhatsApp link opening functionality
+- [x] Add navigation menu item for WhatsApp Contacts

@@ -386,3 +386,49 @@ export async function updateItemQuantity(userId: number, itemCode: string, quant
       eq(items.itemCode, itemCode)
     ));
 }
+
+// WhatsApp Contacts queries
+export async function getWhatsappContacts(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const { whatsappContacts } = await import("../drizzle/schema");
+  return await db.select().from(whatsappContacts)
+    .where(eq(whatsappContacts.userId, userId))
+    .orderBy(desc(whatsappContacts.createdAt));
+}
+
+export async function createWhatsappContact(contact: any) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { whatsappContacts } = await import("../drizzle/schema");
+  
+  const result = await db.insert(whatsappContacts).values(contact);
+  return result[0].insertId;
+}
+
+export async function updateWhatsappContact(id: number, userId: number, updates: any) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { whatsappContacts } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  
+  await db.update(whatsappContacts)
+    .set(updates)
+    .where(and(
+      eq(whatsappContacts.id, id),
+      eq(whatsappContacts.userId, userId)
+    ));
+}
+
+export async function deleteWhatsappContact(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const { whatsappContacts } = await import("../drizzle/schema");
+  const { and } = await import("drizzle-orm");
+  
+  await db.delete(whatsappContacts)
+    .where(and(
+      eq(whatsappContacts.id, id),
+      eq(whatsappContacts.userId, userId)
+    ));
+}

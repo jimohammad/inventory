@@ -22,7 +22,7 @@ import {
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Building2, Package, TrendingUp, Sheet } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, Building2, Package, TrendingUp, Sheet, MessageCircle } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -34,6 +34,7 @@ const menuItems = [
   { icon: Package, label: "Items", path: "/items" },
   { icon: TrendingUp, label: "Inventory Analysis", path: "/inventory-analysis" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },
+  { icon: MessageCircle, label: "WhatsApp Contacts", path: "/whatsapp-contacts" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

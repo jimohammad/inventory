@@ -22,6 +22,7 @@ import BulkItemImport from "@/pages/BulkItemImport";
 import InventoryAnalysis from "@/pages/InventoryAnalysis";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 import PublicCatalog from "@/pages/PublicCatalog";
+import WhatsAppContacts from "@/pages/WhatsAppContacts";
 
 function Router() {
   return (
@@ -107,6 +108,11 @@ function Router() {
       <Route path="/google-sheets" component={() => (
         <DashboardLayout>
           <GoogleSheetsConfig />
+        </DashboardLayout>
+      )} />
+      <Route path="/whatsapp-contacts" component={() => (
+        <DashboardLayout>
+          <WhatsAppContacts />
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />
