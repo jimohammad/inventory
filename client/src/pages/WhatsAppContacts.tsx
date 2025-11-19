@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
+import { MacButton } from "@/components/MacButton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -183,35 +184,20 @@ export default function WhatsAppContacts() {
       ) : (
         <>
           <div className="mb-6 grid grid-cols-2 gap-4">
-            <button
+            <MacButton
               onClick={handleBroadcast}
               disabled={selectedContacts.length === 0}
-              className={`h-16 px-6 rounded-xl font-semibold text-base transition-all duration-300 relative overflow-hidden group/btn
-                ${selectedContacts.length === 0 
-                  ? 'bg-slate-700/50 text-slate-500 cursor-not-allowed' 
-                  : 'bg-slate-800/80 text-emerald-400 hover:bg-slate-800/50 hover:backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:border hover:border-emerald-500/30'
-                }
-                before:absolute before:inset-0 before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500
-                ${selectedContacts.length > 0 ? 'hover:before:opacity-100 hover:before:bg-gradient-to-r hover:before:from-emerald-400/0 hover:before:via-emerald-400/20 hover:before:to-emerald-400/0' : ''}`}
+              icon={Send}
             >
-              <div className="flex items-center justify-center gap-3 relative z-10">
-                <Send className={`h-5 w-5 transition-all duration-300 ${selectedContacts.length > 0 ? 'group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]' : ''}`} />
-                <span>Broadcast to Selected ({selectedContacts.length})</span>
-              </div>
-            </button>
+              Broadcast to Selected ({selectedContacts.length})
+            </MacButton>
             
-            <button
+            <MacButton
               onClick={() => setIsCreateOpen(true)}
-              className="h-16 px-6 rounded-xl font-semibold text-base bg-slate-800/80 text-emerald-400 transition-all duration-300 relative overflow-hidden group/btn
-                hover:bg-slate-800/50 hover:backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:border hover:border-emerald-500/30
-                before:absolute before:inset-0 before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500
-                hover:before:opacity-100 hover:before:bg-gradient-to-r hover:before:from-emerald-400/0 hover:before:via-emerald-400/20 hover:before:to-emerald-400/0"
+              icon={Plus}
             >
-              <div className="flex items-center justify-center gap-3 relative z-10">
-                <Plus className="h-5 w-5 transition-all duration-300 group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
-                <span>Add Contact</span>
-              </div>
-            </button>
+              Add Contact
+            </MacButton>
           </div>
 
           <Card>

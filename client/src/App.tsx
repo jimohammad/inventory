@@ -1,11 +1,13 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
+import { AnimatePresence } from "framer-motion";
+import { PageTransition } from "./components/PageTransition";
 
 import ItemList from "@/pages/ItemList";
 import CreateItem from "@/pages/CreateItem";
@@ -20,20 +22,27 @@ import WhatsAppContacts from "@/pages/WhatsAppContacts";
 import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 
 function Router() {
+  const [location] = useLocation();
+  
   return (
-    <Switch>
+    <AnimatePresence mode="wait">
+      <Switch location={location} key={location}>
       {/* Public catalog routes - no auth required */}
       <Route path="/catalog/:userId/:type" component={PublicCatalog} />
       
       <Route path="/" component={() => (
         <DashboardLayout>
-          <Dashboard />
+          <PageTransition>
+            <Dashboard />
+          </PageTransition>
         </DashboardLayout>
       )} />
 
       <Route path="/items" component={() => (
         <DashboardLayout>
-          <ItemList />
+          <PageTransition>
+            <ItemList />
+          </PageTransition>
         </DashboardLayout>
       )} />
       <Route path="/items/new" component={() => (
@@ -68,7 +77,9 @@ function Router() {
       )} />
       <Route path="/inventory-analysis" component={() => (
         <DashboardLayout>
-          <InventoryAnalysis />
+          <PageTransition>
+            <InventoryAnalysis />
+          </PageTransition>
         </DashboardLayout>
       )} />
       <Route path="/google-sheets" component={() => (
@@ -78,12 +89,15 @@ function Router() {
       )} />
       <Route path="/whatsapp-contacts" component={() => (
         <DashboardLayout>
-          <WhatsAppContacts />
+          <PageTransition>
+            <WhatsAppContacts />
+          </PageTransition>
         </DashboardLayout>
       )} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+    </AnimatePresence>
   );
 }
 

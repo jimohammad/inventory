@@ -301,3 +301,14 @@
 - [x] Use emerald/teal text color
 - [x] Add Mac-style hover effects (gradient glow, backdrop blur, smooth transitions)
 - [x] Maintain consistent design with sidebar menu items
+
+## Unified Mac-Style UI Enhancements
+
+- [x] Create reusable MacButton component with Mac-style effects
+- [x] Replace existing buttons with MacButton component across all pages
+- [x] Implement animated page transitions with fade/slide effects
+- [x] Add teal glow effect on page load for cohesive experience
+- [x] Apply Mac-style hover effects to stat cards (Total Items, Low Stock, etc.)
+- [x] Apply Mac-style hover effects to widget cards (Low Stock Alert, Profit Margins)
+- [x] Add gentle lift animation and shadow glow on card hover
+- [x] Test all enhancements across Dashboard, Items, Suppliers, and other pages

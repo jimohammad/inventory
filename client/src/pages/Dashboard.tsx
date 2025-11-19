@@ -105,19 +105,19 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30 cursor-pointer">
           <CardHeader className="pb-2">
             <CardDescription>Total Items</CardDescription>
             <CardTitle className="text-3xl">{items.length || 0}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/30 cursor-pointer">
           <CardHeader className="pb-2">
             <CardDescription>Low Stock Items</CardDescription>
             <CardTitle className="text-3xl text-red-600">{lowStockItems.length || 0}</CardTitle>
           </CardHeader>
         </Card>
-        <Card>
+        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30 cursor-pointer">
           <CardHeader className="pb-2">
             <CardDescription>Total Stock Value</CardDescription>
             <CardTitle className="text-3xl">
@@ -134,7 +134,7 @@ export default function Dashboard() {
       {/* Low Stock Alert & Profit Margins */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Low Stock Alert */}
-        <Card className="border-red-200">
+        <Card className="border-red-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/40">
           <CardHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-600" />
@@ -167,7 +167,7 @@ export default function Dashboard() {
         </Card>
 
         {/* Profit Margins */}
-        <Card>
+        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30">
           <CardHeader>
             <div className="flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-green-600" />
