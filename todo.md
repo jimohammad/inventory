@@ -172,3 +172,13 @@
 ## UI Improvements
 
 - [x] Increase sidebar menu font size for better visibility
+
+## Dashboard Enhancements
+
+- [x] Backend API for low stock items query
+- [x] Backend API for profit margin analysis
+- [x] Frontend: Low stock widget on dashboard
+- [x] Frontend: Profit margin widget on dashboard
+- [x] Implement keyboard shortcuts (Ctrl+N for new PO, Ctrl+I for new item, Ctrl+K for search, Ctrl+H for home)
+- [x] Add keyboard shortcuts help dialog
+- [x] Display keyboard shortcuts hints in UI

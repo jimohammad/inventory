@@ -126,6 +126,12 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* Low Stock & Profit Margin Widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <LowStockWidget />
+        <ProfitMarginWidget />
+      </div>
+
       {/* Purchase Order Cards */}
       {filteredOrders.length === 0 ? (
         <Card>
@@ -245,5 +251,114 @@ export default function Dashboard() {
         </div>
       )}
     </div>
+  );
+}
+
+function LowStockWidget() {
+  const { data: lowStockItems, isLoading } = trpc.items.lowStock.useQuery({ threshold: 10 });
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <span className="text-red-500">⚠️</span>
+          Low Stock Alert
+        </CardTitle>
+        <CardDescription>Items running low on inventory</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : !lowStockItems || lowStockItems.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            All items are well stocked
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {lowStockItems.map((item) => (
+              <div key={item.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-sm truncate">{item.name}</div>
+                  <div className="text-xs text-muted-foreground">{item.itemCode} • {item.category}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-red-600">{item.availableQty} left</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function ProfitMarginWidget() {
+  const { data: margins, isLoading } = trpc.items.profitMargins.useQuery();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <span className="text-green-500">💰</span>
+          Profit Margins
+        </CardTitle>
+        <CardDescription>Top & low margin items</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : !margins || (margins.topMargins.length === 0 && margins.lowMargins.length === 0) ? (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            No profit margin data available
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {margins.topMargins.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold mb-2 text-green-600">Highest Margins</h4>
+                <div className="space-y-2">
+                  {margins.topMargins.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-2 bg-green-50 rounded border border-green-200">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate">{item.name}</div>
+                        <div className="text-xs text-muted-foreground">{item.itemCode}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-green-600">{item.marginPercent}%</div>
+                        <div className="text-xs text-muted-foreground">KWD {item.margin.toFixed(3)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {margins.lowMargins.length > 0 && (
+              <div>
+                <h4 className="text-sm font-semibold mb-2 text-orange-600">Lowest Margins</h4>
+                <div className="space-y-2">
+                  {margins.lowMargins.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-2 bg-orange-50 rounded border border-orange-200">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate">{item.name}</div>
+                        <div className="text-xs text-muted-foreground">{item.itemCode}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold text-orange-600">{item.marginPercent}%</div>
+                        <div className="text-xs text-muted-foreground">KWD {item.margin.toFixed(3)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -806,6 +806,64 @@ Keep the response concise, actionable, and focused on business decisions.`;
           insights: response.choices[0].message.content,
         };
       }),
+
+    lowStock: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          threshold?: number;
+        };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getUserItems } = await import("./db");
+        const threshold = input.threshold || 10;
+        const allItems = await getUserItems(ctx.user.id);
+        
+        return allItems
+          .filter(item => (item.availableQty || 0) < threshold && (item.availableQty || 0) > 0)
+          .map(item => ({
+            id: item.id,
+            itemCode: item.itemCode,
+            name: item.name,
+            category: item.category,
+            availableQty: item.availableQty || 0,
+            purchasePrice: item.purchasePrice,
+            sellingPrice: item.sellingPrice,
+          }))
+          .sort((a, b) => a.availableQty - b.availableQty)
+          .slice(0, 10);
+      }),
+
+    profitMargins: protectedProcedure.query(async ({ ctx }) => {
+      const { getUserItems } = await import("./db");
+      const allItems = await getUserItems(ctx.user.id);
+      
+      const itemsWithMargin = allItems
+        .filter(item => item.purchasePrice && item.sellingPrice)
+        .map(item => {
+          const margin = (item.sellingPrice! - item.purchasePrice!);
+          const marginPercent = (margin / item.purchasePrice!) * 100;
+          return {
+            id: item.id,
+            itemCode: item.itemCode,
+            name: item.name,
+            category: item.category,
+            purchasePrice: item.purchasePrice!,
+            sellingPrice: item.sellingPrice!,
+            margin,
+            marginPercent: parseFloat(marginPercent.toFixed(2)),
+          };
+        });
+
+      const sorted = itemsWithMargin.sort((a, b) => b.marginPercent - a.marginPercent);
+      
+      return {
+        topMargins: sorted.slice(0, 5),
+        lowMargins: sorted.slice(-5).reverse(),
+      };
+    }),
   }),
 
   googleSheets: router({
