@@ -215,4 +215,4 @@
 
 ## Bug Fixes
 
-- [x] Fix bulk CSV item import - items not showing after import (fixed missing 'name' column in database)
+- [x] Fix bulk CSV item import - items not showing after import (fixed database schema sync issues - added missing columns and removed duplicates)

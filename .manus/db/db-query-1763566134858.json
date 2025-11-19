@@ -1,0 +1,36 @@
+{
+  "query": "SHOW CREATE TABLE items",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SHOW CREATE TABLE items",
+  "rows": [
+    {
+      "Table": "items",
+      "Create Table": "CREATE TABLE `items` ("
+    }
+  ],
+  "messages": [
+    "  `id` int(11) NOT NULL AUTO_INCREMENT,",
+    "  `userId` int(11) NOT NULL,",
+    "  `itemName` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+    "  `category` enum('Motorola','Samsung','Redmi','Realme','Meizu','Honor') COLLATE utf8mb4_unicode_ci DEFAULT NULL,",
+    "  `purchasePrice` int(11) DEFAULT NULL,",
+    "  `sellingPrice` int(11) DEFAULT NULL,",
+    "  `openingStock` int(11) DEFAULT '0',",
+    "  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,",
+    "  `defaultUnitPrice` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,",
+    "  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,",
+    "  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,",
+    "  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,",
+    "  `itemCode` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,",
+    "  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,",
+    "  `availableQty` int(11) NOT NULL DEFAULT '0',",
+    "  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,",
+    "  KEY `idx_items_user_id` (`userId`),",
+    "  KEY `idx_items_category` (`category`),",
+    "  KEY `` (`userId`),",
+    "  UNIQUE KEY `idx_items_name` (`name`)",
+    ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=240001"
+  ],
+  "stdout": "Table\tCreate Table\nitems\tCREATE TABLE `items` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `userId` int(11) NOT NULL,\n  `itemName` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `category` enum('Motorola','Samsung','Redmi','Realme','Meizu','Honor') COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `purchasePrice` int(11) DEFAULT NULL,\n  `sellingPrice` int(11) DEFAULT NULL,\n  `openingStock` int(11) DEFAULT '0',\n  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `defaultUnitPrice` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,\n  `itemCode` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,\n  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,\n  `availableQty` int(11) NOT NULL DEFAULT '0',\n  PRIMARY KEY (`id`) /*T![clustered_index] CLUSTERED */,\n  KEY `idx_items_user_id` (`userId`),\n  KEY `idx_items_category` (`category`),\n  KEY `` (`userId`),\n  UNIQUE KEY `idx_items_name` (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=240001\n",
+  "stderr": "",
+  "execution_time_ms": 1583
+}
