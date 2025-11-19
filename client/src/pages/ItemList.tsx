@@ -17,6 +17,7 @@ import { Link, useLocation } from "wouter";
 import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
+import { ShareCatalogDialog } from "@/components/ShareCatalogDialog";
 
 export default function ItemList() {
   const [, setLocation] = useLocation();
@@ -78,6 +79,7 @@ export default function ItemList() {
           <p className="text-muted-foreground mt-1">Manage your inventory items</p>
         </div>
         <div className="flex gap-2">
+          <ShareCatalogDialog />
           <Link href="/items/bulk-import">
             <Button variant="outline">
               <Upload className="w-4 h-4 mr-2" />

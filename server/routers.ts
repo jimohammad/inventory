@@ -864,6 +864,30 @@ Keep the response concise, actionable, and focused on business decisions.`;
         lowMargins: sorted.slice(-5).reverse(),
       };
     }),
+
+    getPublicCatalog: publicProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          userId: number;
+          includeQty?: boolean;
+        };
+      })
+      .query(async ({ input }) => {
+        const { getUserItems } = await import("./db");
+        const allItems = await getUserItems(input.userId);
+        
+        return allItems.map(item => ({
+          itemCode: item.itemCode,
+          name: item.name,
+          category: item.category,
+          purchasePrice: item.purchasePrice,
+          sellingPrice: item.sellingPrice,
+          ...(input.includeQty ? { availableQty: item.availableQty } : {}),
+        }));
+      }),
   }),
 
   googleSheets: router({

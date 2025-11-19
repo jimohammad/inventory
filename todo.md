@@ -182,3 +182,14 @@
 - [x] Implement keyboard shortcuts (Ctrl+N for new PO, Ctrl+I for new item, Ctrl+K for search, Ctrl+H for home)
 - [x] Add keyboard shortcuts help dialog
 - [x] Display keyboard shortcuts hints in UI
+
+## Shareable Inventory Catalog
+
+- [x] Backend API for public catalog (item code, name, category, purchase price, selling price)
+- [x] Backend API for internal catalog (includes available quantity)
+- [x] Frontend: Share link generator in Items page
+- [x] Frontend: Public catalog view page (no authentication required)
+- [x] Frontend: Internal catalog view page (no authentication required)
+- [x] Display items in clean table/card format
+- [x] Add search and filter by category
+- [x] Add copy link button for easy sharing

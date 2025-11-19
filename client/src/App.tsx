@@ -21,10 +21,14 @@ import BulkOpeningStock from "@/pages/BulkOpeningStock";
 import BulkItemImport from "@/pages/BulkItemImport";
 import InventoryAnalysis from "@/pages/InventoryAnalysis";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
+import PublicCatalog from "@/pages/PublicCatalog";
 
 function Router() {
   return (
     <Switch>
+      {/* Public catalog routes - no auth required */}
+      <Route path="/catalog/:userId/:type" component={PublicCatalog} />
+      
       <Route path="/" component={() => (
         <DashboardLayout>
           <Dashboard />
