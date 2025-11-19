@@ -6,7 +6,7 @@ interface MacButtonProps {
   disabled?: boolean;
   icon?: LucideIcon;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "gradient";
   className?: string;
   type?: "button" | "submit" | "reset";
 }
@@ -50,6 +50,15 @@ export function MacButton({
          hover:before:opacity-100 hover:before:bg-gradient-to-r 
          hover:before:from-teal-400/0 hover:before:via-teal-400/20 
          hover:before:to-teal-400/0`,
+    gradient: disabled
+      ? "bg-slate-700/50 text-slate-500 cursor-not-allowed"
+      : `bg-black/90 
+         hover:bg-black/80 hover:backdrop-blur-sm 
+         hover:shadow-lg hover:shadow-purple-500/30 
+         hover:border hover:border-purple-500/40
+         hover:before:opacity-100 hover:before:bg-gradient-to-r 
+         hover:before:from-purple-500/0 hover:before:via-pink-500/20 
+         hover:before:to-orange-500/0`,
   };
 
   return (
@@ -63,11 +72,27 @@ export function MacButton({
         {Icon && (
           <Icon
             className={`h-5 w-5 transition-all duration-300 ${
-              !disabled ? "group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]" : ""
+              variant === "gradient" && !disabled
+                ? "group-hover/btn:drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]"
+                : !disabled
+                ? "group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]"
+                : ""
+            } ${
+              variant === "gradient" && !disabled
+                ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent"
+                : ""
             }`}
           />
         )}
-        <span>{children}</span>
+        <span
+          className={`${
+            variant === "gradient" && !disabled
+              ? "bg-gradient-to-r from-purple-400 via-pink-400 to-orange-400 bg-clip-text text-transparent font-bold"
+              : ""
+          }`}
+        >
+          {children}
+        </span>
       </div>
     </button>
   );

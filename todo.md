@@ -312,3 +312,11 @@
 - [x] Apply Mac-style hover effects to widget cards (Low Stock Alert, Profit Margins)
 - [x] Add gentle lift animation and shadow glow on card hover
 - [x] Test all enhancements across Dashboard, Items, Suppliers, and other pages
+
+## WhatsApp Contacts Button Gradient Enhancement
+
+- [x] Update MacButton component to support AI-style gradient text option
+- [x] Add black background to WhatsApp buttons
+- [x] Apply vibrant gradient text (purple, pink, orange, teal) similar to AI logos
+- [x] Maintain Mac-style hover effects with gradient text
+- [x] Test gradient appearance and readability

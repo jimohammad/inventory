@@ -188,6 +188,7 @@ export default function WhatsAppContacts() {
               onClick={handleBroadcast}
               disabled={selectedContacts.length === 0}
               icon={Send}
+              variant="gradient"
             >
               Broadcast to Selected ({selectedContacts.length})
             </MacButton>
@@ -195,6 +196,7 @@ export default function WhatsAppContacts() {
             <MacButton
               onClick={() => setIsCreateOpen(true)}
               icon={Plus}
+              variant="gradient"
             >
               Add Contact
             </MacButton>
