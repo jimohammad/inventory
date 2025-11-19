@@ -22,7 +22,7 @@ import {
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Building2, Package, TrendingUp, Sheet, MessageCircle } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Package, TrendingUp, Sheet, MessageCircle } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -30,7 +30,6 @@ import { Button } from "./ui/button";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: Building2, label: "Suppliers", path: "/suppliers" },
   { icon: Package, label: "Items", path: "/items" },
   { icon: TrendingUp, label: "Inventory Analysis", path: "/inventory-analysis" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },

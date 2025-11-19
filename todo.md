@@ -229,3 +229,15 @@
 - [x] Add bulk price update button to Items page
 - [x] Support selling price only, purchase price only, or both prices update
 - [x] Add preview showing example calculation before applying changes
+
+## Performance Optimization - Module Removal
+
+- [x] Drop purchase orders database tables
+- [x] Drop suppliers database table
+- [x] Remove purchase order backend routers and procedures
+- [x] Remove supplier backend routers and procedures
+- [x] Remove purchase order frontend pages
+- [x] Remove supplier frontend pages
+- [x] Remove purchase order and supplier navigation menu items
+- [x] Update dashboard to remove purchase order widgets
+- [x] Clean up unused imports and dependencies

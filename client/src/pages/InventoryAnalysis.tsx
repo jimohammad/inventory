@@ -56,10 +56,10 @@ export default function InventoryAnalysis() {
   };
 
   const stats = {
-    fast: analysis?.filter(i => i.movementCategory === "fast").length || 0,
-    medium: analysis?.filter(i => i.movementCategory === "medium").length || 0,
-    slow: analysis?.filter(i => i.movementCategory === "slow").length || 0,
-    none: analysis?.filter(i => i.movementCategory === "none").length || 0,
+    fast: 0,
+    medium: 0,
+    slow: 0,
+    none: analysis?.length || 0,
   };
 
   if (isLoading) {
