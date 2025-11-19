@@ -15,9 +15,10 @@ export default function CreateItem() {
   const [itemCode, setItemCode] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState<"Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor" | "">("");
-  const [defaultPrice, setDefaultPrice] = useState("");
+  const [sellingPrice, setSellingPrice] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
+  const [openingStock, setOpeningStock] = useState("0");
 
   const createMutation = trpc.items.create.useMutation({
     onSuccess: () => {
@@ -46,9 +47,10 @@ export default function CreateItem() {
       itemCode: itemCode.trim(),
       name: name.trim(),
       category: category || undefined,
-      defaultPrice: defaultPrice ? parseInt(defaultPrice) : undefined,
+      sellingPrice: sellingPrice ? parseInt(sellingPrice) : undefined,
       purchasePrice: purchasePrice ? parseInt(purchasePrice) : undefined,
       availableQty: parseInt(availableQty) || 0,
+      openingStock: parseInt(openingStock) || 0,
     });
   };
 
@@ -122,12 +124,12 @@ export default function CreateItem() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="defaultPrice">Default Price</Label>
+              <Label htmlFor="sellingPrice">Selling Price</Label>
               <Input
-                id="defaultPrice"
+                id="sellingPrice"
                 type="number"
-                value={defaultPrice}
-                onChange={(e) => setDefaultPrice(e.target.value)}
+                value={sellingPrice}
+                onChange={(e) => setSellingPrice(e.target.value)}
                 placeholder="e.g., 100"
               />
             </div>
@@ -149,6 +151,17 @@ export default function CreateItem() {
                 min="0"
                 value={availableQty}
                 onChange={(e) => setAvailableQty(e.target.value)}
+                placeholder="0"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="openingStock">Opening Stock</Label>
+              <Input
+                id="openingStock"
+                type="number"
+                min="0"
+                value={openingStock}
+                onChange={(e) => setOpeningStock(e.target.value)}
                 placeholder="0"
               />
             </div>

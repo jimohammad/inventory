@@ -153,10 +153,10 @@ export default function ItemList() {
                             <span className="font-mono text-xs">{item.itemCode}</span>
                           </div>
                         )}
-                        {item.defaultPrice && (
+                        {item.sellingPrice && (
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">Default Price</span>
-                            <span className="font-medium">{item.defaultPrice}</span>
+                            <span className="text-muted-foreground">Selling Price</span>
+                            <span className="font-medium">{item.sellingPrice}</span>
                           </div>
                         )}
                         {item.purchasePrice && (

@@ -393,10 +393,10 @@ export default function CreatePurchaseOrder() {
                         updateItem(index, "itemName", selected.name);
                         updateItem(index, "category", selected.category || "");
                         updateItem(index, "description", "");
-                        updateItem(index, "unitPrice", selected.defaultPrice?.toString() || "0");
+                        updateItem(index, "unitPrice", selected.sellingPrice?.toString() || "0");
                         // Recalculate total
                         const qty = parseFloat(item.quantity) || 0;
-                        const price = parseFloat(selected.defaultPrice?.toString() || "0") || 0;
+                        const price = parseFloat(selected.sellingPrice?.toString() || "0") || 0;
                         updateItem(index, "totalPrice", (qty * price).toFixed(2));
                       }
                     }}

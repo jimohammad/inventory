@@ -334,9 +334,10 @@ export const appRouter = router({
           itemCode: string;
           name: string;
           category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
-          defaultPrice?: number;
+          sellingPrice?: number;
           purchasePrice?: number;
           availableQty?: number;
+          openingStock?: number;
         };
       })
       .mutation(async ({ ctx, input }) => {
@@ -381,9 +382,10 @@ export const appRouter = router({
           itemCode?: string;
           name: string;
           category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
-          defaultPrice?: number;
+          sellingPrice?: number;
           purchasePrice?: number;
           availableQty?: number;
+          openingStock?: number;
         };
       })
       .mutation(async ({ ctx, input }) => {
@@ -392,9 +394,10 @@ export const appRouter = router({
           itemCode: input.itemCode,
           name: input.name,
           category: input.category,
-          defaultPrice: input.defaultPrice,
+          sellingPrice: input.sellingPrice,
           purchasePrice: input.purchasePrice,
           availableQty: input.availableQty,
+          openingStock: input.openingStock,
         });
         return { success: true };
       }),

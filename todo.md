@@ -138,3 +138,15 @@
 - [x] Update CreateItem form with category dropdown
 - [x] Update EditItem form with category dropdown
 - [x] Update ItemList to display categories correctly
+
+## UI and Performance Improvements
+
+- [x] Rename defaultPrice to sellingPrice in database schema
+- [x] Update all references to default price in backend
+- [x] Update all UI labels from "Default Price" to "Selling Price"
+- [x] Diagnose slow menu opening issue
+- [x] Fix menu performance problems
+- [x] Add opening stock field to items
+- [x] Add opening stock input in CreateItem form
+- [x] Add opening stock display in ItemList
+- [x] Add opening stock to stock history tracking
