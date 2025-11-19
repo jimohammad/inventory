@@ -188,6 +188,7 @@ export default function EditItem() {
                 onChange={(e) => setAvailableQty(e.target.value)}
                 placeholder="0"
               />
+              <p className="text-xs text-muted-foreground">Current stock on hand (updates with sales/purchases)</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="openingStock">Opening Stock</Label>
@@ -199,6 +200,7 @@ export default function EditItem() {
                 onChange={(e) => setOpeningStock(e.target.value)}
                 placeholder="0"
               />
+              <p className="text-xs text-muted-foreground">Initial quantity when first added (for historical reference)</p>
             </div>
           </div>
 

@@ -474,6 +474,38 @@ export const appRouter = router({
         return results;
       }),
 
+    bulkUpdateOpeningStock: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          updates: Array<{
+            itemCode: string;
+            openingStock: number;
+          }>;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { getUserItems, updateItem } = await import("./db");
+        const allItems = await getUserItems(ctx.user.id);
+        const results = { updated: 0, notFound: [] as string[] };
+
+        for (const update of input.updates) {
+          const item = allItems.find(i => i.itemCode === update.itemCode);
+          if (item) {
+            await updateItem(item.id, ctx.user.id, {
+              openingStock: update.openingStock,
+            });
+            results.updated++;
+          } else {
+            results.notFound.push(update.itemCode);
+          }
+        }
+
+        return results;
+      }),
+
     getMovementAnalysis: protectedProcedure
       .input((raw: unknown) => {
         if (typeof raw !== "object" || raw === null) {

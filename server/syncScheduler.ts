@@ -104,22 +104,31 @@ export async function syncAllUsers(): Promise<void> {
 
 /**
  * Start the daily sync scheduler
- * Runs every day at 2 AM
+ * Runs every day at 2 AM Kuwait time (UTC+3)
  */
 export function startSyncScheduler(): void {
-  // Calculate time until next 2 AM
+  // Calculate time until next 2 AM Kuwait time
   const now = new Date();
-  const next2AM = new Date();
-  next2AM.setHours(2, 0, 0, 0);
   
-  // If it's already past 2 AM today, schedule for tomorrow
-  if (now > next2AM) {
-    next2AM.setDate(next2AM.getDate() + 1);
+  // Get current time in Kuwait (UTC+3)
+  const kuwaitOffset = 3 * 60; // Kuwait is UTC+3
+  const localOffset = now.getTimezoneOffset(); // Server's offset from UTC in minutes
+  const kuwaitTime = new Date(now.getTime() + (kuwaitOffset + localOffset) * 60 * 1000);
+  
+  // Set target time to 2 AM Kuwait time
+  const next2AMKuwait = new Date(kuwaitTime);
+  next2AMKuwait.setHours(2, 0, 0, 0);
+  
+  // If it's already past 2 AM today in Kuwait, schedule for tomorrow
+  if (kuwaitTime > next2AMKuwait) {
+    next2AMKuwait.setDate(next2AMKuwait.getDate() + 1);
   }
+  
+  // Convert back to server time
+  const next2AMServer = new Date(next2AMKuwait.getTime() - (kuwaitOffset + localOffset) * 60 * 1000);
+  const msUntil2AM = next2AMServer.getTime() - now.getTime();
 
-  const msUntil2AM = next2AM.getTime() - now.getTime();
-
-  console.log(`[SyncScheduler] Scheduler started. Next sync at ${next2AM.toISOString()}`);
+  console.log(`[SyncScheduler] Scheduler started. Next sync at ${next2AMKuwait.toISOString()} Kuwait time (${next2AMServer.toISOString()} server time)`);
 
   // Schedule first run
   setTimeout(() => {

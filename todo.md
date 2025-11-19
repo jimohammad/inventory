@@ -150,3 +150,12 @@
 - [x] Add opening stock input in CreateItem form
 - [x] Add opening stock display in ItemList
 - [x] Add opening stock to stock history tracking
+
+## Google Sheets Sync Fix & Stock Management
+
+- [x] Debug Google Sheets auto-sync not running at 2 AM
+- [x] Fix scheduler timezone or cron configuration
+- [x] Add bulk opening stock import via CSV
+- [x] Clarify difference between Available Qty and Opening Stock in UI
+- [x] Add tooltips/help text explaining stock fields
+- [x] Test auto-sync functionality

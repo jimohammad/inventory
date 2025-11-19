@@ -17,6 +17,7 @@ import ItemList from "@/pages/ItemList";
 import CreateItem from "@/pages/CreateItem";
 import EditItem from "@/pages/EditItem";
 import StockImport from "@/pages/StockImport";
+import BulkOpeningStock from "@/pages/BulkOpeningStock";
 import InventoryAnalysis from "@/pages/InventoryAnalysis";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 
@@ -81,6 +82,11 @@ function Router() {
       <Route path="/items/import" component={() => (
         <DashboardLayout>
           <StockImport />
+        </DashboardLayout>
+      )} />
+      <Route path="/items/bulk-opening-stock" component={() => (
+        <DashboardLayout>
+          <BulkOpeningStock />
         </DashboardLayout>
       )} />
       <Route path="/inventory-analysis" component={() => (
