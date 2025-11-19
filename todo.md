@@ -245,3 +245,5 @@
 ## Catalog Improvements
 
 - [x] Remove purchase price from public catalog display (show only selling price)
+- [x] Remove purchase price from internal catalog as well
+- [x] Redesign catalog item cards for better visual appeal and conciseness

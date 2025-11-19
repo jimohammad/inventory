@@ -114,27 +114,28 @@ export default function PublicCatalog() {
                     <Badge variant="secondary">{item.category}</Badge>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {/* Only show purchase price in internal catalog */}
-                    {includeQty && item.purchasePrice && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Purchase Price</span>
-                        <span className="font-semibold">KWD {parseFloat(item.purchasePrice as any).toFixed(3)}</span>
-                      </div>
-                    )}
+                <CardContent className="pt-4">
+                  <div className="space-y-3">
+                    {/* Price display */}
                     {item.sellingPrice && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Selling Price</span>
-                        <span className="font-bold text-green-600">KWD {parseFloat(item.sellingPrice as any).toFixed(3)}</span>
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+                        <div className="text-xs text-green-700 font-medium mb-1">Price</div>
+                        <div className="text-2xl font-bold text-green-700">KWD {parseFloat(item.sellingPrice as any).toFixed(3)}</div>
                       </div>
                     )}
+                    {/* Stock availability for internal catalog */}
                     {includeQty && (
-                      <div className="flex justify-between items-center pt-2 border-t">
-                        <span className="text-sm text-muted-foreground">Available</span>
-                        <span className={`font-bold ${(item.availableQty || 0) < 10 ? 'text-red-600' : 'text-blue-600'}`}>
-                          {item.availableQty || 0} units
-                        </span>
+                      <div className={`rounded-lg p-3 border ${
+                        (item.availableQty || 0) < 10 
+                          ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
+                          : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+                      }`}>
+                        <div className={`text-xs font-medium mb-1 ${
+                          (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
+                        }`}>Stock Available</div>
+                        <div className={`text-2xl font-bold ${
+                          (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
+                        }`}>{item.availableQty || 0} <span className="text-sm font-normal">units</span></div>
                       </div>
                     )}
                   </div>
