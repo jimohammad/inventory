@@ -286,3 +286,9 @@
 - [x] Update menu item base colors to darker shades
 - [x] Ensure teal/emerald glow effects stand out against dark background
 - [x] Test readability and visual hierarchy
+
+## Sidebar Background Lightness Adjustment
+
+- [x] Lighten sidebar background by 50% (from oklch 0.15 to approximately 0.30)
+- [x] Maintain good contrast with glow effects
+- [x] Test visual balance and readability
