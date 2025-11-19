@@ -119,3 +119,13 @@
 - [x] Frontend: Add purchase price field to EditItem form
 - [x] Frontend: Update ItemList search to include item code
 - [x] Frontend: Display purchase price in ItemList
+
+## Performance Optimization
+
+- [x] Diagnose slow startup issue
+- [x] Optimize Dashboard initial data loading
+- [x] Implement lazy loading for non-critical data
+- [x] Add loading skeletons for better perceived performance
+- [x] Optimize database queries with proper indexing
+- [x] Reduce number of simultaneous queries on startup
+- [x] Cache frequently accessed data

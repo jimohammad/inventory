@@ -10,7 +10,11 @@ import { useState, useMemo } from "react";
 export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   
-  const { data: orders, isLoading } = trpc.purchaseOrders.list.useQuery();
+  const { data: orders, isLoading } = trpc.purchaseOrders.list.useQuery(undefined, {
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    refetchOnMount: false, // Don't refetch if data is fresh
+    refetchOnWindowFocus: false, // Don't refetch on window focus
+  });
 
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
