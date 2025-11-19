@@ -170,13 +170,13 @@ export default function ItemList() {
                         {item.sellingPrice && (
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Selling Price</span>
-                            <span className="font-medium">{item.sellingPrice}</span>
+                            <span className="font-medium">KWD {parseFloat(item.sellingPrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         {item.purchasePrice && (
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Purchase Price</span>
-                            <span className="font-medium">{item.purchasePrice}</span>
+                            <span className="font-medium">KWD {parseFloat(item.purchasePrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         <div className="flex items-center justify-between text-sm">

@@ -217,3 +217,5 @@
 
 - [x] Fix bulk CSV item import - items not showing after import (fixed database schema sync issues - added missing columns and removed duplicates)
 - [x] Fix 404 error when opening catalog links from WhatsApp broadcast
+- [ ] Fix WhatsApp broadcast catalog link sharing - links still not working when sent via WhatsApp
+- [x] Fix price display formatting to show 3 decimal places (e.g., 24.500 KWD) instead of rounded amounts
