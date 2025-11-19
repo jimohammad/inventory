@@ -279,3 +279,10 @@
 - [x] Implement backdrop blur effects on menu items
 - [x] Add subtle shadow and border animations
 - [x] Ensure consistent teal/emerald color scheme
+
+## Sidebar Dark Theme Enhancement
+
+- [x] Darken sidebar background color for better contrast
+- [x] Update menu item base colors to darker shades
+- [x] Ensure teal/emerald glow effects stand out against dark background
+- [x] Test readability and visual hierarchy
