@@ -271,3 +271,11 @@
 - [x] Use larger font size for better readability
 - [x] Add autocomplete dropdown with item suggestions
 - [x] Apply Mac-inspired design with subtle shadows and blur effects
+
+## Sidebar Menu Mac-Style Animations
+
+- [x] Apply Mac-style gradient glow effects to sidebar menu items
+- [x] Add smooth hover and active state transitions
+- [x] Implement backdrop blur effects on menu items
+- [x] Add subtle shadow and border animations
+- [x] Ensure consistent teal/emerald color scheme
