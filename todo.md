@@ -292,3 +292,12 @@
 - [x] Lighten sidebar background by 50% (from oklch 0.15 to approximately 0.30)
 - [x] Maintain good contrast with glow effects
 - [x] Test visual balance and readability
+
+## WhatsApp Contacts Button Redesign
+
+- [x] Make "Broadcast to Selected" and "Add Contact" buttons adjacent (side-by-side)
+- [x] Ensure both buttons have equal width and height
+- [x] Apply dark background color to both buttons
+- [x] Use emerald/teal text color
+- [x] Add Mac-style hover effects (gradient glow, backdrop blur, smooth transitions)
+- [x] Maintain consistent design with sidebar menu items
