@@ -72,10 +72,10 @@ export default function PublicCatalog() {
                 />
               </div>
               
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 <Badge
                   variant={selectedCategory === null ? "default" : "outline"}
-                  className="cursor-pointer"
+                  className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform"
                   onClick={() => setSelectedCategory(null)}
                 >
                   All Categories
@@ -84,7 +84,7 @@ export default function PublicCatalog() {
                   <Badge
                     key={cat}
                     variant={selectedCategory === cat ? "default" : "outline"}
-                    className="cursor-pointer"
+                    className="cursor-pointer px-6 py-2.5 text-base font-semibold hover:scale-105 transition-transform"
                     onClick={() => setSelectedCategory(cat)}
                   >
                     {cat}
