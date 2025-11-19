@@ -159,3 +159,12 @@
 - [x] Clarify difference between Available Qty and Opening Stock in UI
 - [x] Add tooltips/help text explaining stock fields
 - [x] Test auto-sync functionality
+
+## Bulk Item Import Feature
+
+- [x] Backend API for bulk item creation from CSV
+- [x] Validate item codes are unique during bulk import
+- [x] Frontend: Bulk item import page with CSV upload
+- [x] CSV template with all item fields (code, name, category, prices, stock)
+- [x] Display import results (success count, errors)
+- [x] Add bulk import button to Items page

@@ -43,10 +43,15 @@ export default function CreateItem() {
       return;
     }
     
+    if (!category) {
+      toast.error("Category is required");
+      return;
+    }
+    
     createMutation.mutate({
       itemCode: itemCode.trim(),
       name: name.trim(),
-      category: category || undefined,
+      category: category,
       sellingPrice: sellingPrice ? parseInt(sellingPrice) : undefined,
       purchasePrice: purchasePrice ? parseInt(purchasePrice) : undefined,
       availableQty: parseInt(availableQty) || 0,

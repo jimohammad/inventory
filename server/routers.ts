@@ -333,9 +333,9 @@ export const appRouter = router({
         return raw as {
           itemCode: string;
           name: string;
-          category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
-          sellingPrice?: number;
+          category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
           purchasePrice?: number;
+          sellingPrice?: number;
           availableQty?: number;
           openingStock?: number;
         };
@@ -370,6 +370,110 @@ export const appRouter = router({
           ...input,
         });
         return { success: true };
+      }),
+
+    bulkCreate: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          items: Array<{
+            itemCode: string;
+            name: string;
+            category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
+            purchasePrice?: number;
+            sellingPrice?: number;
+            availableQty?: number;
+            openingStock?: number;
+          }>;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { createItem, getDb } = await import("./db");
+        const { items } = await import("../drizzle/schema");
+        const { eq, or, inArray } = await import("drizzle-orm");
+        
+        const results = {
+          created: 0,
+          skipped: [] as Array<{ itemCode: string; reason: string }>,
+        };
+
+        const db = await getDb();
+        if (!db) {
+          throw new Error("Database not available");
+        }
+
+        // Check for duplicates in the database
+        const allCodes = input.items.map(item => item.itemCode);
+        const allNames = input.items.map(item => item.name);
+        
+        const existingItems = await db.select().from(items)
+          .where(or(
+            inArray(items.itemCode, allCodes),
+            inArray(items.name, allNames)
+          ));
+
+        const existingCodes = new Set(existingItems.map(item => item.itemCode));
+        const existingNames = new Set(existingItems.map(item => item.name));
+
+        // Check for duplicates within the input
+        const seenCodes = new Set<string>();
+        const seenNames = new Set<string>();
+
+        for (const item of input.items) {
+          // Check if already exists in database
+          if (existingCodes.has(item.itemCode)) {
+            results.skipped.push({
+              itemCode: item.itemCode,
+              reason: "Item code already exists in database",
+            });
+            continue;
+          }
+
+          if (existingNames.has(item.name)) {
+            results.skipped.push({
+              itemCode: item.itemCode,
+              reason: "Item name already exists in database",
+            });
+            continue;
+          }
+
+          // Check for duplicates within the CSV
+          if (seenCodes.has(item.itemCode)) {
+            results.skipped.push({
+              itemCode: item.itemCode,
+              reason: "Duplicate item code in CSV",
+            });
+            continue;
+          }
+
+          if (seenNames.has(item.name)) {
+            results.skipped.push({
+              itemCode: item.itemCode,
+              reason: "Duplicate item name in CSV",
+            });
+            continue;
+          }
+
+          seenCodes.add(item.itemCode);
+          seenNames.add(item.name);
+
+          try {
+            await createItem({
+              userId: ctx.user.id,
+              ...item,
+            });
+            results.created++;
+          } catch (error) {
+            results.skipped.push({
+              itemCode: item.itemCode,
+              reason: error instanceof Error ? error.message : "Unknown error",
+            });
+          }
+        }
+
+        return results;
       }),
 
     update: protectedProcedure

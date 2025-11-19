@@ -78,6 +78,12 @@ export default function ItemList() {
           <p className="text-muted-foreground mt-1">Manage your inventory items</p>
         </div>
         <div className="flex gap-2">
+          <Link href="/items/bulk-import">
+            <Button variant="outline">
+              <Upload className="w-4 h-4 mr-2" />
+              Bulk Import
+            </Button>
+          </Link>
           <Link href="/items/bulk-opening-stock">
             <Button variant="outline">
               <Upload className="w-4 h-4 mr-2" />
