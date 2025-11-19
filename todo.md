@@ -193,3 +193,9 @@
 - [x] Display items in clean table/card format
 - [x] Add search and filter by category
 - [x] Add copy link button for easy sharing
+
+## WhatsApp Share Feature
+
+- [x] Add WhatsApp share buttons to Share Catalog dialog
+- [x] Open WhatsApp with pre-filled message and catalog link
+- [x] Support both public and internal catalog links
