@@ -12,12 +12,11 @@ import { toast } from "sonner";
 export default function CreateItem() {
   const [, setLocation] = useLocation();
   const [itemCode, setItemCode] = useState("");
-  const [itemName, setItemName] = useState("");
+  const [name, setName] = useState("");
   const [category, setCategory] = useState("");
-  const [description, setDescription] = useState("");
-  const [defaultUnitPrice, setDefaultUnitPrice] = useState("");
+  const [defaultPrice, setDefaultPrice] = useState("");
+  const [purchasePrice, setPurchasePrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
-  const [notes, setNotes] = useState("");
 
   const createMutation = trpc.items.create.useMutation({
     onSuccess: () => {
@@ -32,19 +31,23 @@ export default function CreateItem() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!itemName.trim()) {
+    if (!name.trim()) {
       toast.error("Item name is required");
       return;
     }
-
+    
+    if (!itemCode.trim()) {
+      toast.error("Item code is required");
+      return;
+    }
+    
     createMutation.mutate({
-      itemCode: itemCode.trim() || undefined,
-      itemName: itemName.trim(),
+      itemCode: itemCode.trim(),
+      name: name.trim(),
       category: category.trim() || undefined,
-      description: description.trim() || undefined,
-      defaultUnitPrice: defaultUnitPrice.trim() || undefined,
+      defaultPrice: defaultPrice ? parseInt(defaultPrice) : undefined,
+      purchasePrice: purchasePrice ? parseInt(purchasePrice) : undefined,
       availableQty: parseInt(availableQty) || 0,
-      notes: notes.trim() || undefined,
     });
   };
 
@@ -87,11 +90,11 @@ export default function CreateItem() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="itemName">Item Name *</Label>
+              <Label htmlFor="name">Item Name *</Label>
               <Input
-                id="itemName"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Enter item name"
                 required
               />
@@ -107,25 +110,27 @@ export default function CreateItem() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Item description"
-              rows={3}
-            />
-          </div>
+
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="defaultUnitPrice">Default Unit Price</Label>
+              <Label htmlFor="defaultPrice">Default Price</Label>
               <Input
-                id="defaultUnitPrice"
-                value={defaultUnitPrice}
-                onChange={(e) => setDefaultUnitPrice(e.target.value)}
-                placeholder="e.g., 100.00"
+                id="defaultPrice"
+                type="number"
+                value={defaultPrice}
+                onChange={(e) => setDefaultPrice(e.target.value)}
+                placeholder="e.g., 100"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Input
+                id="purchasePrice"
+                type="number"
+                value={purchasePrice}
+                onChange={(e) => setPurchasePrice(e.target.value)}
+                placeholder="e.g., 80"
               />
             </div>
             <div className="space-y-2">
@@ -141,16 +146,7 @@ export default function CreateItem() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
-            <Textarea
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Additional notes"
-              rows={3}
-            />
-          </div>
+
         </CardContent>
       </Card>
     </form>

@@ -43,9 +43,9 @@ export default function ItemList() {
     
     const query = searchQuery.toLowerCase();
     return items.filter(item => 
-      item.itemName.toLowerCase().includes(query) ||
-      item.category?.toLowerCase().includes(query) ||
-      item.description?.toLowerCase().includes(query)
+      item.name.toLowerCase().includes(query) ||
+      item.itemCode.toLowerCase().includes(query) ||
+      item.category?.toLowerCase().includes(query)
     );
   }, [items, searchQuery]);
 
@@ -136,12 +136,12 @@ export default function ItemList() {
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <CardTitle className="text-lg">{item.itemName}</CardTitle>
-                          {item.description && (
-                            <CardDescription className="mt-1 line-clamp-2">
-                              {item.description}
-                            </CardDescription>
-                          )}
+                      <CardTitle className="text-lg">{item.name}</CardTitle>
+                      {item.category && (
+                        <CardDescription>
+                          {item.category}
+                        </CardDescription>
+                      )}
                         </div>
                       </div>
                     </CardHeader>
@@ -153,21 +153,23 @@ export default function ItemList() {
                             <span className="font-mono text-xs">{item.itemCode}</span>
                           </div>
                         )}
-                        {item.defaultUnitPrice && (
+                        {item.defaultPrice && (
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Default Price</span>
-                            <span className="font-medium">{item.defaultUnitPrice}</span>
+                            <span className="font-medium">{item.defaultPrice}</span>
+                          </div>
+                        )}
+                        {item.purchasePrice && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Purchase Price</span>
+                            <span className="font-medium">{item.purchasePrice}</span>
                           </div>
                         )}
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Available</span>
                           <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
                         </div>
-                        {item.notes && (
-                          <div className="text-sm text-muted-foreground pt-2 border-t">
-                            {item.notes}
-                          </div>
-                        )}
+
                         <div className="flex gap-2 pt-2">
                           <Link href={`/items/${item.id}/edit`} className="flex-1">
                             <Button variant="outline" size="sm" className="w-full">

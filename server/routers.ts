@@ -331,22 +331,44 @@ export const appRouter = router({
           throw new Error("Invalid input");
         }
         return raw as {
-          itemCode?: string;
-          itemName: string;
+          itemCode: string;
+          name: string;
           category?: string;
-          description?: string;
-          defaultUnitPrice?: string;
+          defaultPrice?: number;
+          purchasePrice?: number;
           availableQty?: number;
-          notes?: string;
         };
       })
       .mutation(async ({ ctx, input }) => {
-        const { createItem } = await import("./db");
-        const id = await createItem({
+        const { createItem, getDb } = await import("./db");
+        const { items } = await import("../drizzle/schema");
+        const { eq, or } = await import("drizzle-orm");
+        
+        // Check for duplicates
+        const db = await getDb();
+        if (db) {
+          const existing = await db.select().from(items)
+            .where(or(
+              eq(items.itemCode, input.itemCode),
+              eq(items.name, input.name)
+            ))
+            .limit(1);
+          
+          if (existing.length > 0) {
+            if (existing[0].itemCode === input.itemCode) {
+              throw new Error("Item code already exists");
+            }
+            if (existing[0].name === input.name) {
+              throw new Error("Item name already exists");
+            }
+          }
+        }
+        
+        await createItem({
           userId: ctx.user.id,
           ...input,
         });
-        return { id };
+        return { success: true };
       }),
 
     update: protectedProcedure
@@ -357,24 +379,22 @@ export const appRouter = router({
         return raw as {
           id: number;
           itemCode?: string;
-          itemName: string;
+          name: string;
           category?: string;
-          description?: string;
-          defaultUnitPrice?: string;
+          defaultPrice?: number;
+          purchasePrice?: number;
           availableQty?: number;
-          notes?: string;
         };
       })
       .mutation(async ({ ctx, input }) => {
         const { updateItem } = await import("./db");
         await updateItem(input.id, ctx.user.id, {
           itemCode: input.itemCode,
-          itemName: input.itemName,
+          name: input.name,
           category: input.category,
-          description: input.description,
-          defaultUnitPrice: input.defaultUnitPrice,
+          defaultPrice: input.defaultPrice,
+          purchasePrice: input.purchasePrice,
           availableQty: input.availableQty,
-          notes: input.notes,
         });
         return { success: true };
       }),
@@ -505,7 +525,7 @@ export const appRouter = router({
 
         // Combine with item details
         const analysis = allItems.map(item => {
-          const stats = itemStats.get(item.itemName) || { totalQty: 0, orderCount: 0 };
+          const stats = itemStats.get(item.name) || { totalQty: 0, orderCount: 0 };
           const daysInPeriod = input.period === "week" ? 7 : 30;
           const avgPerDay = stats.totalQty / daysInPeriod;
           
@@ -523,7 +543,7 @@ export const appRouter = router({
           return {
             id: item.id,
             itemCode: item.itemCode,
-            itemName: item.itemName,
+            itemName: item.name,
             category: item.category,
             availableQty: item.availableQty,
             soldQty: stats.totalQty,
@@ -591,11 +611,11 @@ export const appRouter = router({
 
         // Add available quantities
         allItems.forEach(item => {
-          const stats = itemStats.get(item.itemName);
+          const stats = itemStats.get(item.name);
           if (stats) {
             stats.availableQty = item.availableQty || 0;
           } else {
-            itemStats.set(item.itemName, {
+            itemStats.set(item.name, {
               totalQty: 0,
               orderCount: 0,
               availableQty: item.availableQty || 0,

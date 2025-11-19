@@ -114,13 +114,12 @@ export type InsertSupplier = typeof suppliers.$inferInsert;
 export const items = mysqlTable("items", {
   id: int("id").autoincrement().primaryKey(),
   userId: int("userId").notNull(),
-  itemCode: varchar("itemCode", { length: 100 }),
-  itemName: varchar("itemName", { length: 255 }).notNull(),
+  itemCode: varchar("itemCode", { length: 100 }).notNull().unique(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
   category: varchar("category", { length: 100 }),
-  description: text("description"),
-  defaultUnitPrice: varchar("defaultUnitPrice", { length: 20 }),
+  defaultPrice: int("defaultPrice"),
+  purchasePrice: int("purchasePrice"),
   availableQty: int("availableQty").default(0).notNull(),
-  notes: text("notes"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

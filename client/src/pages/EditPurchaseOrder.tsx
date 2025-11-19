@@ -358,12 +358,12 @@ export default function EditPurchaseOrder() {
                       const selected = availableItems?.find(i => i.id.toString() === value);
                       if (selected) {
                         updateItem(index, "itemId", parseInt(value));
-                        updateItem(index, "itemName", selected.itemName);
+                        updateItem(index, "itemName", selected.name);
                         updateItem(index, "category", selected.category || "");
-                        updateItem(index, "description", selected.description || "");
-                        updateItem(index, "unitPrice", selected.defaultUnitPrice || "0");
+                        updateItem(index, "description", "");
+                        updateItem(index, "unitPrice", selected.defaultPrice?.toString() || "0");
                         const qty = parseFloat(item.quantity) || 0;
-                        const price = parseFloat(selected.defaultUnitPrice || "0") || 0;
+                        const price = parseFloat(selected.defaultPrice?.toString() || "0") || 0;
                         updateItem(index, "totalPrice", (qty * price).toFixed(2));
                       }
                     }}
@@ -374,7 +374,7 @@ export default function EditPurchaseOrder() {
                     <SelectContent>
                       {availableItems?.map(i => (
                         <SelectItem key={i.id} value={i.id.toString()}>
-                          {i.itemName} {i.category && `(${i.category})`}
+                          {i.name} {i.category && `(${i.category})`}
                         </SelectItem>
                       ))}
                     </SelectContent>

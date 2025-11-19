@@ -103,3 +103,19 @@
 - [x] Map sheet columns to item codes and quantities
 - [x] Add sync status and last sync time display
 - [x] Add sync history/logs
+
+## Item Management Improvements
+
+- [x] Remove description field from items table
+- [x] Remove notes field from items table
+- [x] Add purchase price field to items table
+- [x] Add unique constraint on item code
+- [x] Add unique constraint on item name
+- [x] Backend: Validate duplicate item code on create
+- [x] Backend: Validate duplicate item name on create
+- [x] Frontend: Remove description and notes from CreateItem form
+- [x] Frontend: Remove description and notes from EditItem form
+- [x] Frontend: Add purchase price field to CreateItem form
+- [x] Frontend: Add purchase price field to EditItem form
+- [x] Frontend: Update ItemList search to include item code
+- [x] Frontend: Display purchase price in ItemList

@@ -246,7 +246,7 @@ export async function getUserItems(userId: number) {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(items).where(eq(items.userId, userId)).orderBy(items.itemName);
+  return await db.select().from(items).where(eq(items.userId, userId)).orderBy(items.name);
 }
 
 export async function getItemById(id: number, userId: number) {
