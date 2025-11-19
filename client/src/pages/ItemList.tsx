@@ -114,7 +114,7 @@ export default function ItemList() {
             placeholder="Search items by name, category, or description..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-10 text-[25px] h-14"
           />
         </div>
       </div>

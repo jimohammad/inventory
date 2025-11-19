@@ -199,3 +199,7 @@
 - [x] Add WhatsApp share buttons to Share Catalog dialog
 - [x] Open WhatsApp with pre-filled message and catalog link
 - [x] Support both public and internal catalog links
+
+## Search Field Font Size
+
+- [x] Increase Items page search field font size to 25px
