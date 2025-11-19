@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation, useParams } from "wouter";
 import { ArrowLeft, Loader2 } from "lucide-react";
@@ -14,7 +15,7 @@ export default function EditItem() {
   const [, setLocation] = useLocation();
   const [itemCode, setItemCode] = useState("");
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState<"Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor" | "">("");
   const [defaultPrice, setDefaultPrice] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
@@ -59,7 +60,7 @@ export default function EditItem() {
       id: parseInt(id!),
       itemCode: itemCode.trim(),
       name: name.trim(),
-      category: category.trim() || undefined,
+      category: category || undefined,
       defaultPrice: defaultPrice ? parseInt(defaultPrice) : undefined,
       purchasePrice: purchasePrice ? parseInt(purchasePrice) : undefined,
       availableQty: parseInt(availableQty) || 0,
@@ -135,12 +136,19 @@ export default function EditItem() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Input
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="e.g., Electronics, Office Supplies"
-              />
+              <Select value={category} onValueChange={(value) => setCategory(value as typeof category)}>
+                <SelectTrigger id="category">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Motorola">Motorola</SelectItem>
+                  <SelectItem value="Samsung">Samsung</SelectItem>
+                  <SelectItem value="Redmi">Redmi</SelectItem>
+                  <SelectItem value="Realme">Realme</SelectItem>
+                  <SelectItem value="Meizu">Meizu</SelectItem>
+                  <SelectItem value="Honor">Honor</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 

@@ -116,7 +116,7 @@ export const items = mysqlTable("items", {
   userId: int("userId").notNull(),
   itemCode: varchar("itemCode", { length: 100 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull().unique(),
-  category: varchar("category", { length: 100 }),
+  category: mysqlEnum("category", ["Motorola", "Samsung", "Redmi", "Realme", "Meizu", "Honor"]),
   defaultPrice: int("defaultPrice"),
   purchasePrice: int("purchasePrice"),
   availableQty: int("availableQty").default(0).notNull(),

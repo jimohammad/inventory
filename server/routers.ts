@@ -333,7 +333,7 @@ export const appRouter = router({
         return raw as {
           itemCode: string;
           name: string;
-          category?: string;
+          category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
           defaultPrice?: number;
           purchasePrice?: number;
           availableQty?: number;
@@ -380,7 +380,7 @@ export const appRouter = router({
           id: number;
           itemCode?: string;
           name: string;
-          category?: string;
+          category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
           defaultPrice?: number;
           purchasePrice?: number;
           availableQty?: number;

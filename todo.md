@@ -129,3 +129,12 @@
 - [x] Optimize database queries with proper indexing
 - [x] Reduce number of simultaneous queries on startup
 - [x] Cache frequently accessed data
+
+## Category Dropdown Feature
+
+- [x] Update items table category field to enum type
+- [x] Define predefined categories: Motorola, Samsung, Redmi, Realme, Meizu, Honor
+- [x] Update backend validation for category field
+- [x] Update CreateItem form with category dropdown
+- [x] Update EditItem form with category dropdown
+- [x] Update ItemList to display categories correctly
