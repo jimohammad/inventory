@@ -1,0 +1,15 @@
+{
+  "query": "SELECT name, sellingPrice, purchasePrice FROM items WHERE itemCode = 'HO-X9C5G12256';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT name, sellingPrice, purchasePrice FROM items WHERE itemCode = 'HO-X9C5G12256';",
+  "rows": [
+    {
+      "name": "Honor X9C 5G 12GB/256GB NFC",
+      "sellingPrice": "70",
+      "purchasePrice": "67"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tsellingPrice\tpurchasePrice\nHonor X9C 5G 12GB/256GB NFC\t70\t67\n",
+  "stderr": "",
+  "execution_time_ms": 1513
+}

@@ -1,0 +1,40 @@
+{
+  "query": "SELECT name, itemCode, purchasePrice, sellingPrice FROM items LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT name, itemCode, purchasePrice, sellingPrice FROM items LIMIT 5;",
+  "rows": [
+    {
+      "name": "Samsung Galaxy S23",
+      "itemCode": "TEST001",
+      "purchasePrice": "250",
+      "sellingPrice": "300"
+    },
+    {
+      "name": "Motorola Edge 40",
+      "itemCode": "TEST002",
+      "purchasePrice": "200",
+      "sellingPrice": "250"
+    },
+    {
+      "name": "Honor X9C 5G 12GB/256GB NFC",
+      "itemCode": "HO-X9C5G12256",
+      "purchasePrice": "67",
+      "sellingPrice": "70"
+    },
+    {
+      "name": "Moto Buds H40",
+      "itemCode": "MO-BUDSH40",
+      "purchasePrice": "3",
+      "sellingPrice": "3"
+    },
+    {
+      "name": "Moto E15 2GB/64GB",
+      "itemCode": "MO-E15264",
+      "purchasePrice": "18",
+      "sellingPrice": "18"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\titemCode\tpurchasePrice\tsellingPrice\nSamsung Galaxy S23\tTEST001\t250\t300\nMotorola Edge 40\tTEST002\t200\t250\nHonor X9C 5G 12GB/256GB NFC\tHO-X9C5G12256\t67\t70\nMoto Buds H40\tMO-BUDSH40\t3\t3\nMoto E15 2GB/64GB\tMO-E15264\t18\t18\n",
+  "stderr": "",
+  "execution_time_ms": 1652
+}

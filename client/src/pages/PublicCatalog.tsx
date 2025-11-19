@@ -119,13 +119,13 @@ export default function PublicCatalog() {
                     {item.purchasePrice && (
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Purchase Price</span>
-                        <span className="font-semibold">KWD {item.purchasePrice.toFixed(3)}</span>
+                        <span className="font-semibold">KWD {parseFloat(item.purchasePrice as any).toFixed(3)}</span>
                       </div>
                     )}
                     {item.sellingPrice && (
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Selling Price</span>
-                        <span className="font-bold text-green-600">KWD {item.sellingPrice.toFixed(3)}</span>
+                        <span className="font-bold text-green-600">KWD {parseFloat(item.sellingPrice as any).toFixed(3)}</span>
                       </div>
                     )}
                     {includeQty && (

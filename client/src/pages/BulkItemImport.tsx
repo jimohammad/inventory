@@ -79,8 +79,8 @@ export default function BulkItemImport() {
         itemCode: string;
         name: string;
         category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
-        purchasePrice?: number;
-        sellingPrice?: number;
+        purchasePrice?: string;
+        sellingPrice?: string;
         availableQty?: number;
         openingStock?: number;
       }> = [];
@@ -123,7 +123,7 @@ export default function BulkItemImport() {
             setIsUploading(false);
             return;
           }
-          item.purchasePrice = price;
+          item.purchasePrice = row.purchaseprice;
         }
 
         if (row.sellingprice) {
@@ -133,7 +133,7 @@ export default function BulkItemImport() {
             setIsUploading(false);
             return;
           }
-          item.sellingPrice = price;
+          item.sellingPrice = row.sellingprice;
         }
 
         if (row.availableqty) {

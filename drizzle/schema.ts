@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { decimal, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -117,9 +117,9 @@ export const items = mysqlTable("items", {
   itemCode: varchar("itemCode", { length: 100 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull().unique(),
   category: mysqlEnum("category", ["Motorola", "Samsung", "Redmi", "Realme", "Meizu", "Honor"]),
-  sellingPrice: int("sellingPrice"),
+  sellingPrice: decimal("sellingPrice", { precision: 10, scale: 3 }),
   openingStock: int("openingStock").default(0),
-  purchasePrice: int("purchasePrice"),
+  purchasePrice: decimal("purchasePrice", { precision: 10, scale: 3 }),
   availableQty: int("availableQty").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

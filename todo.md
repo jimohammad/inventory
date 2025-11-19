@@ -219,3 +219,4 @@
 - [x] Fix 404 error when opening catalog links from WhatsApp broadcast
 - [ ] Fix WhatsApp broadcast catalog link sharing - links still not working when sent via WhatsApp
 - [x] Fix price display formatting to show 3 decimal places (e.g., 24.500 KWD) instead of rounded amounts
+- [x] Change price columns from INT to DECIMAL to support decimal values (e.g., 24.500)

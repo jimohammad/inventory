@@ -52,8 +52,8 @@ export default function CreateItem() {
       itemCode: itemCode.trim(),
       name: name.trim(),
       category: category,
-      sellingPrice: sellingPrice ? parseInt(sellingPrice) : undefined,
-      purchasePrice: purchasePrice ? parseInt(purchasePrice) : undefined,
+      sellingPrice: sellingPrice || undefined,
+      purchasePrice: purchasePrice || undefined,
       availableQty: parseInt(availableQty) || 0,
       openingStock: parseInt(openingStock) || 0,
     });

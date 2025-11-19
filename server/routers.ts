@@ -334,8 +334,8 @@ export const appRouter = router({
           itemCode: string;
           name: string;
           category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
-          purchasePrice?: number;
-          sellingPrice?: number;
+          purchasePrice?: string;
+          sellingPrice?: string;
           availableQty?: number;
           openingStock?: number;
         };
@@ -382,8 +382,8 @@ export const appRouter = router({
             itemCode: string;
             name: string;
             category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
-            purchasePrice?: number;
-            sellingPrice?: number;
+            purchasePrice?: string;
+            sellingPrice?: string;
             availableQty?: number;
             openingStock?: number;
           }>;
@@ -486,8 +486,8 @@ export const appRouter = router({
           itemCode?: string;
           name: string;
           category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
-          sellingPrice?: number;
-          purchasePrice?: number;
+          sellingPrice?: string;
+          purchasePrice?: string;
           availableQty?: number;
           openingStock?: number;
         };
@@ -843,8 +843,10 @@ Keep the response concise, actionable, and focused on business decisions.`;
       const itemsWithMargin = allItems
         .filter(item => item.purchasePrice && item.sellingPrice)
         .map(item => {
-          const margin = (item.sellingPrice! - item.purchasePrice!);
-          const marginPercent = (margin / item.purchasePrice!) * 100;
+          const sellingPrice = parseFloat(item.sellingPrice as any);
+          const purchasePrice = parseFloat(item.purchasePrice as any);
+          const margin = sellingPrice - purchasePrice;
+          const marginPercent = (margin / purchasePrice) * 100;
           return {
             id: item.id,
             itemCode: item.itemCode,
