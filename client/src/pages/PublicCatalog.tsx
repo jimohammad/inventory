@@ -9,7 +9,7 @@ import { useRoute } from "wouter";
 export default function PublicCatalog() {
   const [, params] = useRoute("/catalog/:userId/:type");
   const userId = params?.userId ? parseInt(params.userId) : 0;
-  const includeQty = params?.type === "with-qty";
+  const includeQty = params?.type === "internal";
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);

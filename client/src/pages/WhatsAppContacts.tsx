@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Pencil, Trash2, MessageCircle, Send } from "lucide-react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function WhatsAppContacts() {
+  const { user } = useAuth();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
@@ -131,8 +133,8 @@ export default function WhatsAppContacts() {
   const startBroadcast = () => {
     const selectedContactsList = contacts.filter((c: any) => selectedContacts.includes(c.id));
     const catalogUrl = catalogType === "public"
-      ? `${window.location.origin}/catalog/public`
-      : `${window.location.origin}/catalog/internal`;
+      ? `${window.location.origin}/catalog/${user?.id}/public`
+      : `${window.location.origin}/catalog/${user?.id}/internal`;
     
     const message = catalogType === "public"
       ? `Hello! Here's our latest product catalog with prices: ${catalogUrl}`
