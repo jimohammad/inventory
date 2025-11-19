@@ -23,6 +23,7 @@ import InventoryAnalysis from "@/pages/InventoryAnalysis";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 import PublicCatalog from "@/pages/PublicCatalog";
 import WhatsAppContacts from "@/pages/WhatsAppContacts";
+import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 
 function Router() {
   return (
@@ -98,6 +99,11 @@ function Router() {
       <Route path="/items/bulk-import" component={() => (
         <DashboardLayout>
           <BulkItemImport />
+        </DashboardLayout>
+      )} />
+      <Route path="/items/bulk-price-update" component={() => (
+        <DashboardLayout>
+          <BulkPriceUpdate />
         </DashboardLayout>
       )} />
       <Route path="/inventory-analysis" component={() => (

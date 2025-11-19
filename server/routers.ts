@@ -519,6 +519,87 @@ export const appRouter = router({
         return { success: true };
       }),
 
+    bulkUpdatePrices: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          category?: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
+          priceType: 'selling' | 'purchase' | 'both';
+          adjustmentType: 'percentage' | 'fixed';
+          adjustmentValue: number;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const { items } = await import("../drizzle/schema");
+        const { eq, sql } = await import("drizzle-orm");
+        
+        const db = await getDb();
+        if (!db) {
+          throw new Error("Database not available");
+        }
+
+        // Build the WHERE clause
+        let whereClause = eq(items.userId, ctx.user.id);
+        if (input.category) {
+          whereClause = sql`${whereClause} AND ${items.category} = ${input.category}`;
+        }
+
+        // Calculate the adjustment
+        const adjustment = (currentPrice: string | null) => {
+          if (!currentPrice) return null;
+          const price = parseFloat(currentPrice);
+          if (isNaN(price)) return null;
+          
+          let newPrice: number;
+          if (input.adjustmentType === 'percentage') {
+            newPrice = price * (1 + input.adjustmentValue / 100);
+          } else {
+            newPrice = price + input.adjustmentValue;
+          }
+          
+          // Ensure price doesn't go negative
+          return Math.max(0, newPrice).toFixed(3);
+        };
+
+        // Get all items that match the criteria
+        const itemsToUpdate = await db.select().from(items).where(whereClause);
+        
+        let updatedCount = 0;
+        for (const item of itemsToUpdate) {
+          const updates: any = {};
+          
+          if (input.priceType === 'selling' || input.priceType === 'both') {
+            const newPrice = adjustment(item.sellingPrice as any);
+            if (newPrice !== null) {
+              updates.sellingPrice = newPrice;
+            }
+          }
+          
+          if (input.priceType === 'purchase' || input.priceType === 'both') {
+            const newPrice = adjustment(item.purchasePrice as any);
+            if (newPrice !== null) {
+              updates.purchasePrice = newPrice;
+            }
+          }
+          
+          if (Object.keys(updates).length > 0) {
+            await db.update(items)
+              .set(updates)
+              .where(eq(items.id, item.id));
+            updatedCount++;
+          }
+        }
+        
+        return { 
+          success: true, 
+          updatedCount,
+          message: `Updated ${updatedCount} item(s) successfully`
+        };
+      }),
+
     getById: protectedProcedure
       .input((raw: unknown) => {
         if (typeof raw !== "object" || raw === null) {

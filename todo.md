@@ -220,3 +220,12 @@
 - [ ] Fix WhatsApp broadcast catalog link sharing - links still not working when sent via WhatsApp
 - [x] Fix price display formatting to show 3 decimal places (e.g., 24.500 KWD) instead of rounded amounts
 - [x] Change price columns from INT to DECIMAL to support decimal values (e.g., 24.500)
+
+## Bulk Price Update Feature
+
+- [x] Create backend procedure for bulk price updates (by percentage or fixed amount)
+- [x] Add category filter support for bulk updates
+- [x] Build bulk price update UI page with preview functionality
+- [x] Add bulk price update button to Items page
+- [x] Support selling price only, purchase price only, or both prices update
+- [x] Add preview showing example calculation before applying changes
