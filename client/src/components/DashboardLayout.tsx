@@ -22,7 +22,7 @@ import {
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Building2, Package, TrendingUp, Sheet, MessageCircle } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Package, TrendingUp, Sheet, MessageCircle } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -30,7 +30,6 @@ import { Button } from "./ui/button";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: Building2, label: "Suppliers", path: "/suppliers" },
   { icon: Package, label: "Items", path: "/items" },
   { icon: TrendingUp, label: "Inventory Analysis", path: "/inventory-analysis" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },
@@ -223,12 +222,21 @@ function DashboardLayoutContent({
                       isActive={isActive}
                       onClick={() => setLocation(item.path)}
                       tooltip={item.label}
-                      className={`h-11 transition-all font-medium text-base`}
+                      className={`h-11 transition-all duration-300 font-medium text-base relative overflow-hidden group/menu
+                        ${isActive 
+                          ? 'bg-gradient-to-r from-teal-500/20 via-emerald-500/20 to-teal-500/20 backdrop-blur-sm shadow-lg shadow-teal-500/20 border border-teal-500/30' 
+                          : 'hover:bg-slate-800/50 hover:backdrop-blur-sm hover:shadow-md hover:shadow-teal-500/10 hover:border hover:border-teal-500/20'
+                        }
+                        before:absolute before:inset-0 before:rounded-lg before:opacity-0 before:transition-opacity before:duration-500
+                        ${isActive 
+                          ? 'before:bg-gradient-to-r before:from-teal-400/0 before:via-emerald-400/30 before:to-teal-400/0 before:animate-[shimmer_3s_ease-in-out_infinite]' 
+                          : 'hover:before:opacity-100 hover:before:bg-gradient-to-r hover:before:from-teal-400/0 hover:before:via-teal-400/20 hover:before:to-teal-400/0'
+                        }`}
                     >
                       <item.icon
-                        className={`h-5 w-5 ${isActive ? "text-primary" : ""}`}
+                        className={`h-5 w-5 transition-all duration-300 relative z-10 ${isActive ? 'text-teal-400 drop-shadow-[0_0_8px_rgba(45,212,191,0.5)]' : 'text-slate-400 group-hover/menu:text-teal-300 group-hover/menu:drop-shadow-[0_0_6px_rgba(45,212,191,0.3)]'}`}
                       />
-                      <span>{item.label}</span>
+                      <span className={`relative z-10 transition-all duration-300 ${isActive ? 'text-teal-50 font-semibold' : 'text-slate-300 group-hover/menu:text-teal-100'}`}>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

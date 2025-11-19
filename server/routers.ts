@@ -18,307 +18,6 @@ export const appRouter = router({
     }),
   }),
 
-  purchaseOrders: router({
-    list: protectedProcedure.query(async ({ ctx }) => {
-      const { getPurchaseOrdersByUserId } = await import("./db");
-      return await getPurchaseOrdersByUserId(ctx.user.id);
-    }),
-
-    getById: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
-          throw new Error("Invalid input: id is required");
-        }
-        const { id } = raw as { id: unknown };
-        if (typeof id !== "number") {
-          throw new Error("Invalid input: id must be a number");
-        }
-        return { id };
-      })
-      .query(async ({ ctx, input }) => {
-        const { getPurchaseOrderById, getPurchaseOrderItems, getDocuments } = await import("./db");
-        const order = await getPurchaseOrderById(input.id, ctx.user.id);
-        if (!order) return null;
-        
-        const items = await getPurchaseOrderItems(input.id);
-        const docs = await getDocuments(input.id);
-        
-        return { ...order, items, documents: docs };
-      }),
-
-    create: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          poNumber: string;
-          supplier: string;
-          supplierInvoiceNumber?: string;
-          currency: "USD" | "AED" | "KWD";
-          exchangeRate: string;
-          exchangeRateKWD?: string;
-          totalAmount: string;
-          bankName?: "National Bank of Kuwait" | "Commercial Bank of Kuwait";
-          notes?: string;
-          status: "draft" | "confirmed" | "completed" | "cancelled";
-          orderDate: Date;
-          items: Array<{
-            itemName: string;
-            description?: string;
-            quantity: number;
-            unitPrice: string;
-            totalPrice: string;
-          }>;
-        };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { createPurchaseOrder, createPurchaseOrderItem } = await import("./db");
-        
-        const orderId = await createPurchaseOrder({
-          userId: ctx.user.id,
-          poNumber: input.poNumber,
-          supplier: input.supplier,
-          supplierInvoiceNumber: input.supplierInvoiceNumber,
-          currency: input.currency,
-          exchangeRate: input.exchangeRate,
-          exchangeRateKWD: input.exchangeRateKWD,
-          totalAmount: input.totalAmount,
-          bankName: input.bankName,
-          notes: input.notes,
-          status: input.status,
-          orderDate: input.orderDate,
-        });
-        
-        for (const item of input.items) {
-          await createPurchaseOrderItem({
-            purchaseOrderId: orderId,
-            itemName: item.itemName,
-            description: item.description,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            totalPrice: item.totalPrice,
-          });
-        }
-        
-        return { id: orderId };
-      }),
-
-    update: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          id: number;
-          poNumber: string;
-          supplier: string;
-          supplierInvoiceNumber?: string;
-          currency: "USD" | "AED" | "KWD";
-          exchangeRate: string;
-          exchangeRateKWD?: string;
-          totalAmount: string;
-          bankName?: "National Bank of Kuwait" | "Commercial Bank of Kuwait";
-          notes?: string;
-          status: "draft" | "confirmed" | "completed" | "cancelled";
-          orderDate: Date;
-          items: Array<{
-            itemName: string;
-            description?: string;
-            quantity: number;
-            unitPrice: string;
-            totalPrice: string;
-          }>;
-        };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { updatePurchaseOrder, deletePurchaseOrderItems, createPurchaseOrderItem } = await import("./db");
-        
-        await updatePurchaseOrder(input.id, ctx.user.id, {
-          poNumber: input.poNumber,
-          supplier: input.supplier,
-          supplierInvoiceNumber: input.supplierInvoiceNumber,
-          currency: input.currency,
-          exchangeRate: input.exchangeRate,
-          exchangeRateKWD: input.exchangeRateKWD,
-          totalAmount: input.totalAmount,
-          bankName: input.bankName,
-          notes: input.notes,
-          status: input.status,
-          orderDate: input.orderDate,
-        });
-        
-        // Delete existing items and recreate
-        await deletePurchaseOrderItems(input.id);
-        
-        for (const item of input.items) {
-          await createPurchaseOrderItem({
-            purchaseOrderId: input.id,
-            itemName: item.itemName,
-            description: item.description,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-            totalPrice: item.totalPrice,
-          });
-        }
-        
-        return { success: true };
-      }),
-
-    delete: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
-          throw new Error("Invalid input: id is required");
-        }
-        const { id } = raw as { id: unknown };
-        if (typeof id !== "number") {
-          throw new Error("Invalid input: id must be a number");
-        }
-        return { id };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { deletePurchaseOrder } = await import("./db");
-        await deletePurchaseOrder(input.id, ctx.user.id);
-        return { success: true };
-      }),
-  }),
-
-  documents: router({
-    upload: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          purchaseOrderId: number;
-          documentType: "delivery_note" | "invoice" | "payment_tt";
-          fileName: string;
-          fileUrl: string;
-          fileKey: string;
-          mimeType: string;
-          fileSize: number;
-        };
-      })
-      .mutation(async ({ input }) => {
-        const { createDocument } = await import("./db");
-        await createDocument(input);
-        return { success: true };
-      }),
-
-    delete: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
-          throw new Error("Invalid input: id is required");
-        }
-        const { id } = raw as { id: unknown };
-        if (typeof id !== "number") {
-          throw new Error("Invalid input: id must be a number");
-        }
-        return { id };
-      })
-      .mutation(async ({ input }) => {
-        const { deleteDocument } = await import("./db");
-        await deleteDocument(input.id);
-        return { success: true };
-      }),
-  }),
-
-  suppliers: router({
-    list: protectedProcedure.query(async ({ ctx }) => {
-      const { getSuppliersByUserId } = await import("./db");
-      return await getSuppliersByUserId(ctx.user.id);
-    }),
-
-    getById: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
-          throw new Error("Invalid input: id is required");
-        }
-        const { id } = raw as { id: unknown };
-        if (typeof id !== "number") {
-          throw new Error("Invalid input: id must be a number");
-        }
-        return { id };
-      })
-      .query(async ({ ctx, input }) => {
-        const { getSupplierById } = await import("./db");
-        return await getSupplierById(input.id, ctx.user.id);
-      }),
-
-    create: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          name: string;
-          contactPerson?: string;
-          phone?: string;
-          email?: string;
-          address?: string;
-          notes?: string;
-        };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { createSupplier } = await import("./db");
-        const id = await createSupplier({
-          userId: ctx.user.id,
-          name: input.name,
-          contactPerson: input.contactPerson,
-          phone: input.phone,
-          email: input.email,
-          address: input.address,
-          notes: input.notes,
-        });
-        return { id };
-      }),
-
-    update: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          id: number;
-          name: string;
-          contactPerson?: string;
-          phone?: string;
-          email?: string;
-          address?: string;
-          notes?: string;
-        };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { updateSupplier } = await import("./db");
-        await updateSupplier(input.id, ctx.user.id, {
-          name: input.name,
-          contactPerson: input.contactPerson,
-          phone: input.phone,
-          email: input.email,
-          address: input.address,
-          notes: input.notes,
-        });
-        return { success: true };
-      }),
-
-    delete: protectedProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null || !("id" in raw)) {
-          throw new Error("Invalid input: id is required");
-        }
-        const { id } = raw as { id: unknown };
-        if (typeof id !== "number") {
-          throw new Error("Invalid input: id must be a number");
-        }
-        return { id };
-      })
-      .mutation(async ({ ctx, input }) => {
-        const { deleteSupplier } = await import("./db");
-        await deleteSupplier(input.id, ctx.user.id);
-        return { success: true };
-      }),
-  }),
-
   items: router({
     list: protectedProcedure.query(async ({ ctx }) => {
       const { getUserItems } = await import("./db");
@@ -706,74 +405,21 @@ export const appRouter = router({
         if (!db) return [];
 
         const allItems = await getUserItems(ctx.user.id);
-        const now = new Date();
-        const startDate = new Date();
         
-        if (input.period === "week") {
-          startDate.setDate(now.getDate() - 7);
-        } else {
-          startDate.setMonth(now.getMonth() - 1);
-        }
+        // Return basic analysis without purchase order data
+        const analysis = allItems.map(item => ({
+          id: item.id,
+          itemCode: item.itemCode,
+          itemName: item.name,
+          category: item.category,
+          availableQty: item.availableQty,
+          soldQty: 0,
+          orderCount: 0,
+          avgPerDay: 0,
+          movementCategory: "none" as const,
+        }));
 
-        // Get purchase order items in the period
-        const { purchaseOrders: pos, purchaseOrderItems: poi } = await import("../drizzle/schema");
-        const { and: andOp, eq: eqOp, gte } = await import("drizzle-orm");
-        
-        const orderItems = await db.select({
-          itemName: poi.itemName,
-          quantity: poi.quantity,
-          orderDate: pos.orderDate,
-        })
-        .from(poi)
-        .innerJoin(pos, eqOp(poi.purchaseOrderId, pos.id))
-        .where(
-          andOp(
-            eqOp(pos.userId, ctx.user.id),
-            gte(pos.orderDate, startDate)
-          )
-        );
-
-        // Aggregate by item name
-        const itemStats = new Map<string, { totalQty: number; orderCount: number }>();
-        
-        orderItems.forEach(oi => {
-          const existing = itemStats.get(oi.itemName) || { totalQty: 0, orderCount: 0 };
-          existing.totalQty += oi.quantity;
-          existing.orderCount += 1;
-          itemStats.set(oi.itemName, existing);
-        });
-
-        // Combine with item details
-        const analysis = allItems.map(item => {
-          const stats = itemStats.get(item.name) || { totalQty: 0, orderCount: 0 };
-          const daysInPeriod = input.period === "week" ? 7 : 30;
-          const avgPerDay = stats.totalQty / daysInPeriod;
-          
-          let movementCategory: "fast" | "medium" | "slow" | "none";
-          if (stats.totalQty === 0) {
-            movementCategory = "none";
-          } else if (avgPerDay >= 5) {
-            movementCategory = "fast";
-          } else if (avgPerDay >= 1) {
-            movementCategory = "medium";
-          } else {
-            movementCategory = "slow";
-          }
-
-          return {
-            id: item.id,
-            itemCode: item.itemCode,
-            itemName: item.name,
-            category: item.category,
-            availableQty: item.availableQty,
-            soldQty: stats.totalQty,
-            orderCount: stats.orderCount,
-            avgPerDay: parseFloat(avgPerDay.toFixed(2)),
-            movementCategory,
-          };
-        });
-
-        return analysis.sort((a, b) => b.soldQty - a.soldQty);
+        return analysis;
       }),
 
     getAIInsights: protectedProcedure
@@ -792,87 +438,39 @@ export const appRouter = router({
         if (!db) return { insights: "Database not available" };
 
         const allItems = await getUserItems(ctx.user.id);
-        const now = new Date();
-        const startDate = new Date();
         
-        if (input.period === "week") {
-          startDate.setDate(now.getDate() - 7);
-        } else {
-          startDate.setMonth(now.getMonth() - 1);
-        }
-
-        // Get purchase order items in the period
-        const { purchaseOrders: pos, purchaseOrderItems: poi } = await import("../drizzle/schema");
-        const { and: andOp, eq: eqOp, gte } = await import("drizzle-orm");
-        
-        const orderItems = await db.select({
-          itemName: poi.itemName,
-          quantity: poi.quantity,
-          orderDate: pos.orderDate,
-        })
-        .from(poi)
-        .innerJoin(pos, eqOp(poi.purchaseOrderId, pos.id))
-        .where(
-          andOp(
-            eqOp(pos.userId, ctx.user.id),
-            gte(pos.orderDate, startDate)
-          )
-        );
-
-        // Aggregate by item name
-        const itemStats = new Map<string, { totalQty: number; orderCount: number; availableQty: number }>();
-        
-        orderItems.forEach(oi => {
-          const existing = itemStats.get(oi.itemName) || { totalQty: 0, orderCount: 0, availableQty: 0 };
-          existing.totalQty += oi.quantity;
-          existing.orderCount += 1;
-          itemStats.set(oi.itemName, existing);
-        });
-
-        // Add available quantities
-        allItems.forEach(item => {
-          const stats = itemStats.get(item.name);
-          if (stats) {
-            stats.availableQty = item.availableQty || 0;
-          } else {
-            itemStats.set(item.name, {
-              totalQty: 0,
-              orderCount: 0,
-              availableQty: item.availableQty || 0,
-            });
-          }
-        });
-
-        // Prepare data for AI analysis
-        const analysisData = Array.from(itemStats.entries()).map(([name, stats]) => ({
-          item: name,
-          soldQty: stats.totalQty,
-          orders: stats.orderCount,
-          available: stats.availableQty,
-          avgPerDay: (stats.totalQty / (input.period === "week" ? 7 : 30)).toFixed(2),
+        // Prepare data for AI analysis based on current inventory
+        const analysisData = allItems.map(item => ({
+          item: item.name,
+          category: item.category,
+          available: item.availableQty || 0,
+          sellingPrice: item.sellingPrice,
+          purchasePrice: item.purchasePrice,
         }));
 
-        const topMovers = analysisData.filter(i => i.soldQty > 0).sort((a, b) => b.soldQty - a.soldQty).slice(0, 10);
-        const noMovement = analysisData.filter(i => i.soldQty === 0 && i.available > 0);
-        const lowStock = analysisData.filter(i => i.available < 10 && i.soldQty > 0);
+        const lowStock = analysisData.filter(i => i.available < 10);
+        const outOfStock = analysisData.filter(i => i.available === 0);
+        const wellStocked = analysisData.filter(i => i.available >= 50);
 
-        const prompt = `You are an inventory management analyst. Analyze the following inventory data for the past ${input.period === "week" ? "week" : "month"} and provide actionable insights.
+        const prompt = `You are an inventory management analyst. Analyze the following current inventory data and provide actionable insights.
 
-Top Moving Items:
-${topMovers.map(i => `- ${i.item}: ${i.soldQty} units sold, ${i.available} available, avg ${i.avgPerDay}/day`).join('\n')}
+Total Items: ${analysisData.length}
 
-Items with No Movement (${noMovement.length} items):
-${noMovement.slice(0, 5).map(i => `- ${i.item}: ${i.available} units in stock`).join('\n')}
+Low Stock Items (< 10 units):
+${lowStock.slice(0, 10).map(i => `- ${i.item} (${i.category}): ${i.available} units available`).join('\n')}
 
-Low Stock Items:
-${lowStock.map(i => `- ${i.item}: only ${i.available} units left, selling ${i.avgPerDay}/day`).join('\n')}
+Out of Stock Items:
+${outOfStock.slice(0, 10).map(i => `- ${i.item} (${i.category}): OUT OF STOCK`).join('\n')}
+
+Well Stocked Items (>= 50 units):
+${wellStocked.slice(0, 5).map(i => `- ${i.item} (${i.category}): ${i.available} units`).join('\n')}
 
 Provide:
-1. Key trends and patterns
-2. Items at risk of stockout
-3. Slow-moving items that may need attention
-4. Specific recommendations for reordering
-5. Any unusual patterns or concerns
+1. Key inventory health observations
+2. Items that need immediate restocking
+3. Items that may be overstocked
+4. Specific recommendations for inventory management
+5. Any concerns or patterns
 
 Keep the response concise, actionable, and focused on business decisions.`;
 

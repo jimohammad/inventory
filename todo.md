@@ -230,11 +230,65 @@
 - [x] Support selling price only, purchase price only, or both prices update
 - [x] Add preview showing example calculation before applying changes
 
-## WhatsApp Contacts Button Redesign
+## Performance Optimization - Module Removal
 
-- [x] Make "Broadcast to Selected" and "Add Contact" buttons adjacent (side-by-side)
-- [x] Ensure both buttons have equal width and height
-- [x] Apply dark background color to both buttons
-- [x] Use emerald/teal text color
-- [x] Add Mac-style hover effects (gradient glow, backdrop blur, smooth transitions)
-- [x] Maintain consistent design with sidebar menu items
+- [x] Drop purchase orders database tables
+- [x] Drop suppliers database table
+- [x] Remove purchase order backend routers and procedures
+- [x] Remove supplier backend routers and procedures
+- [x] Remove purchase order frontend pages
+- [x] Remove supplier frontend pages
+- [x] Remove purchase order and supplier navigation menu items
+- [x] Update dashboard to remove purchase order widgets
+- [x] Clean up unused imports and dependencies
+
+## Catalog Improvements
+
+- [x] Remove purchase price from public catalog display (show only selling price)
+- [x] Remove purchase price from internal catalog as well
+- [x] Redesign catalog item cards for better visual appeal and conciseness
+- [x] Increase category badge size and font for better navigation
+
+## UI/UX Improvements
+
+- [x] Add item count badges to category filters (e.g., "Samsung (16)")
+- [x] Redesign app color scheme with appealing palette for better user experience
+- [x] Update primary colors, backgrounds, and accent colors
+- [x] Ensure consistent color theme across all pages
+
+## Dashboard Search Enhancement
+
+- [x] Add prominent search field to dashboard with autocomplete functionality
+- [x] Style search with light black background and green text
+- [x] Implement item suggestions dropdown showing matching items
+- [x] Use larger font size for better visibility
+- [x] Navigate to item details on selection
+
+## Items Page Search Enhancement
+
+- [x] Add Mac-style animated search field to Items page
+- [x] Implement smooth expand/collapse animations
+- [x] Use larger font size for better readability
+- [x] Add autocomplete dropdown with item suggestions
+- [x] Apply Mac-inspired design with subtle shadows and blur effects
+
+## Sidebar Menu Mac-Style Animations
+
+- [x] Apply Mac-style gradient glow effects to sidebar menu items
+- [x] Add smooth hover and active state transitions
+- [x] Implement backdrop blur effects on menu items
+- [x] Add subtle shadow and border animations
+- [x] Ensure consistent teal/emerald color scheme
+
+## Sidebar Dark Theme Enhancement
+
+- [x] Darken sidebar background color for better contrast
+- [x] Update menu item base colors to darker shades
+- [x] Ensure teal/emerald glow effects stand out against dark background
+- [x] Test readability and visual hierarchy
+
+## Sidebar Background Lightness Adjustment
+
+- [x] Lighten sidebar background by 50% (from oklch 0.15 to approximately 0.30)
+- [x] Maintain good contrast with glow effects
+- [x] Test visual balance and readability

@@ -113,16 +113,68 @@ export default function ItemList() {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search items by name, category, or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 text-[25px] h-14"
-          />
+      {/* Mac-style Animated Search Field */}
+      <div className="relative max-w-4xl mx-auto">
+        <div className="relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500" />
+          <div className="relative">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-teal-500 transition-all duration-300 group-focus-within:scale-110 group-focus-within:text-emerald-500" />
+            <Input
+              placeholder="Search items by name, code, or category..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="h-20 pl-16 pr-8 text-2xl font-medium bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl focus:shadow-2xl focus:border-teal-500 dark:focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-400"
+            />
+          </div>
         </div>
+
+        {/* Autocomplete Dropdown */}
+        {searchQuery.trim() && filteredItems.length > 0 && (
+          <div className="absolute z-50 w-full mt-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="max-h-96 overflow-y-auto">
+              {filteredItems.slice(0, 6).map((item: any) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    const element = document.getElementById(`item-${item.id}`);
+                    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    element?.classList.add('ring-4', 'ring-teal-500', 'ring-opacity-50');
+                    setTimeout(() => {
+                      element?.classList.remove('ring-4', 'ring-teal-500', 'ring-opacity-50');
+                    }, 2000);
+                  }}
+                  className="w-full px-6 py-4 text-left hover:bg-teal-50 dark:hover:bg-slate-800 transition-all duration-200 border-b border-slate-100 dark:border-slate-800 last:border-b-0 group/item"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="text-lg font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-teal-600 dark:group-hover/item:text-emerald-400 transition-colors">
+                        {item.name}
+                      </div>
+                      <div className="text-sm text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2">
+                        <span className="font-mono">{item.itemCode}</span>
+                        <span>•</span>
+                        <Badge variant="outline" className="text-xs">{item.category}</Badge>
+                      </div>
+                    </div>
+                    <div className="text-right ml-6">
+                      <div className="text-xl font-bold text-teal-600 dark:text-emerald-400">
+                        KWD {parseFloat(item.sellingPrice || "0").toFixed(3)}
+                      </div>
+                      <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                        {item.availableQty} units
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {filteredItems.length > 6 && (
+              <div className="px-6 py-3 bg-slate-50 dark:bg-slate-800/50 text-center text-sm text-slate-600 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700">
+                +{filteredItems.length - 6} more items found
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {filteredItems.length === 0 ? (
@@ -152,7 +204,7 @@ export default function ItemList() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categoryItems.map((item) => (
-                  <Card key={item.id}>
+                  <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex-1">

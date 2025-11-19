@@ -162,13 +162,17 @@ export default function WhatsAppContacts() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-6">
+      <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">WhatsApp Contacts</h1>
           <p className="text-muted-foreground mt-1">
             Manage your sales team contacts for catalog broadcasting
           </p>
         </div>
+        <Button onClick={() => setIsCreateOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Add Contact
+        </Button>
       </div>
 
       {contacts.length === 0 ? (
@@ -182,36 +186,15 @@ export default function WhatsAppContacts() {
         </Card>
       ) : (
         <>
-          <div className="mb-6 grid grid-cols-2 gap-4">
-            <button
+          <div className="mb-4 flex gap-2">
+            <Button
               onClick={handleBroadcast}
               disabled={selectedContacts.length === 0}
-              className={`h-16 px-6 rounded-xl font-semibold text-base transition-all duration-300 relative overflow-hidden group/btn
-                ${selectedContacts.length === 0 
-                  ? 'bg-slate-700/50 text-slate-500 cursor-not-allowed' 
-                  : 'bg-slate-800/80 text-emerald-400 hover:bg-slate-800/50 hover:backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:border hover:border-emerald-500/30'
-                }
-                before:absolute before:inset-0 before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500
-                ${selectedContacts.length > 0 ? 'hover:before:opacity-100 hover:before:bg-gradient-to-r hover:before:from-emerald-400/0 hover:before:via-emerald-400/20 hover:before:to-emerald-400/0' : ''}`}
+              variant="default"
             >
-              <div className="flex items-center justify-center gap-3 relative z-10">
-                <Send className={`h-5 w-5 transition-all duration-300 ${selectedContacts.length > 0 ? 'group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]' : ''}`} />
-                <span>Broadcast to Selected ({selectedContacts.length})</span>
-              </div>
-            </button>
-            
-            <button
-              onClick={() => setIsCreateOpen(true)}
-              className="h-16 px-6 rounded-xl font-semibold text-base bg-slate-800/80 text-emerald-400 transition-all duration-300 relative overflow-hidden group/btn
-                hover:bg-slate-800/50 hover:backdrop-blur-sm hover:shadow-lg hover:shadow-emerald-500/20 hover:border hover:border-emerald-500/30
-                before:absolute before:inset-0 before:rounded-xl before:opacity-0 before:transition-opacity before:duration-500
-                hover:before:opacity-100 hover:before:bg-gradient-to-r hover:before:from-emerald-400/0 hover:before:via-emerald-400/20 hover:before:to-emerald-400/0"
-            >
-              <div className="flex items-center justify-center gap-3 relative z-10">
-                <Plus className="h-5 w-5 transition-all duration-300 group-hover/btn:drop-shadow-[0_0_6px_rgba(52,211,153,0.5)]" />
-                <span>Add Contact</span>
-              </div>
-            </button>
+              <Send className="mr-2 h-4 w-4" />
+              Broadcast to Selected ({selectedContacts.length})
+            </Button>
           </div>
 
           <Card>
