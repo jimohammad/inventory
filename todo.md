@@ -168,3 +168,7 @@
 - [x] CSV template with all item fields (code, name, category, prices, stock)
 - [x] Display import results (success count, errors)
 - [x] Add bulk import button to Items page
+
+## UI Improvements
+
+- [x] Increase sidebar menu font size for better visibility
