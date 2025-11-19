@@ -241,3 +241,7 @@
 - [x] Remove purchase order and supplier navigation menu items
 - [x] Update dashboard to remove purchase order widgets
 - [x] Clean up unused imports and dependencies
+
+## Catalog Improvements
+
+- [x] Remove purchase price from public catalog display (show only selling price)

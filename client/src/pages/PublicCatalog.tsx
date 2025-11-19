@@ -116,7 +116,8 @@ export default function PublicCatalog() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {item.purchasePrice && (
+                    {/* Only show purchase price in internal catalog */}
+                    {includeQty && item.purchasePrice && (
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Purchase Price</span>
                         <span className="font-semibold">KWD {parseFloat(item.purchasePrice as any).toFixed(3)}</span>
