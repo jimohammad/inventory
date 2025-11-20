@@ -27,7 +27,7 @@ export default function EditItem() {
     if (item) {
       setItemCode(item.itemCode || "");
       setName(item.name);
-      setCategory(item.category || "");
+      setCategory((item.category as typeof category) || "");
       setSellingPrice(item.sellingPrice?.toString() || "");
       setPurchasePrice(item.purchasePrice?.toString() || "");
       setAvailableQty(item.availableQty?.toString() || "0");

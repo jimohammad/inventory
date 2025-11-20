@@ -397,3 +397,11 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 
 - [x] Reorder fields to show Purchase Price before Selling Price
 - [x] Test form field order in Create Item page
+
+## Category Field Bug Fix
+
+- [x] Investigate why category shows blank when editing item after saving
+- [x] Fix category field persistence issue in Edit Item form
+- [x] Test category field save and reload functionality
+
+**Resolution:** Added type assertion `(item.category as typeof category)` in EditItem useEffect to properly handle category field type from database.
