@@ -392,3 +392,8 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test Items page functionality
 
 **Resolution:** Removed PageTransition wrapper from Items route to eliminate animation overhead and improve loading performance.
+
+## Create Item Form Field Order
+
+- [x] Reorder fields to show Purchase Price before Selling Price
+- [x] Test form field order in Create Item page

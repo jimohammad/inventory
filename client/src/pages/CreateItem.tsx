@@ -129,16 +129,6 @@ export default function CreateItem() {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="sellingPrice">Selling Price</Label>
-              <Input
-                id="sellingPrice"
-                type="number"
-                value={sellingPrice}
-                onChange={(e) => setSellingPrice(e.target.value)}
-                placeholder="e.g., 100"
-              />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="purchasePrice">Purchase Price</Label>
               <Input
                 id="purchasePrice"
@@ -146,6 +136,16 @@ export default function CreateItem() {
                 value={purchasePrice}
                 onChange={(e) => setPurchasePrice(e.target.value)}
                 placeholder="e.g., 80"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="sellingPrice">Selling Price</Label>
+              <Input
+                id="sellingPrice"
+                type="number"
+                value={sellingPrice}
+                onChange={(e) => setSellingPrice(e.target.value)}
+                placeholder="e.g., 100"
               />
             </div>
             <div className="space-y-2">
