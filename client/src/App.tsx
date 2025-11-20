@@ -40,9 +40,7 @@ function Router() {
 
       <Route path="/items" component={() => (
         <DashboardLayout>
-          <PageTransition>
-            <ItemList />
-          </PageTransition>
+          <ItemList />
         </DashboardLayout>
       )} />
       <Route path="/items/new" component={() => (

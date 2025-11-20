@@ -383,3 +383,12 @@
 4. Processes each selected contact with 2-second delays
 
 Potential user issues: Browser popup blocker or not selecting contacts before clicking broadcast.
+
+## Items Page Loading Issue Fix
+
+- [x] Investigate why Items page is not opening
+- [x] Remove unnecessary effects causing performance issues
+- [x] Optimize page rendering and loading
+- [x] Test Items page functionality
+
+**Resolution:** Removed PageTransition wrapper from Items route to eliminate animation overhead and improve loading performance.
