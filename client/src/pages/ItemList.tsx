@@ -113,21 +113,16 @@ export default function ItemList() {
         </div>
       </div>
 
-      {/* Mac-style Animated Search Field */}
+      {/* Search Field */}
       <div className="relative max-w-4xl mx-auto">
-        <div className="relative group">
-          {/* Animated border gradient on hover */}
-          <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500 blur-sm animate-pulse" />
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500" />
-          <div className="relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-emerald-400 transition-all duration-300 group-focus-within:scale-110 group-focus-within:drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-            <Input
-              placeholder="Search items by name, code, or category..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-20 pl-16 pr-8 text-2xl font-bold bg-slate-900/95 backdrop-blur-xl border-2 border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl hover:border-emerald-500/50 focus:shadow-2xl focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-500 text-emerald-400"
-            />
-          </div>
+        <div className="relative">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-emerald-400" />
+          <Input
+            placeholder="Search items by name, code, or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-20 pl-16 pr-8 text-2xl font-bold bg-slate-900/95 border-2 border-emerald-500 rounded-2xl placeholder:text-slate-500 text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          />
         </div>
 
         {/* Autocomplete Dropdown */}
@@ -206,21 +201,32 @@ export default function ItemList() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categoryItems.map((item) => (
-                  <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
+                  <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative">
+                    <div className="absolute top-3 left-3 flex gap-1 z-10">
+                      <Link href={`/items/${item.id}/edit`}>
+                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800">
+                          <Pencil className="w-3.5 h-3.5" />
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setDeleteId(item.id)}
+                        className="h-7 w-7 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                    <CardHeader className="pt-12">
                       <CardTitle className="text-lg">{item.name}</CardTitle>
                       {item.category && (
                         <CardDescription>
                           {item.category}
                         </CardDescription>
                       )}
-                        </div>
-                      </div>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
+                    <CardContent className="pb-4">
+                      <div className="space-y-2">
                         {item.itemCode && (
                           <div className="flex items-center justify-between text-sm">
                             <span className="text-muted-foreground">Code</span>
@@ -242,23 +248,6 @@ export default function ItemList() {
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Available</span>
                           <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
-                        </div>
-
-                        <div className="flex gap-2 pt-2">
-                          <Link href={`/items/${item.id}/edit`} className="flex-1">
-                            <Button variant="outline" size="sm" className="w-full">
-                              <Pencil className="w-3 h-3 mr-2" />
-                              Edit
-                            </Button>
-                          </Link>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setDeleteId(item.id)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
                         </div>
                       </div>
                     </CardContent>
