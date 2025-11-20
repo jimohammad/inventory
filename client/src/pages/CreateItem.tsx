@@ -19,6 +19,13 @@ export default function CreateItem() {
   const [purchasePrice, setPurchasePrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
   const [openingStock, setOpeningStock] = useState("0");
+  
+  // Validation errors
+  const [errors, setErrors] = useState({
+    itemCode: "",
+    name: "",
+    category: "",
+  });
 
   const createMutation = trpc.items.create.useMutation({
     onSuccess: () => {
@@ -30,28 +37,49 @@ export default function CreateItem() {
     },
   });
 
+  const validateItemCode = (value: string) => {
+    if (!value.trim()) {
+      setErrors(prev => ({ ...prev, itemCode: "Item code is required" }));
+      return false;
+    }
+    setErrors(prev => ({ ...prev, itemCode: "" }));
+    return true;
+  };
+
+  const validateName = (value: string) => {
+    if (!value.trim()) {
+      setErrors(prev => ({ ...prev, name: "Item name is required" }));
+      return false;
+    }
+    setErrors(prev => ({ ...prev, name: "" }));
+    return true;
+  };
+
+  const validateCategory = (value: string) => {
+    if (!value) {
+      setErrors(prev => ({ ...prev, category: "Category is required" }));
+      return false;
+    }
+    setErrors(prev => ({ ...prev, category: "" }));
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim()) {
-      toast.error("Item name is required");
-      return;
-    }
+    const isItemCodeValid = validateItemCode(itemCode);
+    const isNameValid = validateName(name);
+    const isCategoryValid = validateCategory(category);
     
-    if (!itemCode.trim()) {
-      toast.error("Item code is required");
-      return;
-    }
-    
-    if (!category) {
-      toast.error("Category is required");
+    if (!isItemCodeValid || !isNameValid || !isCategoryValid) {
+      toast.error("Please fill in all required fields");
       return;
     }
     
     createMutation.mutate({
       itemCode: itemCode.trim(),
       name: name.trim(),
-      category: category,
+      category: category as "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor",
       sellingPrice: sellingPrice || undefined,
       purchasePrice: purchasePrice || undefined,
       availableQty: parseInt(availableQty) || 0,
@@ -89,28 +117,61 @@ export default function CreateItem() {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="itemCode">Item Code</Label>
+              <Label htmlFor="itemCode" className="flex items-center gap-1">
+                Item Code
+                <span className="text-red-500">*</span>
+              </Label>
               <Input
                 id="itemCode"
                 value={itemCode}
-                onChange={(e) => setItemCode(e.target.value)}
+                onChange={(e) => {
+                  setItemCode(e.target.value);
+                  validateItemCode(e.target.value);
+                }}
+                onBlur={() => validateItemCode(itemCode)}
                 placeholder="e.g., ITM-001"
+                className={errors.itemCode ? "border-red-500" : ""}
               />
+              {errors.itemCode && (
+                <p className="text-xs text-red-500">{errors.itemCode}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="name">Item Name *</Label>
+              <Label htmlFor="name" className="flex items-center gap-1">
+                Item Name
+                <span className="text-red-500">*</span>
+              </Label>
               <Input
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  validateName(e.target.value);
+                }}
+                onBlur={() => validateName(name)}
                 placeholder="Enter item name"
-                required
+                className={errors.name ? "border-red-500" : ""}
               />
+              {errors.name && (
+                <p className="text-xs text-red-500">{errors.name}</p>
+              )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Select value={category} onValueChange={(value) => setCategory(value as typeof category)}>
-                <SelectTrigger id="category">
+              <Label htmlFor="category" className="flex items-center gap-1">
+                Category
+                <span className="text-red-500">*</span>
+              </Label>
+              <Select 
+                value={category} 
+                onValueChange={(value) => {
+                  setCategory(value as typeof category);
+                  validateCategory(value);
+                }}
+              >
+                <SelectTrigger 
+                  id="category"
+                  className={errors.category ? "border-red-500" : ""}
+                >
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -122,6 +183,9 @@ export default function CreateItem() {
                   <SelectItem value="Honor">Honor</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.category && (
+                <p className="text-xs text-red-500">{errors.category}</p>
+              )}
             </div>
           </div>
 

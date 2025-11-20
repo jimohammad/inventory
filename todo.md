@@ -405,3 +405,13 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test category field save and reload functionality
 
 **Resolution:** Added type assertion `(item.category as typeof category)` in EditItem useEffect to properly handle category field type from database.
+
+## Form Validation Enhancement
+
+- [x] Add red asterisk (*) indicators to required field labels
+- [x] Implement real-time validation for Item Code field
+- [x] Implement real-time validation for Item Name field
+- [x] Implement real-time validation for Category field
+- [x] Display validation error messages below fields
+- [x] Apply validation to both Create Item and Edit Item forms
+- [x] Test all validation scenarios
