@@ -333,3 +333,17 @@
 
 - [x] Increase font weight in search field to bold/heavy for better visibility
 - [x] Test readability with heavier font weight
+
+## Inventory Dashboard Enhancements
+
+### Item Aging Analysis
+- [x] Add lastSoldDate field to items table in database schema
+- [x] Implement aging calculation (days since last sale)
+- [x] Display aging information for each item in dashboard
+- [x] Add color-coded aging indicators (green: <30 days, yellow: 30-60 days, red: >60 days)
+- [x] Show "Never Sold" status for items without sales history
+
+### UI Improvements
+- [x] Remove "Add New Item" button from top-left of inventory dashboard
+- [x] Make search field full width in inventory dashboard
+- [x] Test responsive layout with full-width search field

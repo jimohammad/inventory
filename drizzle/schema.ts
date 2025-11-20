@@ -39,6 +39,7 @@ export const items = mysqlTable("items", {
   openingStock: int("openingStock").default(0),
   purchasePrice: decimal("purchasePrice", { precision: 10, scale: 3 }),
   availableQty: int("availableQty").default(0).notNull(),
+  lastSoldDate: timestamp("lastSoldDate"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

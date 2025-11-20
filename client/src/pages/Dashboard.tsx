@@ -30,21 +30,13 @@ export default function Dashboard() {
     <div className="space-y-8 p-8">
       {/* Header */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Inventory Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Overview of your inventory and items</p>
-          </div>
-          <Link href="/items/new">
-            <Button size="lg">
-              <Package className="w-5 h-5 mr-2" />
-              Add New Item
-            </Button>
-          </Link>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Inventory Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Overview of your inventory and items</p>
         </div>
 
         {/* Prominent Search Field */}
-        <div className="relative max-w-3xl">
+        <div className="relative w-full">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-emerald-500" />
             <Input
@@ -149,18 +141,33 @@ export default function Dashboard() {
               </p>
             ) : (
               <div className="space-y-3">
-                {lowStockItems.map((item: any) => (
-                  <div key={item.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm truncate">{item.name}</div>
-                      <div className="text-xs text-muted-foreground">{item.itemCode} • {item.category}</div>
+                {lowStockItems.map((item: any) => {
+                  const calculateAging = () => {
+                    if (!item.lastSoldDate) return { days: null, label: "Never Sold", color: "text-slate-500" };
+                    const lastSold = new Date(item.lastSoldDate);
+                    const today = new Date();
+                    const diffTime = Math.abs(today.getTime() - lastSold.getTime());
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays < 30) return { days: diffDays, label: `${diffDays}d ago`, color: "text-green-600" };
+                    if (diffDays < 60) return { days: diffDays, label: `${diffDays}d ago`, color: "text-yellow-600" };
+                    return { days: diffDays, label: `${diffDays}d ago`, color: "text-red-600" };
+                  };
+                  const aging = calculateAging();
+                  
+                  return (
+                    <div key={item.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate">{item.name}</div>
+                        <div className="text-xs text-muted-foreground">{item.itemCode} • {item.category}</div>
+                      </div>
+                      <div className="text-right ml-4 space-y-1">
+                        <div className="font-bold text-red-600">{item.availableQty} left</div>
+                        <div className={`text-xs font-semibold ${aging.color}`}>{aging.label}</div>
+                      </div>
                     </div>
-                    <div className="text-right ml-4">
-                      <div className="font-bold text-red-600">{item.availableQty} left</div>
-                      <div className="text-xs text-muted-foreground">Low stock</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
