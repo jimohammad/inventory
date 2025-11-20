@@ -415,3 +415,12 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Display validation error messages below fields
 - [x] Apply validation to both Create Item and Edit Item forms
 - [x] Test all validation scenarios
+
+## Google Sheets Sync - Sold Status Bug Fix
+
+- [x] Investigate why Google Sheets sync doesn't update lastSoldDate
+- [x] Fix sync logic to detect quantity decreases and update lastSoldDate
+- [x] Test Google Sheets sync with sold items
+- [x] Verify aging analysis shows correct days since last sale
+
+**Resolution:** Modified updateItemQuantity function to compare current quantity with new quantity. When quantity decreases (indicating a sale), the function now automatically updates lastSoldDate to current timestamp, enabling accurate aging analysis.

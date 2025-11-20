@@ -237,8 +237,31 @@ export async function updateItemQuantity(userId: number, itemCode: string, quant
   const { items } = await import("../drizzle/schema");
   const { and } = await import("drizzle-orm");
   
+  // First, get the current quantity to detect if it's a sale
+  const currentItem = await db.select()
+    .from(items)
+    .where(and(
+      eq(items.userId, userId),
+      eq(items.itemCode, itemCode)
+    ))
+    .limit(1);
+  
+  if (currentItem.length === 0) {
+    console.warn(`[updateItemQuantity] Item not found: ${itemCode}`);
+    return;
+  }
+  
+  const currentQty = currentItem[0].availableQty || 0;
+  const updateData: any = { availableQty: quantity };
+  
+  // If quantity decreased, it means items were sold - update lastSoldDate
+  if (quantity < currentQty) {
+    updateData.lastSoldDate = new Date();
+    console.log(`[updateItemQuantity] Item ${itemCode} sold: ${currentQty} → ${quantity}, updating lastSoldDate`);
+  }
+  
   await db.update(items)
-    .set({ availableQty: quantity })
+    .set(updateData)
     .where(and(
       eq(items.userId, userId),
       eq(items.itemCode, itemCode)
