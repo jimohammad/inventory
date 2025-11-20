@@ -116,14 +116,16 @@ export default function ItemList() {
       {/* Mac-style Animated Search Field */}
       <div className="relative max-w-4xl mx-auto">
         <div className="relative group">
+          {/* Animated border gradient on hover */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500 blur-sm animate-pulse" />
           <div className="absolute inset-0 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-500" />
           <div className="relative">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-teal-500 transition-all duration-300 group-focus-within:scale-110 group-focus-within:text-emerald-500" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-emerald-400 transition-all duration-300 group-focus-within:scale-110 group-focus-within:drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
             <Input
               placeholder="Search items by name, code, or category..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-20 pl-16 pr-8 text-2xl font-medium bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-2 border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl focus:shadow-2xl focus:border-teal-500 dark:focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-400"
+              className="h-20 pl-16 pr-8 text-2xl font-medium bg-slate-900/95 backdrop-blur-xl border-2 border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl hover:border-emerald-500/50 focus:shadow-2xl focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-500 text-emerald-400"
             />
           </div>
         </div>
