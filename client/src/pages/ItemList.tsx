@@ -202,7 +202,7 @@ export default function ItemList() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categoryItems.map((item) => (
                   <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative">
-                    <div className="absolute top-3 left-3 flex gap-1 z-10">
+                    <div className="absolute top-2 right-2 flex gap-1 z-10">
                       <Link href={`/items/${item.id}/edit`}>
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800">
                           <Pencil className="w-3.5 h-3.5" />
@@ -217,35 +217,35 @@ export default function ItemList() {
                         <Trash2 className="w-3.5 h-3.5" />
                       </Button>
                     </div>
-                    <CardHeader className="pt-12">
-                      <CardTitle className="text-lg">{item.name}</CardTitle>
+                    <CardHeader className="pt-3 pb-2">
+                      <CardTitle className="text-base pr-16">{item.name}</CardTitle>
                       {item.category && (
                         <CardDescription>
                           {item.category}
                         </CardDescription>
                       )}
                     </CardHeader>
-                    <CardContent className="pb-4">
-                      <div className="space-y-2">
+                    <CardContent className="pt-0 pb-3">
+                      <div className="space-y-1.5">
                         {item.itemCode && (
-                          <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center justify-between text-xs">
                             <span className="text-muted-foreground">Code</span>
-                            <span className="font-mono text-xs">{item.itemCode}</span>
+                            <span className="font-mono">{item.itemCode}</span>
                           </div>
                         )}
                         {item.sellingPrice && (
-                          <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center justify-between text-xs">
                             <span className="text-muted-foreground">Selling Price</span>
                             <span className="font-medium">KWD {parseFloat(item.sellingPrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         {item.purchasePrice && (
-                          <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center justify-between text-xs">
                             <span className="text-muted-foreground">Purchase Price</span>
                             <span className="font-medium">KWD {parseFloat(item.purchasePrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
-                        <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center justify-between text-xs">
                           <span className="text-muted-foreground">Available</span>
                           <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
                         </div>
