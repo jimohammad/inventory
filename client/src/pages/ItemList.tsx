@@ -125,7 +125,7 @@ export default function ItemList() {
               placeholder="Search items by name, code, or category..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-20 pl-16 pr-8 text-2xl font-medium bg-slate-900/95 backdrop-blur-xl border-2 border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl hover:border-emerald-500/50 focus:shadow-2xl focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-500 text-emerald-400"
+              className="h-20 pl-16 pr-8 text-2xl font-bold bg-slate-900/95 backdrop-blur-xl border-2 border-slate-700 rounded-2xl shadow-lg hover:shadow-2xl hover:border-emerald-500/50 focus:shadow-2xl focus:border-emerald-500 transition-all duration-300 placeholder:text-slate-500 text-emerald-400"
             />
           </div>
         </div>

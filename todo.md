@@ -328,3 +328,8 @@
 - [x] Change text color to emerald
 - [x] Implement smooth border animation transitions
 - [x] Test search field appearance and interactions
+
+## Items Search Field Font Weight Adjustment
+
+- [x] Increase font weight in search field to bold/heavy for better visibility
+- [x] Test readability with heavier font weight
