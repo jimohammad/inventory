@@ -424,3 +424,17 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Verify aging analysis shows correct days since last sale
 
 **Resolution:** Modified updateItemQuantity function to compare current quantity with new quantity. When quantity decreases (indicating a sale), the function now automatically updates lastSoldDate to current timestamp, enabling accurate aging analysis.
+
+## Inventory Analysis - Sold Quantity Tracking
+
+- [x] Investigate why Inventory Analysis doesn't show sold quantities
+- [x] Create stock history tracking when quantities change via Google Sheets sync
+- [x] Calculate sold quantities from stock history
+- [x] Update Inventory Analysis page to display soldQty correctly
+- [x] Test with Samsung A17 5G (149 → 139 = 10 sold)
+
+**Resolution:** 
+1. Modified updateItemQuantity to create stockHistory records for all quantity changes
+2. Updated getMovementAnalysis to query stockHistory table and calculate soldQty from "sale" type records
+3. Implemented movement categorization: Fast (≥3 units/week), Medium (1-3 units/week), Slow (<1 unit/week)
+4. Next Google Sheets sync will create history records and sold quantities will appear in Inventory Analysis

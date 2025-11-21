@@ -234,7 +234,7 @@ export async function getSyncLogs(userId: number, limit: number = 10) {
 export async function updateItemQuantity(userId: number, itemCode: string, quantity: number) {
   const db = await getDb();
   if (!db) return;
-  const { items } = await import("../drizzle/schema");
+  const { items, stockHistory } = await import("../drizzle/schema");
   const { and } = await import("drizzle-orm");
   
   // First, get the current quantity to detect if it's a sale
@@ -252,6 +252,7 @@ export async function updateItemQuantity(userId: number, itemCode: string, quant
   }
   
   const currentQty = currentItem[0].availableQty || 0;
+  const quantityChange = quantity - currentQty;
   const updateData: any = { availableQty: quantity };
   
   // If quantity decreased, it means items were sold - update lastSoldDate
@@ -260,12 +261,27 @@ export async function updateItemQuantity(userId: number, itemCode: string, quant
     console.log(`[updateItemQuantity] Item ${itemCode} sold: ${currentQty} → ${quantity}, updating lastSoldDate`);
   }
   
+  // Update item quantity
   await db.update(items)
     .set(updateData)
     .where(and(
       eq(items.userId, userId),
       eq(items.itemCode, itemCode)
     ));
+  
+  // Create stock history record
+  const changeType = quantityChange < 0 ? "sale" : quantityChange > 0 ? "import" : "adjustment";
+  await db.insert(stockHistory).values({
+    userId,
+    itemId: currentItem[0].id,
+    changeType,
+    quantityChange,
+    quantityAfter: quantity,
+    notes: `Google Sheets sync: ${currentQty} → ${quantity}`,
+    createdAt: new Date(),
+  });
+  
+  console.log(`[updateItemQuantity] Stock history created: ${itemCode} ${changeType} ${quantityChange} units`);
 }
 
 // WhatsApp Contacts queries

@@ -405,19 +405,69 @@ export const appRouter = router({
         if (!db) return [];
 
         const allItems = await getUserItems(ctx.user.id);
+        const { stockHistory } = await import("../drizzle/schema");
+        const { eq, and, gte, sum, sql } = await import("drizzle-orm");
         
-        // Return basic analysis without purchase order data
-        const analysis = allItems.map(item => ({
-          id: item.id,
-          itemCode: item.itemCode,
-          itemName: item.name,
-          category: item.category,
-          availableQty: item.availableQty,
-          soldQty: 0,
-          orderCount: 0,
-          avgPerDay: 0,
-          movementCategory: "none" as const,
-        }));
+        // Calculate date range based on period
+        const now = new Date();
+        const periodStart = new Date();
+        if (input.period === "week") {
+          periodStart.setDate(now.getDate() - 7);
+        } else {
+          periodStart.setMonth(now.getMonth() - 1);
+        }
+        
+        // Get sold quantities from stock history for the period
+        const soldData = await db.select({
+          itemId: stockHistory.itemId,
+          totalSold: sql<number>`SUM(ABS(${stockHistory.quantityChange}))`,
+        })
+        .from(stockHistory)
+        .where(
+          and(
+            eq(stockHistory.userId, ctx.user.id),
+            eq(stockHistory.changeType, "sale"),
+            gte(stockHistory.createdAt, periodStart)
+          )
+        )
+        .groupBy(stockHistory.itemId);
+        
+        // Create a map of itemId to soldQty
+        const soldMap = new Map<number, number>();
+        soldData.forEach(row => {
+          soldMap.set(row.itemId, Number(row.totalSold) || 0);
+        });
+        
+        // Calculate analysis with sold quantities
+        const daysInPeriod = input.period === "week" ? 7 : 30;
+        const analysis = allItems.map(item => {
+          const soldQty = soldMap.get(item.id) || 0;
+          const avgPerDay = soldQty / daysInPeriod;
+          
+          let movementCategory: "fast" | "medium" | "slow" | "none" = "none";
+          if (soldQty > 0) {
+            const avgPerWeek = (soldQty / daysInPeriod) * 7;
+            if (avgPerWeek >= 3) {
+              movementCategory = "fast";
+            } else if (avgPerWeek >= 1) {
+              movementCategory = "medium";
+            } else {
+              movementCategory = "slow";
+            }
+          }
+          
+          return {
+            id: item.id,
+            itemCode: item.itemCode,
+            itemName: item.name,
+            category: item.category,
+            availableQty: item.availableQty,
+            soldQty,
+            orderCount: 0,
+            avgPerDay: Number(avgPerDay.toFixed(2)),
+            movementCategory,
+          };
+        });
 
         return analysis;
       }),
