@@ -21,6 +21,7 @@ import PublicCatalog from "@/pages/PublicCatalog";
 import WhatsAppContacts from "@/pages/WhatsAppContacts";
 import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 import ReorderAlerts from "@/pages/ReorderAlerts";
+import StockHistory from "@/pages/StockHistory";
 
 function Router() {
   const [location] = useLocation();
@@ -85,6 +86,13 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <ReorderAlerts />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/stock-history" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <StockHistory />
           </PageTransition>
         </DashboardLayout>
       )} />

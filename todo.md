@@ -554,3 +554,27 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - Added hover effects: darker background + lighter icon colors
 - Centered alignment with flex container and 3-unit gap
 - Smooth transitions for all hover states
+
+
+## Stock History Page
+
+- [x] Create StockHistory page component displaying all items in card format
+- [x] Show stock history information for each item (last sold, sales velocity, stock levels)
+- [x] Use same color combinations as existing item cards
+- [x] Add "Stock History" navigation menu item in left sidebar
+- [x] Add route for /stock-history
+- [x] Test page layout and functionality
+
+**Implementation Details:**
+1. Created `StockHistory.tsx` page component displaying all 34 items in card format
+2. Cards grouped by category (Honor, Meizu, Motorola, Realme, Redmi, Samsung)
+3. Each card shows: item name, code, available qty, opening stock, last sold, sales velocity, velocity status bar
+4. Used exact same color scheme as existing item cards:
+   - Emerald-400 for sales metrics
+   - Color-coded velocity bar (emerald/yellow/red)
+   - Primary color for available quantity
+5. Added "View Full History" button (black bg, emerald text, full-width) at bottom of each card
+6. Button opens StockHistoryModal with full timeline
+7. Added "Stock History" menu item with History icon in DashboardLayout (between Items and Reorder Alerts)
+8. Added route `/stock-history` in App.tsx with PageTransition wrapper
+9. Tested successfully: all items display correctly, modal integration working, color scheme matches perfectly
