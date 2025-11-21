@@ -537,3 +537,20 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
    - Alert sorting: critical first, then by days until stockout
    - Settings load defaults correctly
    - UI matches mockup exactly with dark theme, emerald accents, gradient borders
+
+
+## Item Card Icon Redesign
+
+- [x] Move History, Edit, and Delete icons from top-right to center bottom of item cards
+- [x] Place icons in square boxes with black background
+- [x] Center-align the three icon buttons at the bottom of each card
+- [x] Test icon appearance and functionality
+
+**Implementation Details:**
+- Removed icons from top-right corner (absolute positioning)
+- Added three action icons at bottom center with border-top divider
+- Applied black background (`bg-black`) with 10x10 size square boxes
+- Color-coded icons: History (emerald-400), Edit (blue-400), Delete (red-400)
+- Added hover effects: darker background + lighter icon colors
+- Centered alignment with flex container and 3-unit gap
+- Smooth transitions for all hover states

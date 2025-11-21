@@ -204,32 +204,8 @@ export default function ItemList() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categoryItems.map((item) => (
                   <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative">
-                    <div className="absolute top-2 right-2 flex gap-1 z-10">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setHistoryItem({ id: item.id, name: item.name, code: item.itemCode })}
-                        className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        title="View stock history"
-                      >
-                        <History className="w-3.5 h-3.5" />
-                      </Button>
-                      <Link href={`/items/${item.id}/edit`}>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800">
-                          <Pencil className="w-3.5 h-3.5" />
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setDeleteId(item.id)}
-                        className="h-7 w-7 text-destructive hover:text-destructive hover:bg-red-50 dark:hover:bg-red-950"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
                     <CardHeader className="pt-3 pb-2">
-                      <CardTitle className="text-base pr-16">{item.name}</CardTitle>
+                      <CardTitle className="text-base">{item.name}</CardTitle>
                       {item.category && (
                         <CardDescription>
                           {item.category}
@@ -303,6 +279,36 @@ export default function ItemList() {
                               <span className="text-red-400">Slow (&lt;1/wk)</span>
                             </div>
                           </div>
+                        </div>
+                        
+                        {/* Action Icons at Bottom */}
+                        <div className="flex items-center justify-center gap-3 pt-3 mt-3 border-t border-border">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setHistoryItem({ id: item.id, name: item.name, code: item.itemCode })}
+                            className="h-10 w-10 bg-black hover:bg-slate-900 text-emerald-400 hover:text-emerald-300 rounded-md transition-all"
+                            title="View stock history"
+                          >
+                            <History className="w-5 h-5" />
+                          </Button>
+                          <Link href={`/items/${item.id}/edit`}>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-10 w-10 bg-black hover:bg-slate-900 text-blue-400 hover:text-blue-300 rounded-md transition-all"
+                            >
+                              <Pencil className="w-5 h-5" />
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteId(item.id)}
+                            className="h-10 w-10 bg-black hover:bg-slate-900 text-red-400 hover:text-red-300 rounded-md transition-all"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </Button>
                         </div>
                       </div>
                     </CardContent>
