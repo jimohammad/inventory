@@ -20,8 +20,58 @@ export const appRouter = router({
 
   items: router({
     list: protectedProcedure.query(async ({ ctx }) => {
-      const { getUserItems } = await import("./db");
-      return getUserItems(ctx.user.id);
+      const { getUserItems, getDb } = await import("./db");
+      const allItems = await getUserItems(ctx.user.id);
+      const db = await getDb();
+      
+      if (!db) return allItems;
+      
+      // Calculate sales velocity for each item (last 30 days)
+      const { stockHistory } = await import("../drizzle/schema");
+      const { eq, and, gte, sql } = await import("drizzle-orm");
+      
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const salesData = await db.select({
+        itemId: stockHistory.itemId,
+        totalSold: sql<number>`SUM(ABS(${stockHistory.quantityChange}))`,
+      })
+      .from(stockHistory)
+      .where(
+        and(
+          eq(stockHistory.userId, ctx.user.id),
+          eq(stockHistory.changeType, "sale"),
+          gte(stockHistory.createdAt, thirtyDaysAgo)
+        )
+      )
+      .groupBy(stockHistory.itemId);
+      
+      const salesMap = new Map<number, number>();
+      salesData.forEach(row => {
+        salesMap.set(row.itemId, Number(row.totalSold) || 0);
+      });
+      
+      // Add sales velocity to each item
+      return allItems.map(item => {
+        const soldLast30Days = salesMap.get(item.id) || 0;
+        const salesVelocity = (soldLast30Days / 30) * 7; // units per week
+        
+        let velocityStatus: "fast" | "moderate" | "slow" | "none" = "none";
+        if (salesVelocity >= 3) {
+          velocityStatus = "fast";
+        } else if (salesVelocity >= 1) {
+          velocityStatus = "moderate";
+        } else if (salesVelocity > 0) {
+          velocityStatus = "slow";
+        }
+        
+        return {
+          ...item,
+          salesVelocity: Number(salesVelocity.toFixed(1)),
+          velocityStatus,
+        };
+      });
     }),
 
     create: protectedProcedure

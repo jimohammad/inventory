@@ -438,3 +438,19 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 2. Updated getMovementAnalysis to query stockHistory table and calculate soldQty from "sale" type records
 3. Implemented movement categorization: Fast (≥3 units/week), Medium (1-3 units/week), Slow (<1 unit/week)
 4. Next Google Sheets sync will create history records and sold quantities will appear in Inventory Analysis
+
+## Sales Velocity Tracking Feature
+
+- [x] Add sales velocity calculation to items query (units per week)
+- [x] Display "Last Sold" timestamp on item cards
+- [x] Display "Sales Velocity" metric with units/week
+- [x] Add velocity status bar with color coding (Fast/Moderate/Slow)
+- [x] Use emerald/teal color scheme matching preview design
+- [x] Test velocity calculations with real sales data
+
+**Implementation:**
+1. Updated items.list query to calculate sales velocity from stockHistory (last 30 days)
+2. Added velocity categorization: Fast (≥3 units/week), Moderate (1-3 units/week), Slow (<1 unit/week)
+3. Displayed Last Sold and Sales Velocity metrics in emerald color on item cards
+4. Implemented color-coded horizontal status bar showing velocity category
+5. Velocity updates automatically with each Google Sheets sync

@@ -249,6 +249,50 @@ export default function ItemList() {
                           <span className="text-muted-foreground">Available</span>
                           <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
                         </div>
+                        
+                        {/* Sales Velocity Section */}
+                        <div className="pt-2 mt-2 border-t border-border">
+                          <div className="grid grid-cols-2 gap-2 mb-2">
+                            <div className="text-xs">
+                              <div className="text-muted-foreground mb-0.5">Last Sold</div>
+                              <div className="font-medium text-emerald-400">
+                                {item.lastSoldDate 
+                                  ? `${Math.floor((Date.now() - new Date(item.lastSoldDate).getTime()) / (1000 * 60 * 60 * 24))} days ago`
+                                  : 'Never'}
+                              </div>
+                            </div>
+                            <div className="text-xs">
+                              <div className="text-muted-foreground mb-0.5">Sales Velocity</div>
+                              <div className="font-medium text-emerald-400">
+                                {(item as any).salesVelocity || 0} units/week
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Velocity Status Bar */}
+                          <div className="space-y-1">
+                            <div className="text-xs text-muted-foreground">Velocity Status</div>
+                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                              <div 
+                                className="h-full bg-emerald-500 transition-all"
+                                style={{ width: (item as any).velocityStatus === 'fast' ? '60%' : '0%' }}
+                              />
+                              <div 
+                                className="h-full bg-yellow-500 transition-all"
+                                style={{ width: (item as any).velocityStatus === 'moderate' ? '30%' : '0%' }}
+                              />
+                              <div 
+                                className="h-full bg-red-500 transition-all"
+                                style={{ width: (item as any).velocityStatus === 'slow' ? '10%' : '0%' }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[10px]">
+                              <span className="text-emerald-400">Fast (&gt;3/wk)</span>
+                              <span className="text-yellow-400">Moderate (1-3/wk)</span>
+                              <span className="text-red-400">Slow (&lt;1/wk)</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
