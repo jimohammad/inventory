@@ -785,6 +785,169 @@ Keep the response concise, actionable, and focused on business decisions.`;
     }),
   }),
 
+  alerts: router({
+    getSettings: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const { alertSettings } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      
+      const settings = await db.select().from(alertSettings)
+        .where(eq(alertSettings.userId, ctx.user.id))
+        .limit(1);
+      
+      // Return default settings if none exist
+      if (settings.length === 0) {
+        return {
+          lowStockThreshold: 10,
+          criticalStockThreshold: 5,
+          defaultReorderQuantity: 50,
+          emailNotificationsEnabled: false,
+        };
+      }
+      
+      return {
+        ...settings[0],
+        emailNotificationsEnabled: settings[0].emailNotificationsEnabled === 1,
+      };
+    }),
+
+    updateSettings: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          lowStockThreshold: number;
+          criticalStockThreshold: number;
+          defaultReorderQuantity: number;
+          emailNotificationsEnabled: boolean;
+        };
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const { alertSettings } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        
+        // Validate thresholds
+        if (input.criticalStockThreshold >= input.lowStockThreshold) {
+          throw new Error("Critical threshold must be less than low stock threshold");
+        }
+        
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
+        
+        // Check if settings exist
+        const existing = await db.select().from(alertSettings)
+          .where(eq(alertSettings.userId, ctx.user.id))
+          .limit(1);
+        
+        const settingsData = {
+          userId: ctx.user.id,
+          lowStockThreshold: input.lowStockThreshold,
+          criticalStockThreshold: input.criticalStockThreshold,
+          defaultReorderQuantity: input.defaultReorderQuantity,
+          emailNotificationsEnabled: input.emailNotificationsEnabled ? 1 : 0,
+        };
+        
+        if (existing.length === 0) {
+          // Insert new settings
+          await db.insert(alertSettings).values(settingsData);
+        } else {
+          // Update existing settings
+          await db.update(alertSettings)
+            .set(settingsData)
+            .where(eq(alertSettings.userId, ctx.user.id));
+        }
+        
+        return { success: true };
+      }),
+
+    getAlerts: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb, getUserItems } = await import("./db");
+      const { alertSettings, stockHistory } = await import("../drizzle/schema");
+      const { eq, and, gte, sql, lte, or } = await import("drizzle-orm");
+      
+      const db = await getDb();
+      if (!db) return { alerts: [], summary: { critical: 0, lowStock: 0 } };
+      
+      // Get alert settings
+      const settings = await db.select().from(alertSettings)
+        .where(eq(alertSettings.userId, ctx.user.id))
+        .limit(1);
+      
+      const lowThreshold = settings[0]?.lowStockThreshold || 10;
+      const criticalThreshold = settings[0]?.criticalStockThreshold || 5;
+      const reorderQty = settings[0]?.defaultReorderQuantity || 50;
+      
+      // Get all items
+      const allItems = await getUserItems(ctx.user.id);
+      
+      // Calculate sales velocity for each item (last 30 days)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const salesData = await db.select({
+        itemId: stockHistory.itemId,
+        totalSold: sql<number>`SUM(ABS(${stockHistory.quantityChange}))`,
+      })
+      .from(stockHistory)
+      .where(
+        and(
+          eq(stockHistory.userId, ctx.user.id),
+          eq(stockHistory.changeType, "sale"),
+          gte(stockHistory.createdAt, thirtyDaysAgo)
+        )
+      )
+      .groupBy(stockHistory.itemId);
+      
+      const salesMap = new Map<number, number>();
+      salesData.forEach(row => {
+        salesMap.set(row.itemId, Number(row.totalSold) || 0);
+      });
+      
+      // Filter items that need reorder and calculate urgency
+      const alerts = allItems
+        .filter(item => item.availableQty <= lowThreshold)
+        .map(item => {
+          const soldLast30Days = salesMap.get(item.id) || 0;
+          const salesVelocity = (soldLast30Days / 30) * 7; // units per week
+          const dailyVelocity = salesVelocity / 7;
+          
+          // Calculate days until stockout
+          let daysUntilStockout = 0;
+          if (dailyVelocity > 0) {
+            daysUntilStockout = Math.floor(item.availableQty / dailyVelocity);
+          }
+          
+          const alertLevel = item.availableQty <= criticalThreshold ? "critical" : "low";
+          
+          return {
+            ...item,
+            salesVelocity: Number(salesVelocity.toFixed(1)),
+            daysUntilStockout,
+            alertLevel,
+            suggestedReorder: reorderQty,
+          };
+        })
+        .sort((a, b) => {
+          // Sort: critical first, then by days until stockout (ascending)
+          if (a.alertLevel === "critical" && b.alertLevel !== "critical") return -1;
+          if (a.alertLevel !== "critical" && b.alertLevel === "critical") return 1;
+          return a.daysUntilStockout - b.daysUntilStockout;
+        });
+      
+      const summary = {
+        critical: alerts.filter(a => a.alertLevel === "critical").length,
+        lowStock: alerts.filter(a => a.alertLevel === "low").length,
+      };
+      
+      return { alerts, summary };
+    }),
+  }),
+
   whatsappContacts: router({
     list: protectedProcedure.query(async ({ ctx }) => {
       const { getWhatsappContacts } = await import("./db");

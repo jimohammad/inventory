@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS alertSettings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  lowStockThreshold INT DEFAULT 10 NOT NULL,\n  criticalStockThreshold INT DEFAULT 5 NOT NULL,\n  defaultReorderQuantity INT DEFAULT 50 NOT NULL,\n  emailNotificationsEnabled INT DEFAULT 0 NOT NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute CREATE TABLE IF NOT EXISTS alertSettings (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  lowStockThreshold INT DEFAULT 10 NOT NULL,\n  criticalStockThreshold INT DEFAULT 5 NOT NULL,\n  defaultReorderQuantity INT DEFAULT 50 NOT NULL,\n  emailNotificationsEnabled INT DEFAULT 0 NOT NULL,\n  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL\n)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2286
+}

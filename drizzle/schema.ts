@@ -109,3 +109,21 @@ export const whatsappContacts = mysqlTable("whatsappContacts", {
 
 export type WhatsappContact = typeof whatsappContacts.$inferSelect;
 export type InsertWhatsappContact = typeof whatsappContacts.$inferInsert;
+
+/**
+ * Alert Settings table
+ * Stores reorder alert configuration (thresholds, notification preferences)
+ */
+export const alertSettings = mysqlTable("alertSettings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  lowStockThreshold: int("lowStockThreshold").default(10).notNull(),
+  criticalStockThreshold: int("criticalStockThreshold").default(5).notNull(),
+  defaultReorderQuantity: int("defaultReorderQuantity").default(50).notNull(),
+  emailNotificationsEnabled: int("emailNotificationsEnabled").default(0).notNull(), // 0 = disabled, 1 = enabled
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AlertSettings = typeof alertSettings.$inferSelect;
+export type InsertAlertSettings = typeof alertSettings.$inferInsert;

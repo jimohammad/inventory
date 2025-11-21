@@ -500,3 +500,40 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
    - Honor X9C (no history): Shows empty state with 0 sales, 0 restocks, 8 current stock
    - Samsung A17 5G 8GB/256GB (50 sales): Shows timeline with Nov 21 sale entry, -50 pcs, 139 resulting stock, and summary stats
 6. All interactions working: open modal, close button, ESC key, scrollable timeline
+
+
+## Stock Reorder Alerts Feature
+
+- [x] Create alertSettings database table with thresholds and notification preferences
+- [x] Create backend tRPC procedure to get alert settings
+- [x] Create backend tRPC procedure to update alert settings
+- [x] Create backend tRPC procedure to get alerts list with calculations
+- [x] Implement days until stockout calculation (currentStock / (salesVelocity / 7))
+- [x] Build ReorderAlerts page with settings configuration panel
+- [x] Create AlertCard component matching mockup design
+- [x] Implement alert sorting (critical first, then by urgency)
+- [x] Add color-coded alert badges (CRITICAL red, LOW STOCK amber)
+- [x] Display summary statistics footer (critical count, low stock count)
+- [x] Add "Reorder Alerts" navigation menu item with Bell icon
+- [x] Add email notification toggle (placeholder - no scheduled job yet)
+- [x] Test with various stock levels and velocity scenarios
+- [x] Add "Create PO" button placeholder with toast message
+
+**Implementation Summary:**
+1. **Database**: Created `alertSettings` table via SQL with userId, lowStockThreshold (default 10), criticalStockThreshold (default 5), defaultReorderQuantity (default 50), emailNotificationsEnabled (0/1)
+2. **Backend** (`server/routers.ts` - alerts router):
+   - `getSettings`: Returns user settings or defaults (low=10, critical=5, reorder=50)
+   - `updateSettings`: Validates thresholds (critical < low) and saves settings
+   - `getAlerts`: Fetches items below thresholds, calculates sales velocity (last 30 days), computes days until stockout, sorts by urgency
+3. **Frontend** (`client/src/pages/ReorderAlerts.tsx`):
+   - Settings panel: 3 number inputs (low/critical thresholds, reorder qty) + email toggle + Save button
+   - Alert cards: gradient borders (red=critical, amber=low), item name/code, current stock (color-coded), sales velocity, suggested reorder, days until stockout badge
+   - Summary footer: critical count (red) + low stock count (amber)
+   - "Create PO" buttons with placeholder toast
+4. **Navigation**: Added "Reorder Alerts" with Bell icon to DashboardLayout sidebar menu
+5. **Verified Working**:
+   - 6 critical alerts (stock ≤ 5) + 3 low stock alerts (stock ≤ 10) detected
+   - Days until stockout: Xiaomi 11 Ultra (11 days), Samsung F16 8GB (42 days)
+   - Alert sorting: critical first, then by days until stockout
+   - Settings load defaults correctly
+   - UI matches mockup exactly with dark theme, emerald accents, gradient borders

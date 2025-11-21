@@ -20,6 +20,7 @@ import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 import PublicCatalog from "@/pages/PublicCatalog";
 import WhatsAppContacts from "@/pages/WhatsAppContacts";
 import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
+import ReorderAlerts from "@/pages/ReorderAlerts";
 
 function Router() {
   const [location] = useLocation();
@@ -77,6 +78,13 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <InventoryAnalysis />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/reorder-alerts" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <ReorderAlerts />
           </PageTransition>
         </DashboardLayout>
       )} />
