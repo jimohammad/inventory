@@ -469,3 +469,34 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 3. Inventory Analysis page now correctly displays: 50 pcs sold, 7.14 pcs/day velocity, "fast" status
 4. Item cards now show: Last Sold 0 days ago, 11.7 units/week velocity, Fast status bar
 5. All sales velocity tracking features working correctly
+
+
+## Stock History Viewer Feature
+
+- [x] Create backend tRPC procedure to fetch stock history for specific item
+- [x] Calculate summary statistics (total sales, total restocks, current stock)
+- [x] Build StockHistoryModal component with dark theme and timeline UI
+- [x] Implement timeline entries with date, change type icons, quantity changes, and resulting stock
+- [x] Add summary statistics footer with total sales, restocks, and current stock
+- [x] Add History icon button to item cards on Items page
+- [x] Integrate modal opening from Items page
+- [x] Add smooth animations and backdrop blur effects
+- [x] Test with Samsung A17 5G to verify 50 units sold history displays correctly
+- [x] Test modal open/close interactions and scrolling
+
+**Implementation Details:**
+1. Created `items.getHistory` tRPC procedure in `server/routers.ts` that fetches stock history and calculates summary stats
+2. Built `StockHistoryModal` component (`client/src/components/StockHistoryModal.tsx`) with:
+   - Dark slate-800 background matching app theme
+   - Timeline display with color-coded entries (red=sale, green=restock, yellow=adjustment)
+   - Date formatting using date-fns library
+   - Quantity change display with +/- indicators
+   - Resulting stock level for each entry
+   - Summary footer showing total sales (red), total restocks (emerald), current stock (white)
+   - Empty state handling for items with no history
+3. Added History icon button to item cards in `ItemList.tsx` (top-right corner)
+4. Implemented modal state management with historyItem state variable
+5. Tested successfully:
+   - Honor X9C (no history): Shows empty state with 0 sales, 0 restocks, 8 current stock
+   - Samsung A17 5G 8GB/256GB (50 sales): Shows timeline with Nov 21 sale entry, -50 pcs, 139 resulting stock, and summary stats
+6. All interactions working: open modal, close button, ESC key, scrollable timeline

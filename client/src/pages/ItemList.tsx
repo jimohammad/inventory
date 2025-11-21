@@ -14,15 +14,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Link, useLocation } from "wouter";
-import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload, TrendingUp } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload, TrendingUp, History } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { ShareCatalogDialog } from "@/components/ShareCatalogDialog";
+import { StockHistoryModal } from "@/components/StockHistoryModal";
 
 export default function ItemList() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [historyItem, setHistoryItem] = useState<{ id: number; name: string; code: string } | null>(null);
 
   const { data: items, isLoading } = trpc.items.list.useQuery();
   const utils = trpc.useUtils();
@@ -203,6 +205,15 @@ export default function ItemList() {
                 {categoryItems.map((item) => (
                   <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative">
                     <div className="absolute top-2 right-2 flex gap-1 z-10">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setHistoryItem({ id: item.id, name: item.name, code: item.itemCode })}
+                        className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        title="View stock history"
+                      >
+                        <History className="w-3.5 h-3.5" />
+                      </Button>
                       <Link href={`/items/${item.id}/edit`}>
                         <Button variant="ghost" size="icon" className="h-7 w-7 hover:bg-slate-100 dark:hover:bg-slate-800">
                           <Pencil className="w-3.5 h-3.5" />
@@ -322,6 +333,16 @@ export default function ItemList() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {historyItem && (
+        <StockHistoryModal
+          isOpen={true}
+          onClose={() => setHistoryItem(null)}
+          itemId={historyItem.id}
+          itemName={historyItem.name}
+          itemCode={historyItem.code}
+        />
+      )}
     </div>
   );
 }

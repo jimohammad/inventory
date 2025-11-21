@@ -646,6 +646,69 @@ Keep the response concise, actionable, and focused on business decisions.`;
       };
     }),
 
+    getHistory: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          itemId: number;
+        };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return { history: [], stats: { totalSales: 0, totalRestocks: 0, currentStock: 0 } };
+
+        const { stockHistory, items } = await import("../drizzle/schema");
+        const { eq, and, desc, sql } = await import("drizzle-orm");
+        
+        // Fetch stock history for the item (last 100 entries)
+        const history = await db.select({
+          id: stockHistory.id,
+          changeType: stockHistory.changeType,
+          quantityChange: stockHistory.quantityChange,
+          quantityAfter: stockHistory.quantityAfter,
+          notes: stockHistory.notes,
+          createdAt: stockHistory.createdAt,
+        })
+        .from(stockHistory)
+        .where(
+          and(
+            eq(stockHistory.itemId, input.itemId),
+            eq(stockHistory.userId, ctx.user.id)
+          )
+        )
+        .orderBy(desc(stockHistory.createdAt))
+        .limit(100);
+        
+        // Get current item info
+        const [item] = await db.select({
+          availableQty: items.availableQty,
+        })
+        .from(items)
+        .where(eq(items.id, input.itemId))
+        .limit(1);
+        
+        // Calculate statistics
+        const totalSales = history
+          .filter(h => h.changeType === "sale")
+          .reduce((sum, h) => sum + Math.abs(h.quantityChange), 0);
+        
+        const totalRestocks = history
+          .filter(h => h.changeType === "restock")
+          .reduce((sum, h) => sum + Math.abs(h.quantityChange), 0);
+        
+        return {
+          history,
+          stats: {
+            totalSales,
+            totalRestocks,
+            currentStock: item?.availableQty || 0,
+          },
+        };
+      }),
+
     getPublicCatalog: publicProcedure
       .input((raw: unknown) => {
         if (typeof raw !== "object" || raw === null) {
