@@ -609,3 +609,34 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
    - Xiaomi 11 Ultra: 8 units sold, timeline visible
    - Samsung F16 models: 30 and 5 units sold, timelines visible
 7. All 34 items display correctly in 2-column grid, grouped by category
+
+
+## Stock History Page Color Scheme Enhancement
+
+- [x] Update Stock History page to use Reorder Alerts color scheme
+- [x] Apply gradient borders to item cards (red for items with sales, slate for items without history)
+- [x] Use darker card backgrounds for better contrast
+- [x] Enhance timeline entry styling with better visibility
+- [x] Match the visual design of Reorder Alerts page
+- [x] Test color scheme and readability
+
+**Implementation Details:**
+1. Applied dark gradient background: `bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950`
+2. Updated card styling: `bg-slate-800/50 backdrop-blur-sm border-2`
+3. Implemented gradient borders:
+   - Red border (`border-red-500/50 hover:border-red-500`) for items with sales history
+   - Slate border (`border-slate-700 hover:border-slate-600`) for items without history
+4. Enhanced timeline entry styling:
+   - Entry backgrounds: `bg-slate-900/50 border border-slate-700`
+   - Hover effect: `hover:border-emerald-500/30`
+   - Color-coded dots and icons (red=sale, emerald=restock, yellow=adjustment)
+5. Updated summary statistics with proper backgrounds:
+   - Total Sales: `bg-red-950/30 border border-red-900/50` with red-400 text
+   - Total Restocks: `bg-emerald-950/30 border border-emerald-900/50` with emerald-400 text
+   - Current Stock: `bg-slate-900/50 border border-slate-700` with white text
+6. Tested with multiple items:
+   - Samsung A17 5G 8GB/256GB: 50 sales, red gradient border ✓
+   - Samsung F16 models: 30 and 5 sales, red gradient borders ✓
+   - Samsung M17 5G 6GB/128GB: 15 sales, red gradient border ✓
+   - Items without history: slate borders ✓
+7. Confirmed excellent visibility and readability across all elements
