@@ -1,13 +1,11 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Loader2, History as HistoryIcon } from "lucide-react";
+import { Loader2, TrendingDown, TrendingUp, Edit } from "lucide-react";
+import { format } from "date-fns";
 import { useState } from "react";
-import { StockHistoryModal } from "@/components/StockHistoryModal";
 
 export default function StockHistory() {
-  const [historyItem, setHistoryItem] = useState<{ id: number; name: string; code: string } | null>(null);
   const { data: items, isLoading } = trpc.items.list.useQuery();
 
   if (isLoading) {
@@ -32,7 +30,7 @@ export default function StockHistory() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Stock History</h1>
-        <p className="text-muted-foreground mt-1">View stock movement and sales history for all items</p>
+        <p className="text-muted-foreground mt-1">Complete stock movement history for all items</p>
       </div>
 
       <div className="space-y-6">
@@ -42,110 +40,150 @@ export default function StockHistory() {
               <Badge variant="outline" className="text-base">{category}</Badge>
               <span className="text-sm text-muted-foreground">({categoryItems.length})</span>
             </h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
               {categoryItems.map((item) => (
-                <Card key={item.id} className="transition-all duration-300 hover:shadow-lg">
-                  <CardHeader className="pt-3 pb-2">
-                    <CardTitle className="text-base">{item.name}</CardTitle>
-                    {item.category && (
-                      <CardDescription>
-                        {item.category}
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent className="pt-0 pb-3">
-                    <div className="space-y-1.5">
-                      {item.itemCode && (
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Code</span>
-                          <span className="font-mono">{item.itemCode}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Available</span>
-                        <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
-                      </div>
-                      {item.openingStock !== null && (
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Opening Stock</span>
-                          <span className="font-medium">{item.openingStock} pcs</span>
-                        </div>
-                      )}
-                      
-                      {/* Sales Velocity Section */}
-                      <div className="pt-2 mt-2 border-t border-border">
-                        <div className="grid grid-cols-2 gap-2 mb-2">
-                          <div className="text-xs">
-                            <div className="text-muted-foreground mb-0.5">Last Sold</div>
-                            <div className="font-medium text-emerald-400">
-                              {item.lastSoldDate 
-                                ? `${Math.floor((Date.now() - new Date(item.lastSoldDate).getTime()) / (1000 * 60 * 60 * 24))} days ago`
-                                : 'Never'}
-                            </div>
-                          </div>
-                          <div className="text-xs">
-                            <div className="text-muted-foreground mb-0.5">Sales Velocity</div>
-                            <div className="font-medium text-emerald-400">
-                              {(item as any).salesVelocity || 0} units/week
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Velocity Status Bar */}
-                        <div className="space-y-1">
-                          <div className="text-xs text-muted-foreground">Velocity Status</div>
-                          <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden flex">
-                            <div 
-                              className="h-full bg-emerald-500 transition-all"
-                              style={{ width: (item as any).velocityStatus === 'fast' ? '60%' : '0%' }}
-                            />
-                            <div 
-                              className="h-full bg-yellow-500 transition-all"
-                              style={{ width: (item as any).velocityStatus === 'moderate' ? '30%' : '0%' }}
-                            />
-                            <div 
-                              className="h-full bg-red-500 transition-all"
-                              style={{ width: (item as any).velocityStatus === 'slow' ? '10%' : '0%' }}
-                            />
-                          </div>
-                          <div className="flex justify-between text-[10px]">
-                            <span className="text-emerald-400">Fast (&gt;3/wk)</span>
-                            <span className="text-yellow-400">Moderate (1-3/wk)</span>
-                            <span className="text-red-400">Slow (&lt;1/wk)</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* View History Button */}
-                      <div className="pt-3 mt-3 border-t border-border">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setHistoryItem({ id: item.id, name: item.name, code: item.itemCode })}
-                          className="w-full bg-black hover:bg-slate-900 text-emerald-400 hover:text-emerald-300 border-emerald-500/30 transition-all"
-                        >
-                          <HistoryIcon className="w-4 h-4 mr-2" />
-                          View Full History
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <StockHistoryCard key={item.id} itemId={item.id} />
               ))}
             </div>
           </div>
         ))}
       </div>
-
-      {historyItem && (
-        <StockHistoryModal
-          isOpen={true}
-          onClose={() => setHistoryItem(null)}
-          itemId={historyItem.id}
-          itemName={historyItem.name}
-          itemCode={historyItem.code}
-        />
-      )}
     </div>
+  );
+}
+
+function StockHistoryCard({ itemId }: { itemId: number }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId });
+  const { data: items } = trpc.items.list.useQuery();
+  
+  const item = items?.find(i => i.id === itemId);
+  if (!item) return null;
+
+  const totalSales = historyData?.stats.totalSales || 0;
+  const totalRestocks = historyData?.stats.totalRestocks || 0;
+  const currentStock = historyData?.stats.currentStock || 0;
+  const history = historyData?.history || [];
+
+  return (
+    <Card className="transition-all duration-300">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <CardTitle className="text-lg">{item.name}</CardTitle>
+            <CardDescription className="mt-1">
+              {item.itemCode} • {item.category}
+            </CardDescription>
+          </div>
+          <div className="text-right">
+            <div className="text-sm text-muted-foreground">Current Stock</div>
+            <div className="text-2xl font-bold text-emerald-400">{currentStock} pcs</div>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        {/* Stock Movement Timeline */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm font-medium border-b pb-2">
+            <span>Stock Movement History</span>
+            <span className="text-muted-foreground">
+              {history.length} {history.length === 1 ? 'entry' : 'entries'}
+            </span>
+          </div>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : history.length > 0 ? (
+            <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+              {history.map((entry: any, index: number) => (
+                <div
+                  key={entry.id}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-slate-900/30 border border-slate-800 hover:border-emerald-500/30 transition-all"
+                >
+                  {/* Timeline Dot */}
+                  <div className="flex flex-col items-center mt-1">
+                    <div className={`w-2.5 h-2.5 rounded-full ${
+                      entry.changeType === 'sale' ? 'bg-red-500' :
+                      entry.changeType === 'restock' ? 'bg-emerald-500' :
+                      'bg-yellow-500'
+                    }`} />
+                    {index < history.length - 1 && (
+                      <div className="w-0.5 h-full bg-slate-700 mt-1" style={{ minHeight: '20px' }} />
+                    )}
+                  </div>
+
+                  {/* Entry Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <div className="flex items-center gap-2">
+                        {entry.changeType === 'sale' ? (
+                          <TrendingDown className="w-4 h-4 text-red-400" />
+                        ) : entry.changeType === 'restock' ? (
+                          <TrendingUp className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <Edit className="w-4 h-4 text-yellow-400" />
+                        )}
+                        <span className={`text-sm font-semibold ${
+                          entry.changeType === 'sale' ? 'text-red-400' :
+                          entry.changeType === 'restock' ? 'text-emerald-400' :
+                          'text-yellow-400'
+                        }`}>
+                          {entry.changeType === 'sale' ? 'Sale' :
+                           entry.changeType === 'restock' ? 'Restock' :
+                           'Adjustment'}
+                        </span>
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {format(new Date(entry.createdAt), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm">
+                      <span className={`font-medium ${
+                        entry.quantityChange > 0 ? 'text-emerald-400' : 'text-red-400'
+                      }`}>
+                        {entry.quantityChange > 0 ? '+' : ''}{entry.quantityChange} pcs
+                      </span>
+                      <span className="text-muted-foreground">
+                        → {entry.quantityAfter} pcs
+                      </span>
+                    </div>
+
+                    {entry.notes && (
+                      <div className="text-xs text-muted-foreground mt-1 italic">
+                        {entry.notes}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <p className="text-sm">No stock history available</p>
+              <p className="text-xs mt-1">Stock movements will appear here</p>
+            </div>
+          )}
+
+          {/* Summary Statistics */}
+          <div className="grid grid-cols-3 gap-3 pt-3 border-t border-slate-800">
+            <div className="text-center p-2 rounded-lg bg-red-950/20 border border-red-900/30">
+              <div className="text-xs text-muted-foreground mb-1">Total Sales</div>
+              <div className="text-lg font-bold text-red-400">{totalSales} pcs</div>
+            </div>
+            <div className="text-center p-2 rounded-lg bg-emerald-950/20 border border-emerald-900/30">
+              <div className="text-xs text-muted-foreground mb-1">Total Restocks</div>
+              <div className="text-lg font-bold text-emerald-400">{totalRestocks} pcs</div>
+            </div>
+            <div className="text-center p-2 rounded-lg bg-slate-900/30 border border-slate-800">
+              <div className="text-xs text-muted-foreground mb-1">Current Stock</div>
+              <div className="text-lg font-bold text-white">{currentStock} pcs</div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

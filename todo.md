@@ -578,3 +578,34 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 7. Added "Stock History" menu item with History icon in DashboardLayout (between Items and Reorder Alerts)
 8. Added route `/stock-history` in App.tsx with PageTransition wrapper
 9. Tested successfully: all items display correctly, modal integration working, color scheme matches perfectly
+
+
+## Stock History Page - Permanent Timeline Display
+
+- [x] Remove "View Full History" button from Stock History cards
+- [x] Display complete stock history timeline directly on each card
+- [x] Show all stock movements (sales, restocks, adjustments) with dates and quantities
+- [x] Add summary statistics at bottom of each card timeline
+- [x] Test with items that have actual history data
+
+**Implementation Details:**
+1. Completely rewrote `StockHistory.tsx` to display timeline directly on each card
+2. Each card now contains:
+   - Header: Item name, code, category, current stock (top-right, emerald color)
+   - Stock Movement History section with entry count
+   - Timeline entries with color-coded dots, icons, dates, quantities, notes
+   - Summary statistics footer (Total Sales, Total Restocks, Current Stock)
+3. Timeline section is scrollable (max-height: 96px) for items with multiple entries
+4. Empty state shows "No stock history available" message
+5. Color scheme matches design:
+   - Sale entries: Red dot, TrendingDown icon, red text
+   - Restock entries: Emerald dot, TrendingUp icon, emerald text
+   - Adjustment entries: Yellow dot, Edit icon, yellow text
+   - Entry backgrounds: Slate-900/30 with slate-800 borders
+   - Hover effect: emerald-500/30 border
+6. Successfully tested with multiple items:
+   - Samsung A17 5G 8GB/256GB: 50 units sold, timeline entry permanently visible
+   - Redmi 13C 5G 4GB/128GB: 20 units sold, timeline visible
+   - Xiaomi 11 Ultra: 8 units sold, timeline visible
+   - Samsung F16 models: 30 and 5 units sold, timelines visible
+7. All 34 items display correctly in 2-column grid, grouped by category
