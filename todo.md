@@ -640,3 +640,35 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
    - Samsung M17 5G 6GB/128GB: 15 sales, red gradient border ✓
    - Items without history: slate borders ✓
 7. Confirmed excellent visibility and readability across all elements
+
+
+## Stock History Page - Advanced Filtering
+
+- [x] Add filter toggle to show only items with sold history
+- [x] Implement filtering logic to hide items with zero sales
+- [x] Add filter indicator showing active filter state
+- [x] Display count of filtered items vs total items
+- [x] Test filtering functionality with various items
+
+**Implementation Details:**
+1. Added filter button in top-right corner of Stock History page header
+2. Button states:
+   - Inactive: "Show Only Items with Sales" (outline style, slate colors, Filter icon)
+   - Active: "Clear Filter" (emerald background, white text, X icon)
+3. Added filter status banner below header when filter is active:
+   - Emerald background with border
+   - Text: "Showing only items with sales history"
+   - Filter icon displayed inline
+4. Implemented filtering logic in StockHistoryCard component:
+   - Added `showOnlyWithSales` prop
+   - Returns `null` when filter is active and item has zero sales
+   - Checks `totalSales` from history data
+5. Filter state managed with `useState` hook
+6. Tested successfully:
+   - Before filtering: All 34 items visible (including items with 0 sales)
+   - After filtering: Only 9 items with sales visible
+   - Items filtered correctly: Redmi 13C (20 sales), Redmi A5 (20 sales), Xiaomi 11 Ultra (8 sales), Samsung A06 (10 sales), Samsung A17 5G (50 sales), Samsung F16 6GB (30 sales), Samsung F16 8GB (5 sales), Samsung M17 (15 sales), Samsung M36 (5 sales)
+   - Items hidden correctly: 25 items with 0 sales (Honor X9C, Meizu Note 21, all Motorola, all Realme, 8 Redmi models, 9 Samsung models)
+7. Category counts remain accurate showing total items in parentheses
+8. Smooth toggle behavior with instant filtering (no page reload)
+9. Clear visual feedback with color changes and status banner

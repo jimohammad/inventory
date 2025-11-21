@@ -1,12 +1,23 @@
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon, Filter, X } from "lucide-react";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function StockHistory() {
   const { data: items, isLoading } = trpc.items.list.useQuery();
+  const [showOnlyWithSales, setShowOnlyWithSales] = useState(false);
+  
+  // Fetch history data for all items to determine which have sales
+  const itemsWithHistoryData = useMemo(() => {
+    if (!items) return [];
+    return items.map(item => ({
+      ...item,
+      // We'll check this in the card component
+    }));
+  }, [items]);
 
   if (isLoading) {
     return (
@@ -16,25 +27,68 @@ export default function StockHistory() {
     );
   }
 
+  // Filter items based on sales history (will be checked in card component)
+  const displayItems = items;
+  
   // Group items by category
-  const itemsByCategory = items?.reduce((acc, item) => {
+  const itemsByCategory = displayItems?.reduce((acc, item) => {
     const category = item.category || "Uncategorized";
     if (!acc[category]) {
       acc[category] = [];
     }
     acc[category].push(item);
     return acc;
-  }, {} as Record<string, typeof items>);
+  }, {} as Record<string, typeof displayItems>);
+  
+  // Count total items
+  const totalItems = items?.length || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <HistoryIcon className="w-8 h-8 text-emerald-400" />
-          <h1 className="text-3xl font-bold text-white">Stock History</h1>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <HistoryIcon className="w-8 h-8 text-emerald-400" />
+              <h1 className="text-3xl font-bold text-white">Stock History</h1>
+            </div>
+            <p className="text-slate-400 mt-2">Complete stock movement history for all items</p>
+          </div>
+          
+          {/* Filter Controls */}
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setShowOnlyWithSales(!showOnlyWithSales)}
+              variant={showOnlyWithSales ? "default" : "outline"}
+              className={showOnlyWithSales 
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                : "border-slate-700 text-slate-300 hover:bg-slate-800"}
+            >
+              {showOnlyWithSales ? (
+                <>
+                  <X className="w-4 h-4 mr-2" />
+                  Clear Filter
+                </>
+              ) : (
+                <>
+                  <Filter className="w-4 h-4 mr-2" />
+                  Show Only Items with Sales
+                </>
+              )}
+            </Button>
+          </div>
         </div>
-        <p className="text-slate-400">Complete stock movement history for all items</p>
+        
+        {/* Filter Status */}
+        {showOnlyWithSales && (
+          <div className="bg-emerald-950/30 border border-emerald-900/50 rounded-lg p-3">
+            <p className="text-emerald-400 text-sm">
+              <Filter className="w-4 h-4 inline mr-2" />
+              Showing only items with sales history
+            </p>
+          </div>
+        )}
 
         <div className="space-y-8">
           {Object.entries(itemsByCategory || {}).map(([category, categoryItems]) => categoryItems && (
@@ -45,7 +99,11 @@ export default function StockHistory() {
               </h2>
               <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
                 {categoryItems.map((item) => (
-                  <StockHistoryCard key={item.id} itemId={item.id} />
+                  <StockHistoryCard 
+                    key={item.id} 
+                    itemId={item.id} 
+                    showOnlyWithSales={showOnlyWithSales}
+                  />
                 ))}
               </div>
             </div>
@@ -56,7 +114,7 @@ export default function StockHistory() {
   );
 }
 
-function StockHistoryCard({ itemId }: { itemId: number }) {
+function StockHistoryCard({ itemId, showOnlyWithSales }: { itemId: number; showOnlyWithSales: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId });
   const { data: items } = trpc.items.list.useQuery();
@@ -68,6 +126,11 @@ function StockHistoryCard({ itemId }: { itemId: number }) {
   const totalRestocks = historyData?.stats.totalRestocks || 0;
   const currentStock = historyData?.stats.currentStock || 0;
   const history = historyData?.history || [];
+
+  // Filter logic: hide items without sales when filter is active
+  if (showOnlyWithSales && totalSales === 0) {
+    return null;
+  }
 
   // Determine border color based on history
   const hasSales = totalSales > 0;
