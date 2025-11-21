@@ -454,3 +454,18 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 3. Displayed Last Sold and Sales Velocity metrics in emerald color on item cards
 4. Implemented color-coded horizontal status bar showing velocity category
 5. Velocity updates automatically with each Google Sheets sync
+
+## Stock History Migration for Sold Quantities
+
+- [x] Create migration script to populate stock history from opening stock differences
+- [x] Calculate sold quantity as (openingStock - availableQty) for each item
+- [x] Create stock history records with "sale" type for sold quantities
+- [x] Set lastSoldDate for items with sales
+- [x] Verify Samsung A17 5G shows 50 units sold (189 opening - 139 available)
+
+**Resolution:**
+1. Created and executed migration script `migrations/populate_sales_history.ts`
+2. Script successfully populated stock history for 50 units sold on Samsung A17 5G 8GB/256GB
+3. Inventory Analysis page now correctly displays: 50 pcs sold, 7.14 pcs/day velocity, "fast" status
+4. Item cards now show: Last Sold 0 days ago, 11.7 units/week velocity, Fast status bar
+5. All sales velocity tracking features working correctly
