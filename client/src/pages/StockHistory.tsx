@@ -2,13 +2,15 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon, Filter, X } from "lucide-react";
-import { format } from "date-fns";
+import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon, Filter, Calendar } from "lucide-react";
+import { format, isToday } from "date-fns";
 import { useState, useMemo } from "react";
+
+type FilterType = 'all' | 'with-sales' | 'today';
 
 export default function StockHistory() {
   const { data: items, isLoading } = trpc.items.list.useQuery();
-  const [showOnlyWithSales, setShowOnlyWithSales] = useState(false);
+  const [filterType, setFilterType] = useState<FilterType>('all');
   
   // Fetch history data for all items to determine which have sales
   const itemsWithHistoryData = useMemo(() => {
@@ -57,35 +59,58 @@ export default function StockHistory() {
           </div>
           
           {/* Filter Controls */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Button
-              onClick={() => setShowOnlyWithSales(!showOnlyWithSales)}
-              variant={showOnlyWithSales ? "default" : "outline"}
-              className={showOnlyWithSales 
+              onClick={() => setFilterType('all')}
+              variant={filterType === 'all' ? "default" : "outline"}
+              size="sm"
+              className={filterType === 'all'
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
                 : "border-slate-700 text-slate-300 hover:bg-slate-800"}
             >
-              {showOnlyWithSales ? (
-                <>
-                  <X className="w-4 h-4 mr-2" />
-                  Clear Filter
-                </>
-              ) : (
-                <>
-                  <Filter className="w-4 h-4 mr-2" />
-                  Show Only Items with Sales
-                </>
-              )}
+              All
+            </Button>
+            <Button
+              onClick={() => setFilterType('with-sales')}
+              variant={filterType === 'with-sales' ? "default" : "outline"}
+              size="sm"
+              className={filterType === 'with-sales'
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                : "border-slate-700 text-slate-300 hover:bg-slate-800"}
+            >
+              <Filter className="w-4 h-4 mr-1.5" />
+              Items with Sales
+            </Button>
+            <Button
+              onClick={() => setFilterType('today')}
+              variant={filterType === 'today' ? "default" : "outline"}
+              size="sm"
+              className={filterType === 'today'
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                : "border-slate-700 text-slate-300 hover:bg-slate-800"}
+            >
+              <Calendar className="w-4 h-4 mr-1.5" />
+              Today Only
             </Button>
           </div>
         </div>
         
         {/* Filter Status */}
-        {showOnlyWithSales && (
+        {filterType !== 'all' && (
           <div className="bg-emerald-950/30 border border-emerald-900/50 rounded-lg p-3">
             <p className="text-emerald-400 text-sm">
-              <Filter className="w-4 h-4 inline mr-2" />
-              Showing only items with sales history
+              {filterType === 'with-sales' && (
+                <>
+                  <Filter className="w-4 h-4 inline mr-2" />
+                  Showing only items with sales history
+                </>
+              )}
+              {filterType === 'today' && (
+                <>
+                  <Calendar className="w-4 h-4 inline mr-2" />
+                  Showing only items with changes today
+                </>
+              )}
             </p>
           </div>
         )}
@@ -102,7 +127,7 @@ export default function StockHistory() {
                   <StockHistoryCard 
                     key={item.id} 
                     itemId={item.id} 
-                    showOnlyWithSales={showOnlyWithSales}
+                    filterType={filterType}
                   />
                 ))}
               </div>
@@ -114,7 +139,7 @@ export default function StockHistory() {
   );
 }
 
-function StockHistoryCard({ itemId, showOnlyWithSales }: { itemId: number; showOnlyWithSales: boolean }) {
+function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: FilterType }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId });
   const { data: items } = trpc.items.list.useQuery();
@@ -127,9 +152,17 @@ function StockHistoryCard({ itemId, showOnlyWithSales }: { itemId: number; showO
   const currentStock = historyData?.stats.currentStock || 0;
   const history = historyData?.history || [];
 
-  // Filter logic: hide items without sales when filter is active
-  if (showOnlyWithSales && totalSales === 0) {
+  // Filter logic
+  if (filterType === 'with-sales' && totalSales === 0) {
     return null;
+  }
+  
+  if (filterType === 'today') {
+    // Check if any history entry is from today
+    const hasTodayEntry = history.some((entry: any) => isToday(new Date(entry.createdAt)));
+    if (!hasTodayEntry) {
+      return null;
+    }
   }
 
   // Determine border color based on history

@@ -672,3 +672,42 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 7. Category counts remain accurate showing total items in parentheses
 8. Smooth toggle behavior with instant filtering (no page reload)
 9. Clear visual feedback with color changes and status banner
+
+
+## Stock History Page - Multiple Filter Options
+
+- [x] Replace single filter button with three filter buttons
+- [x] Add "All" filter option to show all items (default)
+- [x] Add "Items with Sales" filter option to show only items with sales history
+- [x] Add "Today Only" filter option to show only items with changes today
+- [x] Implement date comparison logic for "Today Only" filter
+- [x] Update filter status banner to show active filter type
+- [x] Test all three filter options
+
+**Implementation Details:**
+1. Created three filter buttons in top-right corner of Stock History page header
+2. Filter state managed with `useState<FilterType>` where `FilterType = 'all' | 'with-sales' | 'today'`
+3. Button styling:
+   - Active: `bg-emerald-600 text-white` (emerald green background)
+   - Inactive: `border-slate-700 text-slate-300` (slate outline)
+   - All buttons: small size with consistent spacing
+4. Icons:
+   - "Items with Sales": Filter icon
+   - "Today Only": Calendar icon
+   - "All": no icon
+5. Filter status banner:
+   - Only displayed when `filterType !== 'all'`
+   - "Items with Sales": "Showing only items with sales history" (Filter icon)
+   - "Today Only": "Showing only items with changes today" (Calendar icon)
+   - Emerald background with border matching Reorder Alerts design
+6. Filtering logic in StockHistoryCard component:
+   - `filterType='with-sales'`: Returns null if `totalSales === 0`
+   - `filterType='today'`: Returns null if no history entry from today (uses `isToday` from date-fns)
+   - `filterType='all'`: Shows all items
+7. Successfully tested all three filters:
+   - "All": Shows all 34 items, no banner
+   - "Items with Sales": Shows 9 items with sales, hides 25 items without sales, banner displayed
+   - "Today Only": Shows 9 items with today's changes (Nov 21, 2025), banner displayed
+8. Smooth transitions between filters with instant updates (no page reload)
+9. Button states update correctly on each click
+10. Category counts remain accurate showing total items in parentheses
