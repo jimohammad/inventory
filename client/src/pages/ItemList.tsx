@@ -197,17 +197,17 @@ export default function ItemList() {
         <div className="space-y-6">
           {Object.entries(itemsByCategory).map(([category, categoryItems]) => categoryItems && (
             <div key={category}>
-              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                <Badge variant="outline" className="text-base">{category}</Badge>
-                <span className="text-sm text-muted-foreground">({categoryItems.length})</span>
+              <h2 className="text-xl font-semibold mb-3 flex items-center gap-2 text-white">
+                <Badge variant="outline" className="text-base border-emerald-500 text-emerald-400">{category}</Badge>
+                <span className="text-sm text-slate-400">({categoryItems.length})</span>
               </h2>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {categoryItems.map((item) => (
-                  <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative">
+                  <Card key={item.id} id={`item-${item.id}`} className="transition-all duration-300 relative bg-slate-800/50 backdrop-blur-sm border-2 border-slate-700 hover:border-slate-600 hover:shadow-lg">
                     <CardHeader className="pt-3 pb-2">
-                      <CardTitle className="text-base">{item.name}</CardTitle>
+                      <CardTitle className="text-base text-white">{item.name}</CardTitle>
                       {item.category && (
-                        <CardDescription>
+                        <CardDescription className="text-slate-400">
                           {item.category}
                         </CardDescription>
                       )}
@@ -216,32 +216,32 @@ export default function ItemList() {
                       <div className="space-y-1.5">
                         {item.itemCode && (
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-muted-foreground">Code</span>
-                            <span className="font-mono">{item.itemCode}</span>
+                            <span className="text-slate-400">Code</span>
+                            <span className="font-mono text-slate-300">{item.itemCode}</span>
                           </div>
                         )}
                         {item.sellingPrice && (
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-muted-foreground">Selling Price</span>
-                            <span className="font-medium">KWD {parseFloat(item.sellingPrice.toString()).toFixed(3)}</span>
+                            <span className="text-slate-400">Selling Price</span>
+                            <span className="font-medium text-emerald-400">KWD {parseFloat(item.sellingPrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         {item.purchasePrice && (
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-muted-foreground">Purchase Price</span>
-                            <span className="font-medium">KWD {parseFloat(item.purchasePrice.toString()).toFixed(3)}</span>
+                            <span className="text-slate-400">Purchase Price</span>
+                            <span className="font-medium text-blue-400">KWD {parseFloat(item.purchasePrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         <div className="flex items-center justify-between text-xs">
-                          <span className="text-muted-foreground">Available</span>
-                          <span className="font-semibold text-primary">{item.availableQty || 0} pcs</span>
+                          <span className="text-slate-400">Available</span>
+                          <span className="font-semibold text-emerald-400">{item.availableQty || 0} pcs</span>
                         </div>
                         
                         {/* Sales Velocity Section */}
-                        <div className="pt-2 mt-2 border-t border-border">
+                        <div className="pt-2 mt-2 border-t border-slate-700">
                           <div className="grid grid-cols-2 gap-2 mb-2">
                             <div className="text-xs">
-                              <div className="text-muted-foreground mb-0.5">Last Sold</div>
+                              <div className="text-slate-400 mb-0.5">Last Sold</div>
                               <div className="font-medium text-emerald-400">
                                 {item.lastSoldDate 
                                   ? `${Math.floor((Date.now() - new Date(item.lastSoldDate).getTime()) / (1000 * 60 * 60 * 24))} days ago`
@@ -249,7 +249,7 @@ export default function ItemList() {
                               </div>
                             </div>
                             <div className="text-xs">
-                              <div className="text-muted-foreground mb-0.5">Sales Velocity</div>
+                              <div className="text-slate-400 mb-0.5">Sales Velocity</div>
                               <div className="font-medium text-emerald-400">
                                 {(item as any).salesVelocity || 0} units/week
                               </div>
@@ -258,8 +258,8 @@ export default function ItemList() {
                           
                           {/* Velocity Status Bar */}
                           <div className="space-y-1">
-                            <div className="text-xs text-muted-foreground">Velocity Status</div>
-                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden flex">
+                            <div className="text-xs text-slate-400">Velocity Status</div>
+                            <div className="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden flex">
                               <div 
                                 className="h-full bg-emerald-500 transition-all"
                                 style={{ width: (item as any).velocityStatus === 'fast' ? '60%' : '0%' }}
@@ -282,7 +282,7 @@ export default function ItemList() {
                         </div>
                         
                         {/* Action Icons at Bottom */}
-                        <div className="flex items-center justify-center gap-3 pt-3 mt-3 border-t border-border">
+                        <div className="flex items-center justify-center gap-3 pt-3 mt-3 border-t border-slate-700">
                           <Button
                             variant="ghost"
                             size="icon"

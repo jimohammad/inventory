@@ -847,3 +847,14 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test visual consistency with Dashboard page
 
 **Implementation:** Updated ItemList.tsx to apply black theme (slate-950 background) and made search field full-width by removing max-w-4xl constraint. Changed header text to white with slate-400 subtitle for better contrast. Item cards remain white and stand out nicely against black background. Design is now consistent with Dashboard page.
+
+
+## Items Page Dark Card Styling
+
+- [x] Update item cards to use dark backgrounds (similar to Stock History page)
+- [x] Adjust text colors for better readability on dark cards
+- [x] Update card titles, labels, and values with appropriate colors
+- [x] Ensure badges and buttons remain visible on dark backgrounds
+- [x] Test overall visual consistency and readability
+
+**Implementation:** Updated ItemList.tsx cards with dark styling matching Stock History page. Applied slate-800/50 backdrop-blur backgrounds with slate-700 borders. Text colors: white titles, slate-400 labels, emerald-400 for selling prices and availability, blue-400 for purchase prices, slate-300 for codes. Category badges use emerald borders. All borders (dividers, velocity bars) changed to slate-700/900. Design is now visually consistent across Dashboard, Items, and Stock History pages.
