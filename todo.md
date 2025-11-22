@@ -916,3 +916,11 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 6. Increased icon sizes from w-4 h-4 to w-5 h-5 for better visibility at larger button size
 7. Maintained gap-3 spacing between buttons for clean horizontal alignment
 8. Result: Cleaner, more organized layout with better visual hierarchy and consistent sizing
+
+
+## Button Text Optimization
+
+- [x] Rename "Bulk Opening Stock" button to "Opening Stock" for consistent button sizing
+- [x] Verify all buttons have similar width for better visual balance
+
+**Implementation:** Changed button text from "Bulk Opening Stock" to "Opening Stock" in ItemList.tsx to reduce button width and create more uniform sizing across all 6 action buttons. Result: Better visual balance in the button row with more consistent widths.

@@ -99,7 +99,7 @@ export default function ItemList() {
         <Link href="/items/bulk-opening-stock">
           <Button className="h-16 bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
             <Upload className="w-5 h-5 mr-2" />
-            Bulk Opening Stock
+            Opening Stock
           </Button>
         </Link>
         <Link href="/items/import">
