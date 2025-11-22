@@ -74,11 +74,11 @@ export default function ItemList() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-slate-950 space-y-6 p-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Items</h1>
-          <p className="text-muted-foreground mt-1">Manage your inventory items</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Items</h1>
+          <p className="text-slate-400 mt-1">Manage your inventory items</p>
         </div>
         <div className="flex gap-2">
           <ShareCatalogDialog />
@@ -116,7 +116,7 @@ export default function ItemList() {
       </div>
 
       {/* Search Field */}
-      <div className="relative max-w-4xl mx-auto">
+      <div className="relative w-full">
         <div className="relative">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-7 h-7 text-emerald-400" />
           <Input

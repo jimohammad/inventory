@@ -836,3 +836,14 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test visual consistency and readability
 
 **Implementation:** Redesigned Dashboard.tsx with modern gradient cards inspired by user reference image. Each card features: gradient background (purple/blue/emerald), large icon at top (FolderOpen/AlertTriangle/DollarSign), white rounded content section at bottom with label and value. Applied slate-950 black background to entire dashboard page. Cards have hover animations (lift up, shadow). Design is visually striking and maintains excellent readability.
+
+
+## Items Page Design Update
+
+- [x] Make search field full-width on Items page (similar to Dashboard)
+- [x] Apply black theme (slate-950) to entire Items page background
+- [x] Update header text colors for black theme
+- [x] Ensure item cards remain readable on black background
+- [x] Test visual consistency with Dashboard page
+
+**Implementation:** Updated ItemList.tsx to apply black theme (slate-950 background) and made search field full-width by removing max-w-4xl constraint. Changed header text to white with slate-400 subtitle for better contrast. Item cards remain white and stand out nicely against black background. Design is now consistent with Dashboard page.
