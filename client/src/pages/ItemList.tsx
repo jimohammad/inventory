@@ -85,31 +85,31 @@ export default function ItemList() {
       <div className="flex gap-3 justify-end">
         <ShareCatalogDialog />
         <Link href="/items/bulk-price-update">
-          <Button className="h-16 bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button className="h-16 bg-gradient-to-br from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 text-blue-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
             <TrendingUp className="w-5 h-5 mr-2" />
             Bulk Price Update
           </Button>
         </Link>
         <Link href="/items/bulk-import">
-          <Button className="h-16 bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button className="h-16 bg-gradient-to-br from-teal-200 to-teal-300 hover:from-teal-300 hover:to-teal-400 text-teal-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
             <Upload className="w-5 h-5 mr-2" />
             Bulk Import
           </Button>
         </Link>
         <Link href="/items/bulk-opening-stock">
-          <Button className="h-16 bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button className="h-16 bg-gradient-to-br from-orange-200 to-orange-300 hover:from-orange-300 hover:to-orange-400 text-orange-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
             <Upload className="w-5 h-5 mr-2" />
             Opening Stock
           </Button>
         </Link>
         <Link href="/items/import">
-          <Button className="h-16 bg-gradient-to-br from-cyan-500 to-cyan-700 hover:from-cyan-600 hover:to-cyan-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button className="h-16 bg-gradient-to-br from-cyan-200 to-cyan-300 hover:from-cyan-300 hover:to-cyan-400 text-cyan-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
             <Upload className="w-5 h-5 mr-2" />
             Import Stock
           </Button>
         </Link>
         <Link href="/items/new">
-          <Button className="h-16 bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+          <Button className="h-16 bg-gradient-to-br from-pink-200 to-pink-300 hover:from-pink-300 hover:to-pink-400 text-pink-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
             <Plus className="w-5 h-5 mr-2" />
             Add Item
           </Button>

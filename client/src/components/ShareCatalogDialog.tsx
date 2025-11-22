@@ -42,7 +42,7 @@ export function ShareCatalogDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="h-16 bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+        <Button className="h-16 bg-gradient-to-br from-purple-200 to-purple-300 hover:from-purple-300 hover:to-purple-400 text-purple-900 border-0 shadow-md hover:shadow-lg transition-all duration-300">
           <Share2 className="w-5 h-5 mr-2" />
           Share Catalog
         </Button>

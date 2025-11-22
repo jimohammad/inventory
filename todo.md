@@ -924,3 +924,25 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Verify all buttons have similar width for better visual balance
 
 **Implementation:** Changed button text from "Bulk Opening Stock" to "Opening Stock" in ItemList.tsx to reduce button width and create more uniform sizing across all 6 action buttons. Result: Better visual balance in the button row with more consistent widths.
+
+
+## Soft Pastel Button Colors
+
+- [x] Replace vibrant gradient colors with soft, light pastel colors
+- [x] Update Share Catalog button to soft purple/lavender
+- [x] Update Bulk Price Update button to soft blue
+- [x] Update Bulk Import button to soft teal/mint
+- [x] Update Opening Stock button to soft peach/coral
+- [x] Update Import Stock button to soft cyan
+- [x] Update Add Item button to soft pink/rose
+- [x] Adjust text colors to darker shades for readability on light backgrounds
+- [x] Test button appearance and ensure sufficient contrast
+
+**Implementation:** Replaced all vibrant gradient colors (500-700 shades) with soft pastel colors (200-300 shades) inspired by user's reference image. Updated all 6 action buttons:
+- Share Catalog: purple-200 to purple-300 with purple-900 text
+- Bulk Price Update: blue-200 to blue-300 with blue-900 text
+- Bulk Import: teal-200 to teal-300 with teal-900 text
+- Opening Stock: orange-200 to orange-300 with orange-900 text
+- Import Stock: cyan-200 to cyan-300 with cyan-900 text
+- Add Item: pink-200 to pink-300 with pink-900 text
+Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance. Result: Elegant, modern design with excellent text contrast and gentle pastel aesthetic matching reference image.
