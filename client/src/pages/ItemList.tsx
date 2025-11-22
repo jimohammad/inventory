@@ -75,44 +75,45 @@ export default function ItemList() {
 
   return (
     <div className="min-h-screen bg-slate-950 space-y-6 p-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Items</h1>
-          <p className="text-slate-400 mt-1">Manage your inventory items</p>
-        </div>
-        <div className="flex gap-2">
-          <ShareCatalogDialog />
-          <Link href="/items/bulk-price-update">
-            <Button className="bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Bulk Price Update
-            </Button>
-          </Link>
-          <Link href="/items/bulk-import">
-            <Button className="bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Upload className="w-4 h-4 mr-2" />
-              Bulk Import
-            </Button>
-          </Link>
-          <Link href="/items/bulk-opening-stock">
-            <Button className="bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Upload className="w-4 h-4 mr-2" />
-              Bulk Opening Stock
-            </Button>
-          </Link>
-          <Link href="/items/import">
-            <Button className="bg-gradient-to-br from-cyan-500 to-cyan-700 hover:from-cyan-600 hover:to-cyan-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Upload className="w-4 h-4 mr-2" />
-              Import Stock
-            </Button>
-          </Link>
-          <Link href="/items/new">
-            <Button className="bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Item
-            </Button>
-          </Link>
-        </div>
+      {/* Header with Title */}
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-white">Items</h1>
+        <p className="text-slate-400 mt-1">Manage your inventory items</p>
+      </div>
+
+      {/* Action Buttons Row */}
+      <div className="flex gap-3 justify-end">
+        <ShareCatalogDialog />
+        <Link href="/items/bulk-price-update">
+          <Button className="h-16 bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <TrendingUp className="w-5 h-5 mr-2" />
+            Bulk Price Update
+          </Button>
+        </Link>
+        <Link href="/items/bulk-import">
+          <Button className="h-16 bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Upload className="w-5 h-5 mr-2" />
+            Bulk Import
+          </Button>
+        </Link>
+        <Link href="/items/bulk-opening-stock">
+          <Button className="h-16 bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Upload className="w-5 h-5 mr-2" />
+            Bulk Opening Stock
+          </Button>
+        </Link>
+        <Link href="/items/import">
+          <Button className="h-16 bg-gradient-to-br from-cyan-500 to-cyan-700 hover:from-cyan-600 hover:to-cyan-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Upload className="w-5 h-5 mr-2" />
+            Import Stock
+          </Button>
+        </Link>
+        <Link href="/items/new">
+          <Button className="h-16 bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Plus className="w-5 h-5 mr-2" />
+            Add Item
+          </Button>
+        </Link>
       </div>
 
       {/* Search Field */}
@@ -123,7 +124,7 @@ export default function ItemList() {
             placeholder="Search items by name, code, or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-20 pl-16 pr-8 text-2xl font-bold bg-slate-900/95 border-2 border-emerald-500 rounded-2xl placeholder:text-slate-500 text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="h-16 pl-16 pr-8 text-xl font-medium bg-slate-900/95 border-2 border-emerald-500 rounded-2xl placeholder:text-slate-500 text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
         </div>
 
