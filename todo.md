@@ -732,3 +732,37 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 4. Price History section displays: Header with entry count, Date for each entry (MMM dd, yyyy format), Purchase Price in blue (3 decimal places + KWD), Selling Price in emerald (3 decimal places + KWD), Price change indicators (↑ red for increases, ↓ emerald for decreases), Scrollable timeline (max-height: 96px), Empty state message when no data
 5. Feature fully implemented and ready to track price changes when users edit item prices
 6. Price history will be automatically populated when item prices are updated in the future
+
+
+## Stock History Page - Global Search Field
+
+- [ ] Add global search field to Stock History page matching Dashboard style
+- [ ] Implement autocomplete functionality showing item suggestions
+- [ ] Use light black background and emerald text
+- [ ] Add smooth animations and transitions
+- [ ] Scroll to item card when selected from autocomplete
+- [ ] Test search functionality with various item names and codes
+
+
+## Stock History Page - Global Search Field
+
+- [x] Add global search field to Stock History page header
+- [x] Match Dashboard search field styling (size, colors, icons)
+- [x] Implement autocomplete dropdown with item suggestions
+- [x] Show item name, code, category, price, and quantity in suggestions
+- [x] Add scroll-to-item functionality when clicking a suggestion
+- [x] Add highlight effect to target card after scrolling
+- [x] Test search and autocomplete functionality
+
+**Implementation Details:**
+1. Added large search input field below filter buttons with emerald Search icon
+2. Styling matches Dashboard: h-16, pl-14, text-xl, bg-slate-800, emerald-400 text
+3. Implemented autocomplete with useState for searchQuery and showSuggestions
+4. Search filters items by name, code, or category (case-insensitive)
+5. Shows up to 8 matching results in dropdown
+6. Each suggestion displays: Item name (emerald, bold), Item code • category (slate-400), Price (emerald, 3 decimals), Available quantity
+7. Dropdown styling: slate-800 bg, slate-700 borders, hover effects
+8. Added itemRefs using useRef to track card DOM elements
+9. Implemented scrollToItem function: smooth scroll, center alignment, emerald shadow highlight (2s duration)
+10. Clicking suggestion triggers scroll, clears search, closes dropdown
+11. Successfully tested with "Samsung A17" query: 2 results shown correctly, clicked Samsung A17 5G 8GB/256GB NFC, scrolled to card smoothly, card highlighted with emerald shadow, search cleared and dropdown closed

@@ -2,24 +2,45 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon, Filter, Calendar } from "lucide-react";
+import { Loader2, TrendingDown, TrendingUp, Edit, History as HistoryIcon, Filter, Calendar, Search } from "lucide-react";
 import { format, isToday } from "date-fns";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { Input } from "@/components/ui/input";
 
 type FilterType = 'all' | 'with-sales' | 'today';
 
 export default function StockHistory() {
   const { data: items, isLoading } = trpc.items.list.useQuery();
   const [filterType, setFilterType] = useState<FilterType>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const itemRefs = useRef<Record<number, HTMLDivElement | null>>({});
   
-  // Fetch history data for all items to determine which have sales
-  const itemsWithHistoryData = useMemo(() => {
-    if (!items) return [];
-    return items.map(item => ({
-      ...item,
-      // We'll check this in the card component
-    }));
-  }, [items]);
+  // Search results for autocomplete
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim() || !items) return [];
+    const query = searchQuery.toLowerCase();
+    return items
+      .filter((item: any) => 
+        item.name.toLowerCase().includes(query) ||
+        item.itemCode.toLowerCase().includes(query) ||
+        item.category.toLowerCase().includes(query)
+      )
+      .slice(0, 8);
+  }, [searchQuery, items]);
+
+  // Scroll to item card when selected
+  const scrollToItem = (itemId: number) => {
+    const element = itemRefs.current[itemId];
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight the card briefly
+      element.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.5)';
+      setTimeout(() => {
+        element.style.boxShadow = '';
+      }, 2000);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -49,17 +70,18 @@ export default function StockHistory() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <HistoryIcon className="w-8 h-8 text-emerald-400" />
-              <h1 className="text-3xl font-bold text-white">Stock History</h1>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3">
+                <HistoryIcon className="w-8 h-8 text-emerald-400" />
+                <h1 className="text-3xl font-bold text-white">Stock History</h1>
+              </div>
+              <p className="text-slate-400 mt-2">Complete stock movement history for all items</p>
             </div>
-            <p className="text-slate-400 mt-2">Complete stock movement history for all items</p>
-          </div>
-          
-          {/* Filter Controls */}
-          <div className="flex items-center gap-2">
+            
+            {/* Filter Controls */}
+            <div className="flex items-center gap-2">
             <Button
               onClick={() => setFilterType('all')}
               variant={filterType === 'all' ? "default" : "outline"}
@@ -94,6 +116,66 @@ export default function StockHistory() {
             </Button>
           </div>
         </div>
+
+        {/* Global Search Field */}
+        <div className="relative w-full">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-emerald-500" />
+            <Input
+              type="text"
+              placeholder="Search items by name, code, or category..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              className="h-16 pl-14 pr-6 text-xl font-medium bg-slate-800 border-slate-700 text-emerald-400 placeholder:text-slate-500 focus:border-emerald-500 focus:ring-emerald-500"
+            />
+          </div>
+
+          {/* Autocomplete Suggestions */}
+          {showSuggestions && searchQuery.trim() && searchResults.length > 0 && (
+            <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl overflow-hidden">
+              {searchResults.map((item: any) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    scrollToItem(item.id);
+                    setSearchQuery("");
+                    setShowSuggestions(false);
+                  }}
+                  className="w-full px-4 py-3 text-left hover:bg-slate-700 transition-colors border-b border-slate-700 last:border-b-0"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="text-base font-semibold text-emerald-400">{item.name}</div>
+                      <div className="text-sm text-slate-400 mt-1">
+                        {item.itemCode} • {item.category}
+                      </div>
+                    </div>
+                    <div className="text-right ml-4">
+                      <div className="text-base font-bold text-emerald-400">
+                        KWD {parseFloat(item.sellingPrice || "0").toFixed(3)}
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        {item.availableQty} units
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {showSuggestions && searchQuery.trim() && searchResults.length === 0 && (
+            <div className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl p-4">
+              <p className="text-slate-400 text-center">No items found matching "{searchQuery}"</p>
+            </div>
+          )}
+        </div>
+      </div>
         
         {/* Filter Status */}
         {filterType !== 'all' && (
@@ -124,11 +206,12 @@ export default function StockHistory() {
               </h2>
               <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
                 {categoryItems.map((item) => (
-                  <StockHistoryCard 
-                    key={item.id} 
-                    itemId={item.id} 
-                    filterType={filterType}
-                  />
+                  <div key={item.id} ref={(el) => itemRefs.current[item.id] = el}>
+                    <StockHistoryCard 
+                      itemId={item.id} 
+                      filterType={filterType}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
