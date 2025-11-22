@@ -711,3 +711,24 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 8. Smooth transitions between filters with instant updates (no page reload)
 9. Button states update correctly on each click
 10. Category counts remain accurate showing total items in parentheses
+
+
+## Stock History Cards - Price History Timeline
+
+- [x] Create priceHistory database table to track price changes over time
+- [x] Add fields: itemId, purchasePrice, sellingPrice, changedAt
+- [x] Create backend tRPC procedure to fetch price history for an item
+- [x] Add price history timeline section to Stock History cards
+- [x] Display purchase price changes with dates
+- [x] Display selling price changes with dates
+- [x] Show price increase/decrease indicators (arrows, colors)
+- [x] Format prices with 3 decimal places (e.g., 24.500 KWD)
+- [x] Test price history display with items that have price changes
+
+**Implementation Details:**
+1. Created `priceHistory` table with schema: id, userId, itemId, purchasePrice (decimal 10,3), sellingPrice (decimal 10,3), changedAt (timestamp)
+2. Added `items.getPriceHistory` tRPC procedure in `server/routers.ts` to fetch last 50 price history entries ordered by date descending
+3. Updated `StockHistory.tsx` to add Price History section below Stock Movement History in StockHistoryCard component
+4. Price History section displays: Header with entry count, Date for each entry (MMM dd, yyyy format), Purchase Price in blue (3 decimal places + KWD), Selling Price in emerald (3 decimal places + KWD), Price change indicators (↑ red for increases, ↓ emerald for decreases), Scrollable timeline (max-height: 96px), Empty state message when no data
+5. Feature fully implemented and ready to track price changes when users edit item prices
+6. Price history will be automatically populated when item prices are updated in the future

@@ -127,3 +127,19 @@ export const alertSettings = mysqlTable("alertSettings", {
 
 export type AlertSettings = typeof alertSettings.$inferSelect;
 export type InsertAlertSettings = typeof alertSettings.$inferInsert;
+
+/**
+ * Price History table
+ * Tracks purchase price and selling price changes over time for each item
+ */
+export const priceHistory = mysqlTable("priceHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  itemId: int("itemId").notNull(),
+  purchasePrice: decimal("purchasePrice", { precision: 10, scale: 3 }),
+  sellingPrice: decimal("sellingPrice", { precision: 10, scale: 3 }),
+  changedAt: timestamp("changedAt").defaultNow().notNull(),
+});
+
+export type PriceHistory = typeof priceHistory.$inferSelect;
+export type InsertPriceHistory = typeof priceHistory.$inferInsert;

@@ -709,6 +709,38 @@ Keep the response concise, actionable, and focused on business decisions.`;
         };
       }),
 
+    getPriceHistory: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        return raw as {
+          itemId: number;
+        };
+      })
+      .query(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return [];
+
+        const { priceHistory } = await import("../drizzle/schema");
+        const { eq, and, desc } = await import("drizzle-orm");
+        
+        // Fetch price history for the item (last 50 entries)
+        const history = await db.select()
+          .from(priceHistory)
+          .where(
+            and(
+              eq(priceHistory.userId, ctx.user.id),
+              eq(priceHistory.itemId, input.itemId)
+            )
+          )
+          .orderBy(desc(priceHistory.changedAt))
+          .limit(50);
+        
+        return history;
+      }),
+
     getPublicCatalog: publicProcedure
       .input((raw: unknown) => {
         if (typeof raw !== "object" || raw === null) {

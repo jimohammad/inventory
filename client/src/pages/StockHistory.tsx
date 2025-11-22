@@ -142,6 +142,7 @@ export default function StockHistory() {
 function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: FilterType }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId });
+  const { data: priceHistory, isLoading: isPriceLoading } = trpc.items.getPriceHistory.useQuery({ itemId });
   const { data: items } = trpc.items.list.useQuery();
   
   const item = items?.find(i => i.id === itemId);
@@ -275,6 +276,87 @@ function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: 
               <p className="text-xs mt-1 text-slate-500">Stock movements will appear here</p>
             </div>
           )}
+
+          {/* Price History Timeline */}
+          <div className="space-y-3 mt-6">
+            <div className="flex items-center justify-between text-sm font-medium border-b border-slate-700 pb-2">
+              <span className="text-white">Price History</span>
+              <span className="text-slate-400">
+                {priceHistory?.length || 0} {priceHistory?.length === 1 ? 'entry' : 'entries'}
+              </span>
+            </div>
+
+            {isPriceLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-emerald-400" />
+              </div>
+            ) : priceHistory && priceHistory.length > 0 ? (
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                {priceHistory.map((entry: any, index: number) => {
+                  // Calculate price changes
+                  const prevEntry = index < priceHistory.length - 1 ? priceHistory[index + 1] : null;
+                  const purchasePriceChange = prevEntry ? Number(entry.purchasePrice) - Number(prevEntry.purchasePrice) : 0;
+                  const sellingPriceChange = prevEntry ? Number(entry.sellingPrice) - Number(prevEntry.sellingPrice) : 0;
+                  
+                  return (
+                    <div
+                      key={entry.id}
+                      className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 hover:border-emerald-500/30 transition-all"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-slate-400">
+                          {format(new Date(entry.changedAt), 'MMM dd, yyyy')}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        {/* Purchase Price */}
+                        <div className="space-y-1">
+                          <div className="text-xs text-slate-500">Purchase Price</div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-blue-400">
+                              {Number(entry.purchasePrice).toFixed(3)} KWD
+                            </span>
+                            {prevEntry && purchasePriceChange !== 0 && (
+                              <span className={`text-xs flex items-center gap-0.5 ${
+                                purchasePriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
+                              }`}>
+                                {purchasePriceChange > 0 ? '↑' : '↓'}
+                                {Math.abs(purchasePriceChange).toFixed(3)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Selling Price */}
+                        <div className="space-y-1">
+                          <div className="text-xs text-slate-500">Selling Price</div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-emerald-400">
+                              {Number(entry.sellingPrice).toFixed(3)} KWD
+                            </span>
+                            {prevEntry && sellingPriceChange !== 0 && (
+                              <span className={`text-xs flex items-center gap-0.5 ${
+                                sellingPriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
+                              }`}>
+                                {sellingPriceChange > 0 ? '↑' : '↓'}
+                                {Math.abs(sellingPriceChange).toFixed(3)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-slate-400">
+                <p className="text-sm">No price history available</p>
+                <p className="text-xs mt-1 text-slate-500">Price changes will appear here</p>
+              </div>
+            )}
+          </div>
 
           {/* Summary Statistics */}
           <div className="grid grid-cols-3 gap-3 pt-3 border-t border-slate-700">
