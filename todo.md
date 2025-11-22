@@ -858,3 +858,18 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test overall visual consistency and readability
 
 **Implementation:** Updated ItemList.tsx cards with dark styling matching Stock History page. Applied slate-800/50 backdrop-blur backgrounds with slate-700 borders. Text colors: white titles, slate-400 labels, emerald-400 for selling prices and availability, blue-400 for purchase prices, slate-300 for codes. Category badges use emerald borders. All borders (dividers, velocity bars) changed to slate-700/900. Design is now visually consistent across Dashboard, Items, and Stock History pages.
+
+
+## Dashboard and Items Page Fixes
+
+- [x] Remove green border line appearing at bottom of Dashboard gradient cards
+- [x] Fix hidden action buttons on Items page (Share Catalog, Bulk Price Update, Bulk Import, etc.)
+- [x] Ensure all buttons are visible with proper contrast on black background
+- [x] Test Dashboard cards have no unwanted borders
+- [x] Verify all Items page header buttons are clickable
+- [x] Verify fixes work correctly after browser login
+
+**Implementation:**
+1. Dashboard gradient cards: Changed white content section from `rounded-t-2xl` to `rounded-2xl` to eliminate green border line showing through at bottom corners
+2. Items page buttons: Added explicit color classes to outline buttons (`border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white`) to make them visible on black background
+3. Tested both fixes: Dashboard cards now have clean rounded corners with no border artifacts, all Items page action buttons are clearly visible and clickable

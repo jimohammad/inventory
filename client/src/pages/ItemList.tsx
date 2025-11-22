@@ -83,25 +83,25 @@ export default function ItemList() {
         <div className="flex gap-2">
           <ShareCatalogDialog />
           <Link href="/items/bulk-price-update">
-            <Button variant="outline">
+            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
               <TrendingUp className="w-4 h-4 mr-2" />
               Bulk Price Update
             </Button>
           </Link>
           <Link href="/items/bulk-import">
-            <Button variant="outline">
+            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
               <Upload className="w-4 h-4 mr-2" />
               Bulk Import
             </Button>
           </Link>
           <Link href="/items/bulk-opening-stock">
-            <Button variant="outline">
+            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
               <Upload className="w-4 h-4 mr-2" />
               Bulk Opening Stock
             </Button>
           </Link>
           <Link href="/items/import">
-            <Button variant="outline">
+            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
               <Upload className="w-4 h-4 mr-2" />
               Import Stock
             </Button>

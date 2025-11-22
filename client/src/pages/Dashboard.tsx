@@ -108,7 +108,7 @@ export default function Dashboard() {
           </div>
           
           {/* Content Section */}
-          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
             <div className="flex items-center gap-2">
               <Package className="w-4 h-4 text-purple-600" />
               <p className="text-sm font-medium text-slate-600">Total Items</p>
@@ -128,7 +128,7 @@ export default function Dashboard() {
           </div>
           
           {/* Content Section */}
-          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
             <div className="flex items-center gap-2">
               <TrendingDown className="w-4 h-4 text-blue-600" />
               <p className="text-sm font-medium text-slate-600">Low Stock Items</p>
@@ -148,7 +148,7 @@ export default function Dashboard() {
           </div>
           
           {/* Content Section */}
-          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-emerald-600" />
               <p className="text-sm font-medium text-slate-600">Total Stock Value</p>
