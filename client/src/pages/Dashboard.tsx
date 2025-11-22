@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import { Package, TrendingDown, TrendingUp, AlertTriangle, Search } from "lucide-react";
+import { Package, TrendingDown, TrendingUp, AlertTriangle, Search, FolderOpen, DollarSign } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,12 +27,12 @@ export default function Dashboard() {
   }, [searchQuery, items]);
 
   return (
-    <div className="space-y-8 p-8">
+    <div className="min-h-screen bg-slate-950 space-y-8 p-8">
       {/* Header */}
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Inventory Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Overview of your inventory and items</p>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Inventory Dashboard</h1>
+          <p className="text-slate-400 mt-1">Overview of your inventory and items</p>
         </div>
 
         {/* Prominent Search Field */}
@@ -96,31 +96,72 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30 cursor-pointer">
-          <CardHeader className="pb-2">
-            <CardDescription>Total Items</CardDescription>
-            <CardTitle className="text-3xl">{items.length || 0}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-500/10 hover:border-red-500/30 cursor-pointer">
-          <CardHeader className="pb-2">
-            <CardDescription>Low Stock Items</CardDescription>
-            <CardTitle className="text-3xl text-red-600">{lowStockItems.length || 0}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card className="transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30 cursor-pointer">
-          <CardHeader className="pb-2">
-            <CardDescription>Total Stock Value</CardDescription>
-            <CardTitle className="text-3xl">
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* Total Items Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <FolderOpen className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-purple-600" />
+              <p className="text-sm font-medium text-slate-600">Total Items</p>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">{items.length || 0}</p>
+          </div>
+        </div>
+
+        {/* Low Stock Items Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <AlertTriangle className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <TrendingDown className="w-4 h-4 text-blue-600" />
+              <p className="text-sm font-medium text-slate-600">Low Stock Items</p>
+            </div>
+            <p className="text-3xl font-bold text-red-600">{lowStockItems.length || 0}</p>
+          </div>
+        </div>
+
+        {/* Total Stock Value Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-300 via-emerald-400 to-teal-500" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <DollarSign className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-t-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-600" />
+              <p className="text-sm font-medium text-slate-600">Total Stock Value</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-900">
               KWD {items.reduce((sum: number, item: any) => {
                 const price = parseFloat(item.sellingPrice || "0");
                 const qty = item.availableQty || 0;
                 return sum + (price * qty);
               }, 0).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Low Stock Alert & Profit Margins */}
