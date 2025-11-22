@@ -83,31 +83,31 @@ export default function ItemList() {
         <div className="flex gap-2">
           <ShareCatalogDialog />
           <Link href="/items/bulk-price-update">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
+            <Button className="bg-gradient-to-br from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <TrendingUp className="w-4 h-4 mr-2" />
               Bulk Price Update
             </Button>
           </Link>
           <Link href="/items/bulk-import">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
+            <Button className="bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <Upload className="w-4 h-4 mr-2" />
               Bulk Import
             </Button>
           </Link>
           <Link href="/items/bulk-opening-stock">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
+            <Button className="bg-gradient-to-br from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <Upload className="w-4 h-4 mr-2" />
               Bulk Opening Stock
             </Button>
           </Link>
           <Link href="/items/import">
-            <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white">
+            <Button className="bg-gradient-to-br from-cyan-500 to-cyan-700 hover:from-cyan-600 hover:to-cyan-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <Upload className="w-4 h-4 mr-2" />
               Import Stock
             </Button>
           </Link>
           <Link href="/items/new">
-            <Button>
+            <Button className="bg-gradient-to-br from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <Plus className="w-4 h-4 mr-2" />
               Add Item
             </Button>
