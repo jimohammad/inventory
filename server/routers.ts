@@ -242,7 +242,41 @@ export const appRouter = router({
         };
       })
       .mutation(async ({ ctx, input }) => {
-        const { updateItem } = await import("./db");
+        const { updateItem, getDb } = await import("./db");
+        const { items, priceHistory } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+        
+        // Get current item data before update
+        const db = await getDb();
+        if (db) {
+          const currentItem = await db.select().from(items)
+            .where(eq(items.id, input.id))
+            .limit(1);
+          
+          if (currentItem.length > 0) {
+            const oldItem = currentItem[0];
+            const oldPurchasePrice = oldItem.purchasePrice ? parseFloat(oldItem.purchasePrice) : null;
+            const oldSellingPrice = oldItem.sellingPrice ? parseFloat(oldItem.sellingPrice) : null;
+            const newPurchasePrice = input.purchasePrice ? parseFloat(input.purchasePrice) : null;
+            const newSellingPrice = input.sellingPrice ? parseFloat(input.sellingPrice) : null;
+            
+            // Check if prices have changed
+            const purchasePriceChanged = oldPurchasePrice !== newPurchasePrice;
+            const sellingPriceChanged = oldSellingPrice !== newSellingPrice;
+            
+            // Record price history if any price changed
+            if (purchasePriceChanged || sellingPriceChanged) {
+              await db.insert(priceHistory).values({
+                userId: ctx.user.id,
+                itemId: input.id,
+                purchasePrice: input.purchasePrice || oldItem.purchasePrice,
+                sellingPrice: input.sellingPrice || oldItem.sellingPrice,
+                changedAt: new Date(),
+              });
+            }
+          }
+        }
+        
         await updateItem(input.id, ctx.user.id, {
           itemCode: input.itemCode,
           name: input.name,

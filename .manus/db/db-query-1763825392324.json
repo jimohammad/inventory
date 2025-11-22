@@ -1,0 +1,18 @@
+{
+  "query": "SELECT * FROM priceHistory WHERE itemId = 330020 ORDER BY changedAt DESC LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT * FROM priceHistory WHERE itemId = 330020 ORDER BY changedAt DESC LIMIT 5",
+  "rows": [
+    {
+      "id": "1",
+      "userId": "1",
+      "itemId": "330020",
+      "purchasePrice": "21.000",
+      "sellingPrice": "22.000",
+      "changedAt": "2025-11-22 15:27:53"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\titemId\tpurchasePrice\tsellingPrice\tchangedAt\n1\t1\t330020\t21.000\t22.000\t2025-11-22 15:27:53\n",
+  "stderr": "",
+  "execution_time_ms": 1671
+}
