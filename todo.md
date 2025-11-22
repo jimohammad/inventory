@@ -813,3 +813,13 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - [x] Test price displays correctly across all pages
 
 **Resolution:** Successfully corrected Samsung A07 4GB/64GB selling price from 22.000 to 21.500 KWD in both items table and priceHistory table. Verified price displays correctly with 3 decimal places across Items page, Stock History page, and Dashboard autocomplete.
+
+
+## Price History Layout Improvement
+
+- [x] Update Price History section in Stock History cards to single-line layout
+- [x] Display date, purchase price, and selling price on one line to save vertical space
+- [x] Test compact layout with Samsung A07 price history
+- [x] Verify all information remains readable and properly formatted
+
+**Implementation:** Redesigned Price History section in StockHistory.tsx to display all information on one line: Date (left) | P: Purchase Price (middle) | S: Selling Price (right). Reduced padding from p-3 to p-2.5 and changed from 2-column grid to single-row flex layout. Saves significant vertical space while maintaining readability.

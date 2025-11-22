@@ -384,49 +384,42 @@ function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: 
                   return (
                     <div
                       key={entry.id}
-                      className="p-3 rounded-lg bg-slate-900/50 border border-slate-700 hover:border-emerald-500/30 transition-all"
+                      className="p-2.5 rounded-lg bg-slate-900/50 border border-slate-700 hover:border-emerald-500/30 transition-all"
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-slate-400">
+                      <div className="flex items-center justify-between gap-3">
+                        {/* Date */}
+                        <span className="text-xs text-slate-400 whitespace-nowrap">
                           {format(new Date(entry.changedAt), 'MMM dd, yyyy')}
                         </span>
-                      </div>
 
-                      <div className="grid grid-cols-2 gap-3">
                         {/* Purchase Price */}
-                        <div className="space-y-1">
-                          <div className="text-xs text-slate-500">Purchase Price</div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-blue-400">
-                              {Number(entry.purchasePrice).toFixed(3)} KWD
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-slate-500">P:</span>
+                          <span className="text-sm font-semibold text-blue-400">
+                            {Number(entry.purchasePrice).toFixed(3)}
+                          </span>
+                          {prevEntry && purchasePriceChange !== 0 && (
+                            <span className={`text-xs flex items-center ${
+                              purchasePriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
+                            }`}>
+                              {purchasePriceChange > 0 ? '↑' : '↓'}{Math.abs(purchasePriceChange).toFixed(3)}
                             </span>
-                            {prevEntry && purchasePriceChange !== 0 && (
-                              <span className={`text-xs flex items-center gap-0.5 ${
-                                purchasePriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
-                              }`}>
-                                {purchasePriceChange > 0 ? '↑' : '↓'}
-                                {Math.abs(purchasePriceChange).toFixed(3)}
-                              </span>
-                            )}
-                          </div>
+                          )}
                         </div>
 
                         {/* Selling Price */}
-                        <div className="space-y-1">
-                          <div className="text-xs text-slate-500">Selling Price</div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-emerald-400">
-                              {Number(entry.sellingPrice).toFixed(3)} KWD
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-slate-500">S:</span>
+                          <span className="text-sm font-semibold text-emerald-400">
+                            {Number(entry.sellingPrice).toFixed(3)}
+                          </span>
+                          {prevEntry && sellingPriceChange !== 0 && (
+                            <span className={`text-xs flex items-center ${
+                              sellingPriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
+                            }`}>
+                              {sellingPriceChange > 0 ? '↑' : '↓'}{Math.abs(sellingPriceChange).toFixed(3)}
                             </span>
-                            {prevEntry && sellingPriceChange !== 0 && (
-                              <span className={`text-xs flex items-center gap-0.5 ${
-                                sellingPriceChange > 0 ? 'text-red-400' : 'text-emerald-400'
-                              }`}>
-                                {sellingPriceChange > 0 ? '↑' : '↓'}
-                                {Math.abs(sellingPriceChange).toFixed(3)}
-                              </span>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </div>
