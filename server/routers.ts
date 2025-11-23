@@ -789,7 +789,10 @@ Keep the response concise, actionable, and focused on business decisions.`;
         const { getUserItems } = await import("./db");
         const allItems = await getUserItems(input.userId);
         
-        return allItems.map(item => ({
+        // Filter out items with zero stock
+        const availableItems = allItems.filter(item => item.availableQty > 0);
+        
+        return availableItems.map(item => ({
           itemCode: item.itemCode,
           name: item.name,
           category: item.category,

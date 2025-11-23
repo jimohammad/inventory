@@ -957,3 +957,56 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Test with Samsung A07 and other items to verify filtering works correctly
 
 **Implementation:** Updated StockHistory.tsx to filter out stock movement entries where `quantityChange === 0`. Added filter logic in line 238: `const history = (historyData?.history || []).filter((entry: any) => entry.quantityChange !== 0);`. This removes Google Sheets sync adjustments and other zero-change entries from the Stock Movement History timeline. Tested with Samsung A07 (shows 0 entries after filtering out sync adjustments) and Samsung A17 (shows 1 entry with real -4 pcs sale). Result: Only meaningful stock movements (sales, restocks, real adjustments) are now displayed.
+
+
+## Salesman Order System
+
+### Database Schema
+- [x] Create orders table (id, orderNumber, salesmanName, status, totalItems, totalQuantity, totalValue, notes, createdAt)
+- [x] Create orderItems table (id, orderId, itemId, itemCode, itemName, quantity, price, subtotal)
+- [x] Add database relations and indexes
+
+### Catalog Filtering
+- [x] Update shared catalog to filter out items with availableQuantity = 0
+- [x] Update internal catalog to filter out items with availableQuantity = 0
+- [x] Test catalog filtering with zero-stock items
+
+### Order Creation Interface
+- [ ] Add "Create Order" button to catalog pages
+- [x] Build shopping cart component with add/remove items
+- [x] Create quantity input dialog with +/- buttons
+- [x] Show cart summary (total items, total quantity, total value)
+- [x] Add salesman name input field
+- [x] Add optional order notes field
+- [x] Implement order preview before submission
+
+**Progress:** Created OrderCart component with floating cart button, quantity controls, salesman info input, and order preview. Remaining: integrate with catalog pages and backend.
+
+### WhatsApp Integration
+- [ ] Generate formatted WhatsApp message text
+- [ ] Create unique order link for each order
+- [ ] Add "Copy to Clipboard" button
+- [ ] Add "Share to WhatsApp" button (mobile-optimized)
+- [ ] Test WhatsApp message formatting
+
+### Order Processing
+- [ ] Auto-process orders (no approval required)
+- [ ] Automatically deduct stock when order is created
+- [ ] Create stock movement entries for order items
+- [ ] Save order to database with all details
+- [ ] Generate unique order number
+
+### Order Management Dashboard
+- [ ] Create Orders page in navigation
+- [ ] Display all orders with filters (date, salesman, status)
+- [ ] Show order details (items, quantities, values)
+- [ ] Add order search functionality
+- [ ] Export orders to Excel/CSV
+- [ ] Show order statistics (total orders, total value, etc.)
+
+### Testing
+- [ ] Test order creation flow end-to-end
+- [ ] Test catalog filtering (zero-stock items hidden)
+- [ ] Test stock deduction after order
+- [ ] Test WhatsApp message generation
+- [ ] Test order dashboard and filters

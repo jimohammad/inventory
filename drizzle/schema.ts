@@ -143,3 +143,41 @@ export const priceHistory = mysqlTable("priceHistory", {
 
 export type PriceHistory = typeof priceHistory.$inferSelect;
 export type InsertPriceHistory = typeof priceHistory.$inferInsert;
+
+/**
+ * Orders table
+ * Stores salesman orders created from shared catalog
+ */
+export const orders = mysqlTable("orders", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
+  salesmanName: varchar("salesmanName", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["pending", "processed", "cancelled"]).default("processed").notNull(),
+  totalItems: int("totalItems").notNull(),
+  totalQuantity: int("totalQuantity").notNull(),
+  totalValue: decimal("totalValue", { precision: 12, scale: 3 }),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Order = typeof orders.$inferSelect;
+export type InsertOrder = typeof orders.$inferInsert;
+
+/**
+ * Order Items table
+ * Stores individual items within each order
+ */
+export const orderItems = mysqlTable("orderItems", {
+  id: int("id").autoincrement().primaryKey(),
+  orderId: int("orderId").notNull(),
+  itemId: int("itemId").notNull(),
+  itemCode: varchar("itemCode", { length: 100 }).notNull(),
+  itemName: varchar("itemName", { length: 255 }).notNull(),
+  quantity: int("quantity").notNull(),
+  price: decimal("price", { precision: 10, scale: 3 }),
+  subtotal: decimal("subtotal", { precision: 12, scale: 3 }),
+});
+
+export type OrderItem = typeof orderItems.$inferSelect;
+export type InsertOrderItem = typeof orderItems.$inferInsert;
