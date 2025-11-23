@@ -793,6 +793,7 @@ Keep the response concise, actionable, and focused on business decisions.`;
         const availableItems = allItems.filter(item => item.availableQty > 0);
         
         return availableItems.map(item => ({
+          id: item.id,
           itemCode: item.itemCode,
           name: item.name,
           category: item.category,
@@ -1077,6 +1078,150 @@ Keep the response concise, actionable, and focused on business decisions.`;
       .mutation(async ({ ctx, input }) => {
         const { deleteWhatsappContact } = await import("./db");
         return await deleteWhatsappContact(input.id, ctx.user.id);
+      }),
+  }),
+
+  orders: router({
+    create: publicProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        const input = raw as {
+          salesmanName: string;
+          notes?: string;
+          items: Array<{
+            itemId: number;
+            itemCode: string;
+            itemName: string;
+            quantity: number;
+            price: number;
+          }>;
+        };
+        if (!input.salesmanName || !input.items || input.items.length === 0) {
+          throw new Error("Invalid order data");
+        }
+        return input;
+      })
+      .mutation(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { orders, orderItems, items, stockHistory } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+
+        // Generate unique order number
+        const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+
+        // Calculate totals
+        const totalItems = input.items.length;
+        const totalQuantity = input.items.reduce((sum, item) => sum + item.quantity, 0);
+        const totalValue = input.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        // Create order record
+        const [order] = await db.insert(orders).values({
+          userId: 1, // Public orders don't require authentication
+          orderNumber,
+          salesmanName: input.salesmanName,
+          status: "processed",
+          totalItems,
+          totalQuantity,
+          totalValue: totalValue.toString(),
+          notes: input.notes || null,
+        }).$returningId();
+
+        const orderId = order.id;
+
+        // Create order items and deduct stock
+        for (const item of input.items) {
+          console.log('[DEBUG] Inserting order item:', { orderId, itemId: item.itemId, itemCode: item.itemCode });
+          // Insert order item
+          await db.insert(orderItems).values({
+            orderId,
+            itemId: item.itemId,
+            itemCode: item.itemCode,
+            itemName: item.itemName,
+            quantity: item.quantity,
+            price: item.price.toString(),
+            subtotal: (item.price * item.quantity).toString(),
+          });
+
+          // Get current item stock
+          const [currentItem] = await db.select()
+            .from(items)
+            .where(eq(items.id, item.itemId))
+            .limit(1);
+
+          if (!currentItem) {
+            throw new TRPCError({ code: "NOT_FOUND", message: `Item ${item.itemCode} not found` });
+          }
+
+          const newQuantity = (currentItem.availableQty || 0) - item.quantity;
+
+          if (newQuantity < 0) {
+            throw new TRPCError({ 
+              code: "BAD_REQUEST", 
+              message: `Insufficient stock for ${item.itemName}. Available: ${currentItem.availableQty}, Requested: ${item.quantity}` 
+            });
+          }
+
+          // Update item stock
+          await db.update(items)
+            .set({ 
+              availableQty: newQuantity,
+              lastSoldDate: new Date(),
+            })
+            .where(eq(items.id, item.itemId));
+
+          // Record stock history
+          await db.insert(stockHistory).values({
+            userId: currentItem.userId,
+            itemId: item.itemId,
+            changeType: "sale",
+            quantityChange: -item.quantity,
+            quantityAfter: newQuantity,
+            notes: `Order #${orderNumber} - ${input.salesmanName}`,
+          });
+        }
+
+        return {
+          success: true,
+          orderNumber,
+          orderId,
+        };
+      }),
+
+    list: protectedProcedure
+      .query(async ({ ctx }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { orders, orderItems } = await import("../drizzle/schema");
+        const { eq, desc } = await import("drizzle-orm");
+
+        // Get all orders for the user
+        const allOrders = await db.select()
+          .from(orders)
+          .where(eq(orders.userId, ctx.user.id))
+          .orderBy(desc(orders.createdAt));
+
+        // Get order items for each order
+        const ordersWithItems = await Promise.all(
+          allOrders.map(async (order) => {
+            const items = await db.select()
+              .from(orderItems)
+              .where(eq(orderItems.orderId, order.id));
+
+            return {
+              ...order,
+              items,
+            };
+          })
+        );
+
+        return ordersWithItems;
       }),
   }),
 });

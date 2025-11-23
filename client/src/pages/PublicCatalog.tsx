@@ -2,9 +2,12 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Search, ShoppingCart } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useRoute } from "wouter";
+import OrderCart, { CartItem } from "@/components/OrderCart";
+import { toast } from "sonner";
 
 export default function PublicCatalog() {
   const [, params] = useRoute("/catalog/:userId/:type");
@@ -13,6 +16,7 @@ export default function PublicCatalog() {
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const { data: items, isLoading } = trpc.items.getPublicCatalog.useQuery({
     userId,
@@ -43,6 +47,52 @@ export default function PublicCatalog() {
       return matchesSearch && matchesCategory;
     });
   }, [items, searchQuery, selectedCategory]);
+
+  const handleAddToCart = (item: any) => {
+    const existingItem = cartItems.find(ci => ci.id === item.id);
+    
+    if (existingItem) {
+      // Update quantity
+      setCartItems(cartItems.map(ci => 
+        ci.id === item.id 
+          ? { ...ci, quantity: ci.quantity + 1 }
+          : ci
+      ));
+      toast.success(`Increased ${item.name} quantity`);
+    } else {
+      // Add new item
+      const newCartItem: CartItem = {
+        id: item.id,
+        itemCode: item.itemCode,
+        name: item.name,
+        price: parseFloat(item.sellingPrice as any),
+        quantity: 1,
+      };
+      setCartItems([...cartItems, newCartItem]);
+      toast.success(`Added ${item.name} to cart`);
+    }
+  };
+
+  const handleUpdateQuantity = (itemId: number, quantity: number) => {
+    setCartItems(cartItems.map(item => 
+      item.id === itemId ? { ...item, quantity } : item
+    ));
+  };
+
+  const handleRemoveItem = (itemId: number) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
+    toast.success("Item removed from cart");
+  };
+
+  const handleClearCart = () => {
+    setCartItems([]);
+    toast.success("Cart cleared");
+  };
+
+  const getItemCartQuantity = (itemId: number) => {
+    const cartItem = cartItems.find(ci => ci.id === itemId);
+    return cartItem ? cartItem.quantity : 0;
+  };
 
   if (isLoading) {
     return (
@@ -110,45 +160,58 @@ export default function PublicCatalog() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item, idx) => (
-              <Card key={idx} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg truncate">{item.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">{item.itemCode}</p>
+            {filteredItems.map((item, idx) => {
+              const cartQty = getItemCartQuantity(item.id);
+              
+              return (
+                <Card key={idx} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg truncate">{item.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-1">{item.itemCode}</p>
+                      </div>
+                      <Badge variant="secondary">{item.category}</Badge>
                     </div>
-                    <Badge variant="secondary">{item.category}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-4">
-                  <div className="space-y-3">
-                    {/* Price display */}
-                    {item.sellingPrice && (
-                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
-                        <div className="text-xs text-green-700 font-medium mb-1">Price</div>
-                        <div className="text-2xl font-bold text-green-700">KWD {parseFloat(item.sellingPrice as any).toFixed(3)}</div>
-                      </div>
-                    )}
-                    {/* Stock availability for internal catalog */}
-                    {includeQty && (
-                      <div className={`rounded-lg p-3 border ${
-                        (item.availableQty || 0) < 10 
-                          ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
-                          : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
-                      }`}>
-                        <div className={`text-xs font-medium mb-1 ${
-                          (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
-                        }`}>Stock Available</div>
-                        <div className={`text-2xl font-bold ${
-                          (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
-                        }`}>{item.availableQty || 0} <span className="text-sm font-normal">units</span></div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="space-y-3">
+                      {/* Price display */}
+                      {item.sellingPrice && (
+                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+                          <div className="text-xs text-green-700 font-medium mb-1">Price</div>
+                          <div className="text-2xl font-bold text-green-700">KWD {parseFloat(item.sellingPrice as any).toFixed(3)}</div>
+                        </div>
+                      )}
+                      {/* Stock availability for internal catalog */}
+                      {includeQty && (
+                        <div className={`rounded-lg p-3 border ${
+                          (item.availableQty || 0) < 10 
+                            ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
+                            : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+                        }`}>
+                          <div className={`text-xs font-medium mb-1 ${
+                            (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
+                          }`}>Stock Available</div>
+                          <div className={`text-2xl font-bold ${
+                            (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
+                          }`}>{item.availableQty || 0} <span className="text-sm font-normal">units</span></div>
+                        </div>
+                      )}
+
+                      {/* Add to Cart Button */}
+                      <Button
+                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
 
@@ -156,6 +219,14 @@ export default function PublicCatalog() {
           Total Items: {filteredItems.length}
         </div>
       </div>
+
+      {/* Order Cart Component */}
+      <OrderCart
+        cartItems={cartItems}
+        onUpdateQuantity={handleUpdateQuantity}
+        onRemoveItem={handleRemoveItem}
+        onClearCart={handleClearCart}
+      />
     </div>
   );
 }

@@ -1010,3 +1010,32 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [ ] Test stock deduction after order
 - [ ] Test WhatsApp message generation
 - [ ] Test order dashboard and filters
+
+
+## Complete Order System Integration (User Request)
+
+- [ ] Add "Add to Cart" button to each item in PublicCatalog
+- [ ] Integrate OrderCart component with PublicCatalog page
+- [ ] Implement cart state management (add/remove/update items)
+- [ ] Create backend orders.create procedure with stock deduction
+- [ ] Test adding items to cart from catalog
+- [ ] Test order submission and WhatsApp sharing
+- [ ] Verify stock is deducted after order creation
+
+## Salesman Order System
+
+- [x] Create orders and orderItems database tables
+- [x] Add backend procedure for creating orders from public catalog
+- [x] Add backend procedure for listing orders with items
+- [x] Implement stock deduction when order is placed
+- [x] Create OrderCart component with quantity controls
+- [x] Integrate OrderCart with PublicCatalog page
+- [x] Add "Add to Cart" functionality to catalog items
+- [x] Generate WhatsApp shareable order message with details
+- [x] Create order details page (/order/:orderNumber)
+- [x] Build Orders management page in dashboard
+- [x] Add Orders navigation menu item
+- [x] Display order list with search and filtering
+- [x] Implement order details dialog with item breakdown
+- [x] Test complete order flow from catalog to WhatsApp
+- [x] Verify stock deduction after order placement

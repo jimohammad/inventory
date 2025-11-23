@@ -22,6 +22,7 @@ import WhatsAppContacts from "@/pages/WhatsAppContacts";
 import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 import ReorderAlerts from "@/pages/ReorderAlerts";
 import StockHistory from "@/pages/StockHistory";
+import Orders from "@/pages/Orders";
 
 function Router() {
   const [location] = useLocation();
@@ -31,6 +32,15 @@ function Router() {
       <Switch location={location} key={location}>
       {/* Public catalog routes - no auth required */}
       <Route path="/catalog/:userId/:type" component={PublicCatalog} />
+      
+      {/* Orders route */}
+      <Route path="/orders" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <Orders />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
       
       <Route path="/" component={() => (
         <DashboardLayout>

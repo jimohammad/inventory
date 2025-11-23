@@ -1,0 +1,19 @@
+{
+  "query": "SELECT o.orderNumber, o.salesmanName, o.totalValue, o.status, oi.itemCode, oi.quantity, i.availableQty FROM orders o JOIN orderItems oi ON o.id = oi.orderId JOIN items i ON oi.itemId = i.id WHERE o.orderNumber = 'ORD-1763922561977-QFPN8' LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT o.orderNumber, o.salesmanName, o.totalValue, o.status, oi.itemCode, oi.quantity, i.availableQty FROM orders o JOIN orderItems oi ON o.id = oi.orderId JOIN items i ON oi.itemId = i.id WHERE o.orderNumber = 'ORD-1763922561977-QFPN8' LIMIT 1",
+  "rows": [
+    {
+      "orderNumber": "ORD-1763922561977-QFPN8",
+      "salesmanName": "Ahmed Ali",
+      "totalValue": "70.000",
+      "status": "processed",
+      "itemCode": "HO-X9C5G12256",
+      "quantity": "1",
+      "availableQty": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "orderNumber\tsalesmanName\ttotalValue\tstatus\titemCode\tquantity\tavailableQty\nORD-1763922561977-QFPN8\tAhmed Ali\t70.000\tprocessed\tHO-X9C5G12256\t1\t7\n",
+  "stderr": "",
+  "execution_time_ms": 1691
+}
