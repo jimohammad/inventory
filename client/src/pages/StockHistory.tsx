@@ -234,7 +234,8 @@ function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: 
   const totalSales = historyData?.stats.totalSales || 0;
   const totalRestocks = historyData?.stats.totalRestocks || 0;
   const currentStock = historyData?.stats.currentStock || 0;
-  const history = historyData?.history || [];
+  // Filter out entries with no actual quantity change (e.g., Google Sheets sync adjustments)
+  const history = (historyData?.history || []).filter((entry: any) => entry.quantityChange !== 0);
 
   // Filter logic
   if (filterType === 'with-sales' && totalSales === 0) {

@@ -946,3 +946,14 @@ Potential user issues: Browser popup blocker or not selecting contacts before cl
 - Import Stock: cyan-200 to cyan-300 with cyan-900 text
 - Add Item: pink-200 to pink-300 with pink-900 text
 Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance. Result: Elegant, modern design with excellent text contrast and gentle pastel aesthetic matching reference image.
+
+
+## Stock History Filtering
+
+- [x] Filter out adjustment entries with zero quantity change from Stock History page
+- [x] Only show stock movements where quantity actually changed (sales, additions, real adjustments)
+- [x] Hide Google Sheets sync entries that show "0 pcs" with no real change
+- [x] Update backend query or frontend filtering logic
+- [x] Test with Samsung A07 and other items to verify filtering works correctly
+
+**Implementation:** Updated StockHistory.tsx to filter out stock movement entries where `quantityChange === 0`. Added filter logic in line 238: `const history = (historyData?.history || []).filter((entry: any) => entry.quantityChange !== 0);`. This removes Google Sheets sync adjustments and other zero-change entries from the Stock Movement History timeline. Tested with Samsung A07 (shows 0 entries after filtering out sync adjustments) and Samsung A17 (shows 1 entry with real -4 pcs sale). Result: Only meaningful stock movements (sales, restocks, real adjustments) are now displayed.
