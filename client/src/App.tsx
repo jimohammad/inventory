@@ -23,6 +23,7 @@ import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 import ReorderAlerts from "@/pages/ReorderAlerts";
 import StockHistory from "@/pages/StockHistory";
 import Orders from "@/pages/Orders";
+import OrderDetail from "@/pages/OrderDetail";
 
 function Router() {
   const [location] = useLocation();
@@ -30,8 +31,9 @@ function Router() {
   return (
     <AnimatePresence mode="wait">
       <Switch location={location} key={location}>
-      {/* Public catalog routes - no auth required */}
+      {/* Public routes - no auth required */}
       <Route path="/catalog/:userId/:type" component={PublicCatalog} />
+      <Route path="/order/:orderNumber" component={OrderDetail} />
       
       {/* Orders route */}
       <Route path="/orders" component={() => (

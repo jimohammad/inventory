@@ -1223,6 +1223,48 @@ Keep the response concise, actionable, and focused on business decisions.`;
 
         return ordersWithItems;
       }),
+
+    getByOrderNumber: publicProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        const input = raw as { orderNumber: string };
+        if (!input.orderNumber) {
+          throw new Error("Order number is required");
+        }
+        return input;
+      })
+      .query(async ({ input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { orders, orderItems } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+
+        // Get order by order number
+        const orderResult = await db.select()
+          .from(orders)
+          .where(eq(orders.orderNumber, input.orderNumber))
+          .limit(1);
+
+        if (orderResult.length === 0) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Order not found" });
+        }
+
+        const order = orderResult[0];
+
+        // Get order items
+        const items = await db.select()
+          .from(orderItems)
+          .where(eq(orderItems.orderId, order.id));
+
+        return {
+          ...order,
+          items,
+        };
+      }),
   }),
 });
 

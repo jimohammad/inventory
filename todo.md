@@ -1039,3 +1039,7 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Implement order details dialog with item breakdown
 - [x] Test complete order flow from catalog to WhatsApp
 - [x] Verify stock deduction after order placement
+
+## Bug Fixes - Order System
+
+- [x] Fix order detail page not opening from WhatsApp link
