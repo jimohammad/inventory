@@ -1602,6 +1602,64 @@ Keep the response concise, actionable, and focused on business decisions.`;
         return { success: true, successCount, failCount };
       }),
   }),
+
+  templates: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return [];
+
+      const { messageTemplates } = await import("../drizzle/schema");
+      const { eq, desc } = await import("drizzle-orm");
+
+      const result = await db.select().from(messageTemplates)
+        .where(eq(messageTemplates.userId, ctx.user.id))
+        .orderBy(desc(messageTemplates.createdAt));
+      return result;
+    }),
+
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        content: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { messageTemplates } = await import("../drizzle/schema");
+
+        await db.insert(messageTemplates).values({
+          userId: ctx.user.id,
+          name: input.name,
+          content: input.content,
+        });
+
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { messageTemplates } = await import("../drizzle/schema");
+        const { eq, and } = await import("drizzle-orm");
+
+        // Only allow deleting own templates
+        await db.delete(messageTemplates).where(
+          and(
+            eq(messageTemplates.id, input.id),
+            eq(messageTemplates.userId, ctx.user.id)
+          )
+        );
+
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

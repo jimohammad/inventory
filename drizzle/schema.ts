@@ -227,3 +227,19 @@ export const messageHistory = mysqlTable("messageHistory", {
 
 export type MessageHistory = typeof messageHistory.$inferSelect;
 export type InsertMessageHistory = typeof messageHistory.$inferInsert;
+
+/**
+ * Message Templates table
+ * Stores reusable message templates for bulk messaging
+ */
+export const messageTemplates = mysqlTable("messageTemplates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type MessageTemplate = typeof messageTemplates.$inferSelect;
+export type InsertMessageTemplate = typeof messageTemplates.$inferInsert;

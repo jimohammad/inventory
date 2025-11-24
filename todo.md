@@ -1146,3 +1146,15 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Fix area enum mismatch between frontend and database schema
 - [x] Add Import CSV button to Customers page
 - [x] Add route for /customers/import page
+
+## Message Templates Library (Phase 1-5)
+
+- [x] Create messageTemplates table in database schema
+- [x] Add backend CRUD procedures for templates (create, list, delete)
+- [x] Add template selector dropdown to Bulk Messaging page
+- [x] Implement "Save as Template" button with name input dialog
+- [x] Add template management section showing saved templates
+- [x] Allow loading template content into message textarea
+- [x] Add delete button for each saved template
+- [x] Test saving, loading, and deleting templates
+- [x] Ensure templates work with catalog link insertion
