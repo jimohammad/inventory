@@ -1116,3 +1116,17 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [ ] Track delivery status
 - [ ] Message templates
 - [ ] Resend failed messages
+
+## Bulk Messaging System (Phase 3-5)
+
+- [x] Create bulk messaging page UI with area-based customer grouping
+- [x] Add customer selection with checkboxes (Select All/Deselect All per area)
+- [x] Implement message template input with catalog link insertion button
+- [x] Build WhatsApp queue system with configurable delays between messages
+- [x] Integrate Green API for sending WhatsApp messages
+- [x] Add message history tracking to messageHistory table
+- [x] Display delivery status (pending/sent/failed) for each message
+- [x] Add message history viewer showing all sent messages
+- [x] Test complete bulk messaging flow with multiple customers
+- [x] Add navigation menu item for Bulk Messaging
+- [x] Add navigation menu item for Message History

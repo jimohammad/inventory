@@ -1489,6 +1489,119 @@ Keep the response concise, actionable, and focused on business decisions.`;
         return { success: true, imported };
       }),
   }),
+
+  messages: router({
+    create: protectedProcedure
+      .input(z.object({
+        customerId: z.number(),
+        customerName: z.string(),
+        customerPhone: z.string(),
+        message: z.string(),
+        status: z.enum(["pending", "sent", "failed"]),
+        errorMessage: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { messageHistory } = await import("../drizzle/schema");
+
+        await db.insert(messageHistory).values({
+          customerId: input.customerId,
+          customerName: input.customerName,
+          customerPhone: input.customerPhone,
+          message: input.message,
+          status: input.status,
+          errorMessage: input.errorMessage || null,
+          sentAt: input.status === "sent" ? new Date() : null,
+        });
+
+        return { success: true };
+      }),
+
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return [];
+
+      const { messageHistory } = await import("../drizzle/schema");
+      const { desc } = await import("drizzle-orm");
+
+      const result = await db.select().from(messageHistory).orderBy(desc(messageHistory.createdAt)).limit(100);
+      return result;
+    }),
+
+    sendBulk: protectedProcedure
+      .input(z.object({
+        customerIds: z.array(z.number()),
+        message: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { customers, messageHistory } = await import("../drizzle/schema");
+        const { inArray } = await import("drizzle-orm");
+        const { sendWhatsAppMessage, delay } = await import("./greenapi");
+
+        // Get selected customers
+        const selectedCustomers = await db.select().from(customers).where(inArray(customers.id, input.customerIds));
+
+        let successCount = 0;
+        let failCount = 0;
+
+        for (const customer of selectedCustomers) {
+          try {
+            // Format phone number (remove + and spaces)
+            const phone = customer.phone.replace(/[^0-9]/g, "");
+
+            // Send message via Green API
+            const result = await sendWhatsAppMessage({
+              phone,
+              message: input.message,
+            });
+
+            // Record in message history
+            await db.insert(messageHistory).values({
+              customerId: customer.id,
+              customerName: customer.name,
+              customerPhone: customer.phone,
+              message: input.message,
+              status: result.success ? "sent" : "failed",
+              errorMessage: result.error || null,
+              sentAt: result.success ? new Date() : null,
+            });
+
+            if (result.success) {
+              successCount++;
+            } else {
+              failCount++;
+            }
+
+            // Add delay between messages (2 seconds)
+            await delay(2000);
+          } catch (error) {
+            console.error(`Failed to send message to ${customer.name}:`, error);
+            failCount++;
+
+            // Record failure in message history
+            await db.insert(messageHistory).values({
+              customerId: customer.id,
+              customerName: customer.name,
+              customerPhone: customer.phone,
+              message: input.message,
+              status: "failed",
+              errorMessage: error instanceof Error ? error.message : "Unknown error",
+              sentAt: null,
+            });
+          }
+        }
+
+        return { success: true, successCount, failCount };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

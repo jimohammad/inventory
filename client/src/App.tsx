@@ -25,6 +25,8 @@ import StockHistory from "@/pages/StockHistory";
 import Orders from "@/pages/Orders";
 import OrderDetail from "@/pages/OrderDetail";
 import Customers from "@/pages/Customers";
+import BulkMessaging from "@/pages/BulkMessaging";
+import MessageHistory from "@/pages/MessageHistory";
 
 function Router() {
   const [location] = useLocation();
@@ -125,6 +127,20 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <Customers />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/bulk-messaging" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <BulkMessaging />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/message-history" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <MessageHistory />
           </PageTransition>
         </DashboardLayout>
       )} />
