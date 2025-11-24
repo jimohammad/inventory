@@ -1277,3 +1277,14 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Change In Cart button color from green to orange
 - [x] Test visual distinction between Add to Cart and In Cart states
+
+## Low Stock Indicator
+
+- [x] Add blinking red dot when stock < 20 pieces
+- [x] Show "X left" text in red color next to dot
+- [x] Test indicator visibility on catalog cards
+
+## Remove Item Code from Catalog
+
+- [x] Remove item code line from catalog cards to save space
+- [x] Test catalog layout without item code
