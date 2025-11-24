@@ -1301,3 +1301,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Verify query includes availableQty field - FIXED: now always included
 - [x] Test with actual low stock items
 - [x] Make indicator more prominent if needed
+
+## Reposition Low Stock Indicator
+
+- [x] Move indicator from above item name to below item name
+- [x] Change text color from red to orange
+- [x] Keep red blinking dot
+- [x] Test new position and color
