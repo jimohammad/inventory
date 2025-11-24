@@ -1225,3 +1225,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Reduce spacing between item code and price to 2mm (space-y-0.5)
 - [x] Test ultra-tight spacing for maximum compactness
+
+## Zero-Gap Catalog Spacing
+
+- [x] Change space-y-0.5 to space-y-0 for absolute minimum spacing (zero gap)
+- [x] Test zero-gap layout and verify readability
