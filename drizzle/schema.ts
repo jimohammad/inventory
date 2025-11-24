@@ -201,7 +201,8 @@ export const customers = mysqlTable("customers", {
     "Jahra",
     "Salmiya",
     "Hawally",
-    "Souk Qurain"
+    "Souk Qurain",
+    "Team"
   ]).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

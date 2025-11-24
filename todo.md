@@ -1339,3 +1339,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Change justify-center to justify-start for both indicators
 - [x] Test left alignment on mobile and desktop
+
+## Add Team Category to Customers
+
+- [x] Add "Team" to customer category dropdown options (Customers.tsx)
+- [x] Update database schema (added to area enum)
+- [x] Update CustomerImport.tsx VALID_AREAS
+- [x] Test creating customer with Team category

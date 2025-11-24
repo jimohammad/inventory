@@ -43,6 +43,7 @@ const AREAS = [
   "Salmiya",
   "Hawally",
   "Souk Qurain",
+  "Team",
 ];
 
 export default function Customers() {

@@ -27,6 +27,7 @@ const VALID_AREAS = [
   "Salmiya",
   "Hawally",
   "Souk Qurain",
+  "Team",
 ];
 
 export default function CustomerImport() {
