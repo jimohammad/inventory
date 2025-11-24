@@ -1185,3 +1185,12 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Test new layout for better workflow
 - [x] Fix layout to stack vertically (not side-by-side)
 - [x] Message card should be full-width above customer selection
+
+## Catalog Quantity Input
+
+- [x] Add quantity input box next to Add to Cart button in PublicCatalog
+- [x] Set default quantity to 1
+- [x] Add +/- buttons for easy quantity adjustment
+- [x] Update Add to Cart to use selected quantity
+- [x] Test ordering multiple quantities
+- [x] Reset quantity to 1 after adding to cart

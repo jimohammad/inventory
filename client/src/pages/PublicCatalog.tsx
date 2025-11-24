@@ -18,6 +18,7 @@ export default function PublicCatalog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [itemQuantities, setItemQuantities] = useState<Record<number, number>>({});
 
   const { data: items, isLoading } = trpc.items.getPublicCatalog.useQuery({
     userId,
@@ -49,17 +50,26 @@ export default function PublicCatalog() {
     });
   }, [items, searchQuery, selectedCategory]);
 
+  const getItemQuantity = (itemId: number) => itemQuantities[itemId] || 1;
+
+  const setItemQuantity = (itemId: number, quantity: number) => {
+    if (quantity < 1) quantity = 1;
+    if (quantity > 999) quantity = 999;
+    setItemQuantities({ ...itemQuantities, [itemId]: quantity });
+  };
+
   const handleAddToCart = (item: any) => {
+    const quantity = getItemQuantity(item.id);
     const existingItem = cartItems.find(ci => ci.id === item.id);
     
     if (existingItem) {
       // Update quantity
       setCartItems(cartItems.map(ci => 
         ci.id === item.id 
-          ? { ...ci, quantity: ci.quantity + 1 }
+          ? { ...ci, quantity: ci.quantity + quantity }
           : ci
       ));
-      toast.success(`Increased ${item.name} quantity`);
+      toast.success(`Added ${quantity} more ${item.name} to cart`);
     } else {
       // Add new item
       const newCartItem: CartItem = {
@@ -67,11 +77,13 @@ export default function PublicCatalog() {
         itemCode: item.itemCode,
         name: item.name,
         price: parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any),
-        quantity: 1,
+        quantity,
       };
       setCartItems([...cartItems, newCartItem]);
-      toast.success(`Added ${item.name} to cart`);
+      toast.success(`Added ${quantity} ${item.name} to cart`);
     }
+    // Reset quantity to 1 after adding
+    setItemQuantity(item.id, 1);
   };
 
   const handleUpdateQuantity = (itemId: number, quantity: number) => {
@@ -200,14 +212,42 @@ export default function PublicCatalog() {
                         </div>
                       )}
 
-                      {/* Add to Cart Button */}
-                      <Button
-                        className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
-                        onClick={() => handleAddToCart(item)}
-                      >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
-                      </Button>
+                      {/* Quantity Selector and Add to Cart */}
+                      <div className="flex gap-2">
+                        <div className="flex items-center border rounded-lg">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-10 px-3"
+                            onClick={() => setItemQuantity(item.id, getItemQuantity(item.id) - 1)}
+                          >
+                            −
+                          </Button>
+                          <Input
+                            type="number"
+                            min="1"
+                            max="999"
+                            value={getItemQuantity(item.id)}
+                            onChange={(e) => setItemQuantity(item.id, parseInt(e.target.value) || 1)}
+                            className="w-16 h-10 text-center border-0 focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-10 px-3"
+                            onClick={() => setItemQuantity(item.id, getItemQuantity(item.id) + 1)}
+                          >
+                            +
+                          </Button>
+                        </div>
+                        <Button
+                          className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
+                          onClick={() => handleAddToCart(item)}
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
