@@ -1248,3 +1248,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Reduce item name font from text-lg to text-base
 - [x] Reduce item code font from text-sm to text-xs
 - [x] Test smaller font sizes for readability
+
+## Mobile-First Optimization
+
+- [x] Reduce price font size from text-2xl to text-xl
+- [x] Implement single-column layout for mobile devices
+- [x] Test mobile layout to verify improved visibility

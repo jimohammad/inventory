@@ -172,7 +172,7 @@ export default function PublicCatalog() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {filteredItems.map((item, idx) => {
               const cartQty = getItemCartQuantity(item.id);
               
@@ -192,7 +192,7 @@ export default function PublicCatalog() {
                       {/* Price display */}
                       {((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-1 border border-green-200">
-                          <div className="text-2xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
+                          <div className="text-xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
                         </div>
                       )}
                       {/* Stock availability for internal catalog */}
@@ -202,7 +202,7 @@ export default function PublicCatalog() {
                             ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
                             : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
                         }`}>
-                          <div className={`text-2xl font-bold ${
+                          <div className={`text-xl font-bold ${
                             (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
                           }`}>{item.availableQty || 0} <span className="text-sm font-normal">units</span></div>
                         </div>
