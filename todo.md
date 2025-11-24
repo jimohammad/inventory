@@ -1220,3 +1220,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Reduce price/stock box padding to minimum (p-1.5)
 - [x] Remove unnecessary margins and gaps
 - [x] Test ultra-compact layout
+
+## Ultra-Tight Catalog Spacing
+
+- [x] Reduce spacing between item code and price to 2mm (space-y-0.5)
+- [x] Test ultra-tight spacing for maximum compactness

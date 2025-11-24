@@ -188,7 +188,7 @@ export default function PublicCatalog() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-1 px-2 pb-2">
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       {/* Price display */}
                       {((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-1.5 border border-green-200">
