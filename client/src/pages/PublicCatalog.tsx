@@ -181,10 +181,10 @@ export default function PublicCatalog() {
                   <CardHeader className="pb-2 pt-3 px-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-base truncate leading-tight">{item.name}</CardTitle>
-                        <p className="text-xs text-muted-foreground mt-0.5">{item.itemCode}</p>
+                        <CardTitle className="text-lg truncate">{item.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground mt-0.5">{item.itemCode}</p>
                       </div>
-                      <Badge variant="secondary" className="text-xs px-2 py-0.5">{item.category}</Badge>
+                      <Badge variant="secondary">{item.category}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-2 px-3 pb-3">
@@ -193,7 +193,7 @@ export default function PublicCatalog() {
                       {((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-2 border border-green-200">
                           <div className="text-xs text-green-700 font-medium mb-0.5">{catalogType === "retail" ? 'Retail Shop Price' : 'Wholesale Price'}</div>
-                          <div className="text-xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
+                          <div className="text-2xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
                         </div>
                       )}
                       {/* Stock availability for internal catalog */}
@@ -206,19 +206,26 @@ export default function PublicCatalog() {
                           <div className={`text-xs font-medium mb-0.5 ${
                             (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
                           }`}>Stock Available</div>
-                          <div className={`text-xl font-bold ${
+                          <div className={`text-2xl font-bold ${
                             (item.availableQty || 0) < 10 ? 'text-red-700' : 'text-blue-700'
-                          }`}>{item.availableQty || 0} <span className="text-xs font-normal">units</span></div>
+                          }`}>{item.availableQty || 0} <span className="text-sm font-normal">units</span></div>
                         </div>
                       )}
 
-                      {/* Quantity Selector and Add to Cart */}
+                      {/* Add to Cart and Quantity Selector */}
                       <div className="flex gap-2">
+                        <Button
+                          className="flex-1 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
+                          onClick={() => handleAddToCart(item)}
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
+                        </Button>
                         <div className="flex items-center border rounded-lg">
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-9 px-2.5 text-sm"
+                            className="h-10 px-3"
                             onClick={() => setItemQuantity(item.id, getItemQuantity(item.id) - 1)}
                           >
                             −
@@ -229,24 +236,17 @@ export default function PublicCatalog() {
                             max="999"
                             value={getItemQuantity(item.id)}
                             onChange={(e) => setItemQuantity(item.id, parseInt(e.target.value) || 1)}
-                            className="w-14 h-9 text-center text-sm border-0 focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-16 h-10 text-center border-0 focus-visible:ring-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                           />
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-9 px-2.5 text-sm"
+                            className="h-10 px-3"
                             onClick={() => setItemQuantity(item.id, getItemQuantity(item.id) + 1)}
                           >
                             +
                           </Button>
                         </div>
-                        <Button
-                          className="flex-1 h-9 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-sm"
-                          onClick={() => handleAddToCart(item)}
-                        >
-                          <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
-                          {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
-                        </Button>
                       </div>
                     </div>
                   </CardContent>

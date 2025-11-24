@@ -1203,3 +1203,11 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Reduce font sizes for mobile-friendly display
 - [x] Optimize spacing between elements
 - [x] Test layout on desktop and mobile views
+
+## Catalog Layout Optimization
+
+- [x] Revert font sizes to original (keep text readable)
+- [x] Reduce only blank space (padding, margins, spacing)
+- [x] Move Add to Cart button to left side
+- [x] Move quantity selector to right side
+- [x] Test optimized layout with original font sizes
