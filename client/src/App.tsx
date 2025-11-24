@@ -25,6 +25,7 @@ import OrderDetail from "@/pages/OrderDetail";
 import Customers from "@/pages/Customers";
 import BulkMessaging from "@/pages/BulkMessaging";
 import CustomerImport from "@/pages/CustomerImport";
+import TerminalPage from "@/pages/TerminalPage";
 
 function Router() {
   const [location] = useLocation();
@@ -35,6 +36,9 @@ function Router() {
       {/* Public routes - no auth required */}
       <Route path="/catalog/:userId/:type" component={PublicCatalog} />
       <Route path="/order/:orderNumber" component={OrderDetail} />
+      
+      {/* Terminal route - full screen, no layout */}
+      <Route path="/terminal" component={TerminalPage} />
       
       {/* Orders route */}
       <Route path="/orders" component={() => (
