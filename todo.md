@@ -1334,3 +1334,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Remove indicators from below item name
 - [x] Add indicators below Add to Cart button (centered)
 - [x] Test layout on mobile and desktop
+
+## Align Stock Indicators to Left
+
+- [x] Change justify-center to justify-start for both indicators
+- [x] Test left alignment on mobile and desktop
