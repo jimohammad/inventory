@@ -1288,3 +1288,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Remove item code line from catalog cards to save space
 - [x] Test catalog layout without item code
+
+## Fix Low Stock Visibility
+
+- [x] Show low stock indicator on all catalog types (public, retail, internal)
+- [x] Remove includeQty condition from low stock indicator
+- [x] Test on public and retail catalogs
