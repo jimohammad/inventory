@@ -818,7 +818,7 @@ Keep the response concise, actionable, and focused on business decisions.`;
           purchasePrice: item.purchasePrice,
           wholesalePrice: item.wholesalePrice,
           retailPrice: item.retailPrice,
-          ...(input.includeQty ? { availableQty: item.availableQty } : {}),
+          availableQty: item.availableQty, // Always include for low stock indicator
         }));
       }),
   }),
