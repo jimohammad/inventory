@@ -176,13 +176,8 @@ export default function BulkMessaging() {
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div>
-        <div className="flex items-center gap-3">
-          <img src="/bulk-messaging-icon.png" alt="Bulk Messaging" className="w-12 h-12" />
-          <div>
-            <h1 className="text-3xl font-bold">Bulk Messaging</h1>
-            <p className="text-muted-foreground">Send catalog links to multiple customers via WhatsApp</p>
-          </div>
-        </div>
+        <h1 className="text-3xl font-bold">Bulk Messaging</h1>
+        <p className="text-muted-foreground">Send catalog links to multiple customers via WhatsApp</p>
       </div>
 
       {/* Message Composer */}
