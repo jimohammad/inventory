@@ -1,0 +1,18 @@
+{
+  "query": "SHOW COLUMNS FROM customers LIKE 'area'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SHOW COLUMNS FROM customers LIKE 'area'",
+  "rows": [
+    {
+      "Field": "area",
+      "Type": "enum('Sharq','Margab','Mubarkiya','Souk Wataniya','Fahaheel','Jaleeb Shuwaikh','Jahra','Salmiya','Hawally','Souk Qurain')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\narea\tenum('Sharq','Margab','Mubarkiya','Souk Wataniya','Fahaheel','Jaleeb Shuwaikh','Jahra','Salmiya','Hawally','Souk Qurain')\tNO\t\tNULL\t\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}

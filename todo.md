@@ -1346,3 +1346,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Update database schema (added to area enum)
 - [x] Update CustomerImport.tsx VALID_AREAS
 - [x] Test creating customer with Team category
+
+## Fix Team Category Database Migration
+
+- [x] Complete database migration to add Team to area enum (ALTER TABLE)
+- [x] Test creating customer with Team category
+- [x] Verify no SQL errors
