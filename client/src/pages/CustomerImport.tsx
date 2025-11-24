@@ -155,9 +155,9 @@ export default function CustomerImport() {
 
   const downloadTemplate = () => {
     const template = `name,phone,area
-Ahmed Al-Sayed,+96550123456,Salmiya
-Fatima Hassan,+96551234567,Hawally
-Mohammed Ali,+96552345678,Sharq`;
+Ahmed Al-Sayed,50123456,Salmiya
+Fatima Hassan,51234567,Hawally
+Mohammed Ali,52345678,Sharq`;
 
     const blob = new Blob([template], { type: "text/csv" });
     const url = URL.createObjectURL(blob);

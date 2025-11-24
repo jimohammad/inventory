@@ -363,7 +363,7 @@ export default function Customers() {
                 id="phone"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+96550000000"
+                placeholder="50000000"
               />
             </div>
             <div>
@@ -508,8 +508,8 @@ export default function Customers() {
               <p className="font-medium mb-2">CSV Format Example:</p>
               <pre className="bg-muted p-2 rounded text-xs">
                 name,phone,area{"\n"}
-                John Doe,+96550000000,Salmiya{"\n"}
-                Jane Smith,+96550000001,Hawally
+                John Doe,50000000,Salmiya{"\n"}
+                Jane Smith,51234567,Hawally
               </pre>
             </div>
           </div>

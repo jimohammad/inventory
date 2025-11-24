@@ -1260,3 +1260,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Change from single-column to responsive grid (1/2/3 columns)
 - [x] Keep reduced price font (text-xl)
 - [x] Test grid layout on mobile
+
+## Remove Phone Number Prefix Restriction
+
+- [x] Remove automatic +965 prefix from customer phone field
+- [x] Update validation to allow flexible phone entry (8 digits or with manual country code)
+- [x] Test customer creation with different phone formats
