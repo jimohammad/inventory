@@ -1194,3 +1194,12 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Update Add to Cart to use selected quantity
 - [x] Test ordering multiple quantities
 - [x] Reset quantity to 1 after adding to cart
+
+## Compact Catalog Layout
+
+- [x] Reduce card padding and spacing for more compact view
+- [x] Make item cards smaller in height
+- [x] Align quantity selector and Add to Cart button to same height
+- [x] Reduce font sizes for mobile-friendly display
+- [x] Optimize spacing between elements
+- [x] Test layout on desktop and mobile views
