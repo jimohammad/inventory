@@ -75,7 +75,7 @@ export default function Dashboard() {
                     </div>
                     <div className="text-right ml-4">
                       <div className="text-base font-bold text-emerald-400">
-                        KWD {parseFloat(item.sellingPrice || "0").toFixed(3)}
+                        KWD {parseFloat(item.wholesalePrice || item.retailPrice || "0").toFixed(3)}
                       </div>
                       <div className="text-xs text-slate-400">
                         {item.availableQty} units
@@ -155,7 +155,7 @@ export default function Dashboard() {
             </div>
             <p className="text-2xl font-bold text-slate-900">
               KWD {items.reduce((sum: number, item: any) => {
-                const price = parseFloat(item.sellingPrice || "0");
+                const price = parseFloat(item.purchasePrice || "0");
                 const qty = item.availableQty || 0;
                 return sum + (price * qty);
               }, 0).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}

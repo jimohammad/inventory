@@ -1308,3 +1308,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Change text color from red to orange
 - [x] Keep red blinking dot
 - [x] Test new position and color
+
+## Fix Total Stock Value Bug
+
+- [x] Check dashboard stock value calculation logic
+- [x] Debug why value shows 0 - was using non-existent sellingPrice field
+- [x] Fix calculation to use purchasePrice and test
