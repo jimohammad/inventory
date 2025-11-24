@@ -1321,3 +1321,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Change "Only X left" text to yellow-400 color
 - [x] Increase blinking dot size from h-2 w-2 to h-2.5 w-2.5
 - [x] Test updated styling
+
+## New Stock Arrived Indicator
+
+- [x] Add green blinking dot indicator for items with 50+ quantity
+- [x] Display "New stock arrived" text in purple color
+- [x] Position below item name (similar to low stock indicator)
+- [x] Test on all catalog types (public, retail, internal)
