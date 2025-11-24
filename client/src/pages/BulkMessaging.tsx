@@ -181,59 +181,8 @@ export default function BulkMessaging() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Customer Selection */}
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              Select Customers ({selectedCustomers.length} selected)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {!customersByArea || Object.keys(customersByArea).length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">
-                No customers found. Add customers first to send messages.
-              </p>
-            ) : (
-              Object.entries(customersByArea).map(([area, areaCustomers]) => (
-                <div key={area} className="space-y-2">
-                  <div className="flex items-center justify-between bg-muted p-3 rounded-lg">
-                    <h3 className="font-semibold">{area}</h3>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSelectAll(area)}
-                    >
-                      {areaCustomers?.every(c => selectedCustomers.includes(c.id))
-                        ? "Deselect All"
-                        : "Select All"}
-                    </Button>
-                  </div>
-                  <div className="grid gap-2 pl-4">
-                    {areaCustomers?.map(customer => (
-                      <div key={customer.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`customer-${customer.id}`}
-                          checked={selectedCustomers.includes(customer.id)}
-                          onCheckedChange={() => handleToggleCustomer(customer.id)}
-                        />
-                        <label
-                          htmlFor={`customer-${customer.id}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
-                        >
-                          {customer.name} - {customer.phone}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
-
         {/* Message Composer */}
-        <Card>
+        <Card className="md:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="w-5 h-5" />
@@ -343,6 +292,58 @@ export default function BulkMessaging() {
                 </>
               )}
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Customer Selection */}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="w-5 h-5" />
+              Select Customers ({selectedCustomers.length} selected)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {!customersByArea || Object.keys(customersByArea).length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                No customers found. Add customers first to send messages.
+              </p>
+            ) : (
+              Object.entries(customersByArea).map(([area, areaCustomers]) => (
+                <div key={area} className="space-y-2">
+                  <div className="flex items-center justify-between bg-muted p-3 rounded-lg">
+                    <h3 className="font-semibold">{area}</h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSelectAll(area)}
+                    >
+                      {areaCustomers?.every(c => selectedCustomers.includes(c.id))
+                        ? "Deselect All"
+                        : "Select All"}
+                      {" "}({areaCustomers.length})
+                    </Button>
+                  </div>
+                  <div className="grid gap-2 pl-4">
+                    {areaCustomers?.map(customer => (
+                      <div key={customer.id} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`customer-${customer.id}`}
+                          checked={selectedCustomers.includes(customer.id)}
+                          onCheckedChange={() => handleToggleCustomer(customer.id)}
+                        />
+                        <label
+                          htmlFor={`customer-${customer.id}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex-1"
+                        >
+                          {customer.name} - {customer.phone}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
       </div>

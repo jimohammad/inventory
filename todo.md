@@ -1177,3 +1177,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Update catalog URL routing to support /catalog/:userId/retail
 - [x] Update BulkMessaging to include retail catalog link option
 - [x] Test all three catalog types (internal, public, retail)
+
+## Bulk Messaging Layout Improvement
+
+- [x] Move message composer card to top of page
+- [x] Move customer selection card below message composer
+- [x] Test new layout for better workflow
