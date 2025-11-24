@@ -1124,7 +1124,7 @@ Keep the response concise, actionable, and focused on business decisions.`;
           userId: 1, // Public orders don't require authentication
           orderNumber,
           salesmanName: input.salesmanName,
-          status: "processed",
+          status: "received",
           totalItems,
           totalQuantity,
           totalValue: totalValue.toString(),
@@ -1330,6 +1330,49 @@ Keep the response concise, actionable, and focused on business decisions.`;
           .where(eq(orders.id, input.orderId));
 
         return { success: true };
+      }),
+
+    updateStatus: protectedProcedure
+      .input((raw: unknown) => {
+        if (typeof raw !== "object" || raw === null) {
+          throw new Error("Invalid input");
+        }
+        const input = raw as { orderId: number; status: "received" | "delivered" };
+        if (!input.orderId || !input.status) {
+          throw new Error("Order ID and status are required");
+        }
+        if (input.status !== "received" && input.status !== "delivered") {
+          throw new Error("Status must be 'received' or 'delivered'");
+        }
+        return input;
+      })
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { orders } = await import("../drizzle/schema");
+        const { eq, and } = await import("drizzle-orm");
+
+        // Verify the order belongs to the user
+        const [order] = await db.select()
+          .from(orders)
+          .where(and(
+            eq(orders.id, input.orderId),
+            eq(orders.userId, ctx.user.id)
+          ))
+          .limit(1);
+
+        if (!order) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Order not found or access denied" });
+        }
+
+        // Update order status
+        await db.update(orders)
+          .set({ status: input.status })
+          .where(eq(orders.id, input.orderId));
+
+        return { success: true, status: input.status };
       }),
   }),
 });

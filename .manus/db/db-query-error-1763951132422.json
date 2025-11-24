@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO orders (orderNumber, salesmanName, totalValue, totalItems, totalQuantity, status, userId, createdAt) VALUES ('ORD-TEST-STATUS-002', 'Status Test Salesman', 3.500, 1, 1, 'received', 1, NOW()); INSERT INTO orderItems (orderId, itemId, quantity, price) VALUES (LAST_INSERT_ID(), (SELECT id FROM items WHERE itemCode = 'MO-BUDSH40' LIMIT 1), 1, 3.500);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute INSERT INTO orders (orderNumber, salesmanName, totalValue, totalItems, totalQuantity, status, userId, createdAt) VALUES ('ORD-TEST-STATUS-002', 'Status Test Salesman', 3.500, 1, 1, 'received', 1, NOW()); INSERT INTO orderItems (orderId, itemId, quantity, price) VALUES (LAST_INSERT_ID(), (SELECT id FROM items WHERE itemCode = 'MO-BUDSH40' LIMIT 1), 1, 3.500);",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1364 (HY000) at line 1: Field 'itemCode' doesn't have a default value"
+  ]
+}

@@ -1059,3 +1059,11 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add confirmation dialog before deleting orders
 - [x] Optimize order detail page loading performance
 - [x] Test order deletion and page performance
+
+## Order Status Workflow (Simplified)
+
+- [x] Update order status enum to "received" and "delivered"
+- [x] Change default order status from "processed" to "received"
+- [x] Add backend procedure to update order status
+- [x] Add status update UI in Orders dashboard
+- [x] Test status workflow (received → delivered)

@@ -153,7 +153,7 @@ export const orders = mysqlTable("orders", {
   userId: int("userId").notNull(),
   orderNumber: varchar("orderNumber", { length: 50 }).notNull().unique(),
   salesmanName: varchar("salesmanName", { length: 255 }).notNull(),
-  status: mysqlEnum("status", ["pending", "processed", "cancelled"]).default("processed").notNull(),
+  status: mysqlEnum("status", ["received", "delivered"]).default("received").notNull(),
   totalItems: int("totalItems").notNull(),
   totalQuantity: int("totalQuantity").notNull(),
   totalValue: decimal("totalValue", { precision: 12, scale: 3 }),

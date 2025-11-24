@@ -54,6 +54,17 @@ export default function Orders() {
     },
   });
 
+  const updateStatusMutation = trpc.orders.updateStatus.useMutation({
+    onSuccess: (data) => {
+      toast.success(`Order status updated to ${data.status}`);
+      utils.orders.list.invalidate();
+      setDetailsOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update order status");
+    },
+  });
+
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
     
@@ -158,7 +169,7 @@ export default function Orders() {
                         KWD {parseFloat(order.totalValue).toFixed(3)}
                       </TableCell>
                       <TableCell>
-                        <Badge variant={order.status === "processed" ? "default" : "secondary"}>
+                        <Badge variant={order.status === "delivered" ? "default" : "secondary"}>
                           {order.status}
                         </Badge>
                       </TableCell>
@@ -205,9 +216,27 @@ export default function Orders() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Status</p>
-                  <Badge variant={selectedOrder.status === "processed" ? "default" : "secondary"}>
-                    {selectedOrder.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={selectedOrder.status === "delivered" ? "default" : "secondary"}>
+                      {selectedOrder.status}
+                    </Badge>
+                    {selectedOrder.status === "received" && (
+                      <Button
+                        size="sm"
+                        onClick={() => updateStatusMutation.mutate({ orderId: selectedOrder.id, status: "delivered" })}
+                        disabled={updateStatusMutation.isPending}
+                      >
+                        {updateStatusMutation.isPending ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Updating...
+                          </>
+                        ) : (
+                          "Mark as Delivered"
+                        )}
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">Salesman</p>

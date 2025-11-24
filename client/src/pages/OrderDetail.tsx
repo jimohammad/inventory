@@ -77,7 +77,7 @@ export default function OrderDetail() {
                   {order.orderNumber}
                 </p>
               </div>
-              <Badge variant={order.status === "processed" ? "default" : "secondary"} className="text-sm">
+              <Badge variant={order.status === "delivered" ? "default" : "secondary"} className="text-sm">
                 {order.status}
               </Badge>
             </div>
