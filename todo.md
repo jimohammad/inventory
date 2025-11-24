@@ -1074,3 +1074,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Show "Order Placed Successfully" confirmation message to salesman
 - [x] Keep automatic WhatsApp notification to owner working
 - [x] Test complete order flow
+
+## Order Confirmation Message Improvements
+
+- [x] Increase toast message display duration (5s → 10s)
+- [x] Increase font size for better visibility (18px, bold, more padding)
+- [x] Test improved confirmation message

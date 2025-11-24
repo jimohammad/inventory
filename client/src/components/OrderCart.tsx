@@ -64,9 +64,14 @@ export default function OrderCart({ cartItems, onUpdateQuantity, onRemoveItem, o
         })),
       });
 
-      // Show success message
+      // Show success message with longer duration and larger font
       toast.success(`🎉 Order Placed Successfully!\nOrder #${result.orderNumber}`, {
-        duration: 5000,
+        duration: 10000,
+        style: {
+          fontSize: '18px',
+          fontWeight: '600',
+          padding: '20px',
+        },
       });
       
       // Clear cart and close dialog
