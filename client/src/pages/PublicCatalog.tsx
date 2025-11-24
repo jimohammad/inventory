@@ -193,30 +193,6 @@ export default function PublicCatalog() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <CardTitle className="text-base truncate">{item.name}</CardTitle>
-                        {/* New Stock Indicator - for 50+ quantity */}
-                        {(item.availableQty || 0) >= 50 && (
-                          <div className="flex items-center gap-1.5 mt-1">
-                            <span className="relative flex h-2.5 w-2.5">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                            </span>
-                            <span className="text-xs font-semibold text-purple-600">
-                              New stock arrived
-                            </span>
-                          </div>
-                        )}
-                        {/* Low Stock Indicator - for less than 20 quantity */}
-                        {(item.availableQty || 0) < 20 && (item.availableQty || 0) > 0 && (
-                          <div className="flex items-center gap-1.5 mt-1">
-                            <span className="relative flex h-2.5 w-2.5">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-                            </span>
-                            <span className="text-xs font-semibold text-yellow-400">
-                              Only {item.availableQty} left
-                            </span>
-                          </div>
-                        )}
                       </div>
                       <Badge variant="secondary">{item.category}</Badge>
                     </div>
@@ -293,6 +269,32 @@ export default function PublicCatalog() {
                           </Button>
                         </div>
                       </div>
+
+                      {/* Stock Indicators - below Add to Cart */}
+                      {/* New Stock Indicator - for 50+ quantity */}
+                      {(item.availableQty || 0) >= 50 && (
+                        <div className="flex items-center justify-center gap-1.5 mt-2">
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                          </span>
+                          <span className="text-xs font-semibold text-purple-600">
+                            New stock arrived
+                          </span>
+                        </div>
+                      )}
+                      {/* Low Stock Indicator - for less than 20 quantity */}
+                      {(item.availableQty || 0) < 20 && (item.availableQty || 0) > 0 && (
+                        <div className="flex items-center justify-center gap-1.5 mt-2">
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                          </span>
+                          <span className="text-xs font-semibold text-yellow-400">
+                            Only {item.availableQty} left
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

@@ -1328,3 +1328,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Display "New stock arrived" text in purple color
 - [x] Position below item name (similar to low stock indicator)
 - [x] Test on all catalog types (public, retail, internal)
+
+## Move Stock Indicators to Bottom
+
+- [x] Remove indicators from below item name
+- [x] Add indicators below Add to Cart button (centered)
+- [x] Test layout on mobile and desktop
