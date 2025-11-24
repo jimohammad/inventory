@@ -1185,6 +1185,27 @@ Keep the response concise, actionable, and focused on business decisions.`;
           });
         }
 
+        // Send WhatsApp notification
+        try {
+          const { sendOrderNotification } = await import("./_core/whatsappNotification");
+          const orderDetails = {
+            orderNumber,
+            salesmanName: input.salesmanName,
+            items: input.items.map(item => ({
+              itemCode: item.itemCode,
+              itemName: item.itemName,
+              quantity: item.quantity,
+              price: `KWD ${item.price.toFixed(3)}`,
+            })),
+            totalValue: totalValue.toFixed(3),
+            totalQuantity,
+          };
+          await sendOrderNotification(orderDetails);
+        } catch (error) {
+          console.error("[WhatsApp] Failed to send order notification:", error);
+          // Don't fail the order if WhatsApp notification fails
+        }
+
         return {
           success: true,
           orderNumber,
