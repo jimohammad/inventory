@@ -1352,3 +1352,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Complete database migration to add Team to area enum (ALTER TABLE)
 - [x] Test creating customer with Team category
 - [x] Verify no SQL errors
+
+## Add Custom Icon to Bulk Messaging Page
+
+- [x] Copy icon_4.png to client/public folder as bulk-messaging-icon.png
+- [x] Update BulkMessaging.tsx to display icon next to heading
+- [x] Test icon display
