@@ -1358,3 +1358,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Copy icon_4.png to client/public folder as bulk-messaging-icon.png
 - [x] Update BulkMessaging.tsx to display icon next to heading
 - [x] Test icon display
+
+## Replace Bulk Messaging Icon
+
+- [x] Copy new icon_4.png to replace existing bulk-messaging-icon.png
+- [x] Test updated icon display
