@@ -180,9 +180,8 @@ export default function BulkMessaging() {
         <p className="text-muted-foreground">Send catalog links to multiple customers via WhatsApp</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {/* Message Composer */}
-        <Card className="md:col-span-1">
+      {/* Message Composer */}
+      <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="w-5 h-5" />
@@ -295,8 +294,8 @@ export default function BulkMessaging() {
           </CardContent>
         </Card>
 
-        {/* Customer Selection */}
-        <Card className="md:col-span-2">
+      {/* Customer Selection */}
+      <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="w-5 h-5" />
@@ -346,7 +345,6 @@ export default function BulkMessaging() {
             )}
           </CardContent>
         </Card>
-      </div>
 
       {/* Saved Templates Section */}
       {templates && templates.length > 0 && (

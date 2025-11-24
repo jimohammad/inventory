@@ -1183,3 +1183,5 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Move message composer card to top of page
 - [x] Move customer selection card below message composer
 - [x] Test new layout for better workflow
+- [x] Fix layout to stack vertically (not side-by-side)
+- [x] Message card should be full-width above customer selection
