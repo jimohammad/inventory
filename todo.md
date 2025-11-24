@@ -1254,3 +1254,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Reduce price font size from text-2xl to text-xl
 - [x] Implement single-column layout for mobile devices
 - [x] Test mobile layout to verify improved visibility
+
+## Restore Responsive Grid Layout
+
+- [x] Change from single-column to responsive grid (1/2/3 columns)
+- [x] Keep reduced price font (text-xl)
+- [x] Test grid layout on mobile
