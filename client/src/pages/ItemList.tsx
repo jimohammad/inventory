@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Link, useLocation } from "wouter";
-import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload, TrendingUp, History } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, Package, Upload, TrendingUp, History, FolderOpen, AlertTriangle, DollarSign, TrendingDown } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { ShareCatalogDialog } from "@/components/ShareCatalogDialog";
@@ -79,6 +79,75 @@ export default function ItemList() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-white">Items</h1>
         <p className="text-slate-400 mt-1">Manage your inventory items</p>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* Total Items Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <FolderOpen className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-purple-600" />
+              <p className="text-sm font-medium text-slate-600">Total Items</p>
+            </div>
+            <p className="text-3xl font-bold text-slate-900">{items?.length || 0}</p>
+          </div>
+        </div>
+
+        {/* Low Stock Items Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <AlertTriangle className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <TrendingDown className="w-4 h-4 text-blue-600" />
+              <p className="text-sm font-medium text-slate-600">Low Stock Items</p>
+            </div>
+            <p className="text-3xl font-bold text-red-600">{items?.filter(item => (item.availableQty || 0) < 20).length || 0}</p>
+          </div>
+        </div>
+
+        {/* Total Stock Value Card */}
+        <div className="group relative overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl cursor-pointer">
+          {/* Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-300 via-emerald-400 to-teal-500" />
+          
+          {/* Icon Section */}
+          <div className="relative p-8 flex items-center justify-center">
+            <DollarSign className="w-20 h-20 text-white/90" strokeWidth={1.5} />
+          </div>
+          
+          {/* Content Section */}
+          <div className="relative bg-white rounded-2xl p-6 space-y-1">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-emerald-600" />
+              <p className="text-sm font-medium text-slate-600">Total Stock Value</p>
+            </div>
+            <p className="text-2xl font-bold text-slate-900">
+              KWD {items?.reduce((sum: number, item: any) => {
+                const price = parseFloat(item.purchasePrice || "0");
+                const qty = item.availableQty || 0;
+                return sum + (price * qty);
+              }, 0).toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Action Buttons Row */}

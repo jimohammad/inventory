@@ -1375,3 +1375,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Delete bulk-messaging-icon.png from public folder
 - [x] Remove icon from BulkMessaging.tsx
 - [x] Test page without icon
+
+## Move Stat Cards to Items Page
+
+- [x] Copy three stat cards (Total Items, Low Stock, Total Value) to Items page
+- [x] Position cards at top of Items page
+- [x] Remove cards from Dashboard
+- [x] Test both pages
