@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, Search, ShoppingCart } from "lucide-react";
+import { Loader2, Search, ShoppingCart, Check } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useRoute } from "wouter";
 import OrderCart, { CartItem } from "@/components/OrderCart";
@@ -19,6 +19,7 @@ export default function PublicCatalog() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [itemQuantities, setItemQuantities] = useState<Record<number, number>>({});
+  const [addedItems, setAddedItems] = useState<Set<number>>(new Set());
 
   const { data: items, isLoading } = trpc.items.getPublicCatalog.useQuery({
     userId,
@@ -84,6 +85,16 @@ export default function PublicCatalog() {
     }
     // Reset quantity to 1 after adding
     setItemQuantity(item.id, 1);
+    
+    // Trigger animation
+    setAddedItems(prev => new Set(prev).add(item.id));
+    setTimeout(() => {
+      setAddedItems(prev => {
+        const next = new Set(prev);
+        next.delete(item.id);
+        return next;
+      });
+    }, 1000);
   };
 
   const handleUpdateQuantity = (itemId: number, quantity: number) => {
@@ -211,11 +222,24 @@ export default function PublicCatalog() {
                       {/* Add to Cart and Quantity Selector */}
                       <div className="flex gap-2">
                         <Button
-                          className="flex-1 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white"
+                          className={`flex-1 h-10 text-white transition-all duration-300 ${
+                            addedItems.has(item.id)
+                              ? 'bg-green-600 hover:bg-green-600'
+                              : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'
+                          }`}
                           onClick={() => handleAddToCart(item)}
                         >
-                          <ShoppingCart className="w-4 h-4 mr-2" />
-                          {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
+                          {addedItems.has(item.id) ? (
+                            <>
+                              <Check className="w-4 h-4 mr-2 animate-in zoom-in duration-200" />
+                              Added!
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-4 h-4 mr-2" />
+                              {cartQty > 0 ? `In Cart (${cartQty})` : 'Add to Cart'}
+                            </>
+                          )}
                         </Button>
                         <div className="flex items-center border rounded-lg">
                           <Button
