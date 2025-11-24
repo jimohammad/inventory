@@ -225,6 +225,8 @@ export default function PublicCatalog() {
                           className={`flex-1 h-10 text-white transition-all duration-300 ${
                             addedItems.has(item.id)
                               ? 'bg-green-600 hover:bg-green-600'
+                              : cartQty > 0
+                              ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700'
                               : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'
                           }`}
                           onClick={() => handleAddToCart(item)}

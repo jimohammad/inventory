@@ -1272,3 +1272,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add visual feedback animation when items added to cart
 - [x] Show brief checkmark on Add to Cart button
 - [x] Test animation on mobile devices
+
+## Orange In Cart Button
+
+- [x] Change In Cart button color from green to orange
+- [x] Test visual distinction between Add to Cart and In Cart states
