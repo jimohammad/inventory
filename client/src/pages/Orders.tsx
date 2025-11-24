@@ -166,7 +166,7 @@ export default function Orders() {
                       <TableCell>{order.totalItems}</TableCell>
                       <TableCell>{order.totalQuantity} pcs</TableCell>
                       <TableCell className="font-semibold">
-                        KWD {parseFloat(order.totalValue).toFixed(3)}
+                        KWD {parseFloat(order.totalValue || '0').toFixed(3)}
                       </TableCell>
                       <TableCell>
                         <Badge variant={order.status === "delivered" ? "default" : "secondary"}>

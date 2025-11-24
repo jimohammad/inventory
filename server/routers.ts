@@ -1,5 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -730,7 +731,7 @@ Keep the response concise, actionable, and focused on business decisions.`;
           .reduce((sum, h) => sum + Math.abs(h.quantityChange), 0);
         
         const totalRestocks = history
-          .filter(h => h.changeType === "restock")
+          .filter(h => h.changeType === "purchase")
           .reduce((sum, h) => sum + Math.abs(h.quantityChange), 0);
         
         return {
@@ -1373,6 +1374,119 @@ Keep the response concise, actionable, and focused on business decisions.`;
           .where(eq(orders.id, input.orderId));
 
         return { success: true, status: input.status };
+      }),
+  }),
+
+  customers: router({
+    list: protectedProcedure.query(async ({ ctx }) => {
+      const { getDb } = await import("./db");
+      const db = await getDb();
+      if (!db) return [];
+
+      const { customers } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+
+      const result = await db.select().from(customers).orderBy(customers.createdAt);
+      return result;
+    }),
+
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        phone: z.string().min(1),
+        area: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { customers } = await import("../drizzle/schema");
+
+        await db.insert(customers).values({
+          name: input.name,
+          phone: input.phone,
+          area: input.area as any,
+        });
+
+        // Get the last inserted customer
+        const { desc } = await import("drizzle-orm");
+        const [newCustomer] = await db.select().from(customers).orderBy(desc(customers.id)).limit(1);
+
+        return { success: true, id: newCustomer.id };
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        phone: z.string().min(1),
+        area: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { customers } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+
+        await db.update(customers)
+          .set({
+            name: input.name,
+            phone: input.phone,
+            area: input.area as any,
+          })
+          .where(eq(customers.id, input.id));
+
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { customers } = await import("../drizzle/schema");
+        const { eq } = await import("drizzle-orm");
+
+        await db.delete(customers).where(eq(customers.id, input.id));
+
+        return { success: true };
+      }),
+
+    importFromCsv: protectedProcedure
+      .input(z.object({
+        customers: z.array(z.object({
+          name: z.string(),
+          phone: z.string(),
+          area: z.string(),
+        })),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+
+        const { customers } = await import("../drizzle/schema");
+
+        let imported = 0;
+        for (const customer of input.customers) {
+          try {
+            await db.insert(customers).values({
+              name: customer.name,
+              phone: customer.phone,
+              area: customer.area as any,
+            });
+            imported++;
+          } catch (error) {
+            console.error("Failed to import customer:", customer, error);
+          }
+        }
+
+        return { success: true, imported };
       }),
   }),
 });

@@ -24,6 +24,7 @@ import ReorderAlerts from "@/pages/ReorderAlerts";
 import StockHistory from "@/pages/StockHistory";
 import Orders from "@/pages/Orders";
 import OrderDetail from "@/pages/OrderDetail";
+import Customers from "@/pages/Customers";
 
 function Router() {
   const [location] = useLocation();
@@ -117,6 +118,13 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <WhatsAppContacts />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/customers" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <Customers />
           </PageTransition>
         </DashboardLayout>
       )} />

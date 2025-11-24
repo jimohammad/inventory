@@ -1080,3 +1080,39 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Increase toast message display duration (5s → 10s)
 - [x] Increase font size for better visibility (18px, bold, more padding)
 - [x] Test improved confirmation message
+
+## Bulk Messaging System
+
+### Database Schema
+- [x] Create customers table (id, name, phone, area, createdAt, updatedAt)
+- [x] Create messageHistory table (id, customerId, message, status, sentAt)
+- [x] Add area enum with 10 Kuwait locations
+
+### Customer Management
+- [ ] Create WhatsApp Contacts page in dashboard
+- [ ] Add customer form (name, phone, area)
+- [ ] Import customers from CSV/Excel
+- [ ] Edit customer functionality
+- [ ] Delete customer functionality
+- [ ] Customer list with search
+
+### Bulk Messaging Interface
+- [ ] Left sidebar with area groups and customer counts
+- [ ] Customer list with checkboxes
+- [ ] Select All / Deselect All functionality
+- [ ] Search customers by name/phone
+- [ ] Message preview with catalog link
+
+### WhatsApp Integration
+- [ ] Message queue system with delays
+- [ ] Send to selected customers
+- [ ] Track message delivery status
+- [ ] Handle rate limits
+- [ ] Error handling and retry logic
+
+### Message History & Tracking
+- [ ] Message history page
+- [ ] View sent messages
+- [ ] Track delivery status
+- [ ] Message templates
+- [ ] Resend failed messages

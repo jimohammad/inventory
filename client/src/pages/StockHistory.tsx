@@ -206,7 +206,7 @@ export default function StockHistory() {
               </h2>
               <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
                 {categoryItems.map((item) => (
-                  <div key={item.id} ref={(el) => itemRefs.current[item.id] = el}>
+                  <div key={item.id} ref={(el) => { itemRefs.current[item.id] = el; }}>
                     <StockHistoryCard 
                       itemId={item.id} 
                       filterType={filterType}

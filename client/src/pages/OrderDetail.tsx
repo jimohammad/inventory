@@ -23,7 +23,7 @@ export default function OrderDetail() {
     { 
       enabled: !!orderNumber,
       staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-      cacheTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+      gcTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
     }
   );
 
@@ -167,7 +167,7 @@ export default function OrderDetail() {
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground mb-1">Total Value</p>
                   <p className="text-3xl font-bold text-primary">
-                    KWD {parseFloat(order.totalValue).toFixed(3)}
+                    KWD {parseFloat(order.totalValue || '0').toFixed(3)}
                   </p>
                 </div>
               </div>

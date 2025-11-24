@@ -181,3 +181,49 @@ export const orderItems = mysqlTable("orderItems", {
 
 export type OrderItem = typeof orderItems.$inferSelect;
 export type InsertOrderItem = typeof orderItems.$inferInsert;
+
+/**
+ * Customers table
+ * Stores customer contacts for bulk messaging
+ */
+export const customers = mysqlTable("customers", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 20 }).notNull(),
+  area: mysqlEnum("area", [
+    "Sharq",
+    "Margab",
+    "Mubarkiya",
+    "Souk Wataniya",
+    "Fahaheel",
+    "Jaleeb Shuwaikh",
+    "Jahra",
+    "Salmiya",
+    "Hawally",
+    "Souk Qurain"
+  ]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Customer = typeof customers.$inferSelect;
+export type InsertCustomer = typeof customers.$inferInsert;
+
+/**
+ * Message History table
+ * Tracks all WhatsApp messages sent to customers
+ */
+export const messageHistory = mysqlTable("messageHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  customerId: int("customerId").notNull(),
+  customerName: varchar("customerName", { length: 255 }).notNull(),
+  customerPhone: varchar("customerPhone", { length: 20 }).notNull(),
+  message: text("message").notNull(),
+  status: mysqlEnum("status", ["pending", "sent", "failed"]).default("pending").notNull(),
+  errorMessage: text("errorMessage"),
+  sentAt: timestamp("sentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MessageHistory = typeof messageHistory.$inferSelect;
+export type InsertMessageHistory = typeof messageHistory.$inferInsert;
