@@ -1230,3 +1230,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Change space-y-0.5 to space-y-0 for absolute minimum spacing (zero gap)
 - [x] Test zero-gap layout and verify readability
+
+## Remove Price Labels from Catalog
+
+- [x] Remove "Wholesale Price" and "Retail Shop Price" label lines from catalog cards
+- [x] Test catalog layout with removed labels to verify space savings
