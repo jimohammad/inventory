@@ -33,10 +33,8 @@ const menuItems = [
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
   { icon: Users, label: "Customers", path: "/customers" },
   { icon: Send, label: "Bulk Messaging", path: "/bulk-messaging" },
-  { icon: MessageSquareText, label: "Message History", path: "/message-history" },
   { icon: History, label: "Stock History", path: "/stock-history" },
   { icon: Bell, label: "Reorder Alerts", path: "/reorder-alerts" },
-  { icon: TrendingUp, label: "Inventory Analysis", path: "/inventory-analysis" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },
   { icon: MessageCircle, label: "WhatsApp Contacts", path: "/whatsapp-contacts" },
 ];

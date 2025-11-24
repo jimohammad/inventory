@@ -14,7 +14,6 @@ import EditItem from "@/pages/EditItem";
 import StockImport from "@/pages/StockImport";
 import BulkOpeningStock from "@/pages/BulkOpeningStock";
 import BulkItemImport from "@/pages/BulkItemImport";
-import InventoryAnalysis from "@/pages/InventoryAnalysis";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 import PublicCatalog from "@/pages/PublicCatalog";
 import WhatsAppContacts from "@/pages/WhatsAppContacts";
@@ -25,7 +24,6 @@ import Orders from "@/pages/Orders";
 import OrderDetail from "@/pages/OrderDetail";
 import Customers from "@/pages/Customers";
 import BulkMessaging from "@/pages/BulkMessaging";
-import MessageHistory from "@/pages/MessageHistory";
 import CustomerImport from "@/pages/CustomerImport";
 
 function Router() {
@@ -88,13 +86,6 @@ function Router() {
           <BulkPriceUpdate />
         </DashboardLayout>
       )} />
-      <Route path="/inventory-analysis" component={() => (
-        <DashboardLayout>
-          <PageTransition>
-            <InventoryAnalysis />
-          </PageTransition>
-        </DashboardLayout>
-      )} />
       <Route path="/reorder-alerts" component={() => (
         <DashboardLayout>
           <PageTransition>
@@ -132,13 +123,6 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <BulkMessaging />
-          </PageTransition>
-        </DashboardLayout>
-      )} />
-      <Route path="/message-history" component={() => (
-        <DashboardLayout>
-          <PageTransition>
-            <MessageHistory />
           </PageTransition>
         </DashboardLayout>
       )} />

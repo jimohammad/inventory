@@ -1389,3 +1389,23 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Update default route to redirect to Items page (both / and /items)
 - [x] Delete Dashboard.tsx file
 - [x] Test navigation
+
+## Restart Server to Apply Dashboard Removal
+
+- [ ] Restart dev server
+- [ ] Verify Dashboard page is no longer accessible
+- [ ] Verify Items page loads at root URL
+
+## Remove Inventory Analysis Page
+
+- [x] Remove Inventory Analysis from DashboardLayout navigation
+- [x] Remove Inventory Analysis route from App.tsx
+- [x] Delete InventoryAnalysis.tsx file
+- [x] Test navigation
+
+## Remove Message History Page
+
+- [x] Remove Message History from DashboardLayout navigation
+- [x] Remove Message History route from App.tsx
+- [x] Delete MessageHistory.tsx file
+- [x] Test navigation
