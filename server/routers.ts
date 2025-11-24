@@ -85,7 +85,8 @@ export const appRouter = router({
           name: string;
           category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
           purchasePrice?: string;
-          sellingPrice?: string;
+          wholesalePrice?: string;
+          retailPrice?: string;
           availableQty?: number;
           openingStock?: number;
         };
@@ -133,7 +134,8 @@ export const appRouter = router({
             name: string;
             category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
             purchasePrice?: string;
-            sellingPrice?: string;
+            wholesalePrice?: string;
+            retailPrice?: string;
             availableQty?: number;
             openingStock?: number;
           }>;
@@ -236,7 +238,8 @@ export const appRouter = router({
           itemCode?: string;
           name: string;
           category?: "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor";
-          sellingPrice?: string;
+          wholesalePrice?: string;
+          retailPrice?: string;
           purchasePrice?: string;
           availableQty?: number;
           openingStock?: number;
@@ -257,21 +260,24 @@ export const appRouter = router({
           if (currentItem.length > 0) {
             const oldItem = currentItem[0];
             const oldPurchasePrice = oldItem.purchasePrice ? parseFloat(oldItem.purchasePrice) : null;
-            const oldSellingPrice = oldItem.sellingPrice ? parseFloat(oldItem.sellingPrice) : null;
+            const oldWholesalePrice = oldItem.wholesalePrice ? parseFloat(oldItem.wholesalePrice) : null;
+            const oldRetailPrice = oldItem.retailPrice ? parseFloat(oldItem.retailPrice) : null;
             const newPurchasePrice = input.purchasePrice ? parseFloat(input.purchasePrice) : null;
-            const newSellingPrice = input.sellingPrice ? parseFloat(input.sellingPrice) : null;
+            const newWholesalePrice = input.wholesalePrice ? parseFloat(input.wholesalePrice) : null;
+            const newRetailPrice = input.retailPrice ? parseFloat(input.retailPrice) : null;
             
             // Check if prices have changed
             const purchasePriceChanged = oldPurchasePrice !== newPurchasePrice;
-            const sellingPriceChanged = oldSellingPrice !== newSellingPrice;
+            const wholesalePriceChanged = oldWholesalePrice !== newWholesalePrice;
+            const retailPriceChanged = oldRetailPrice !== newRetailPrice;
             
             // Record price history if any price changed
-            if (purchasePriceChanged || sellingPriceChanged) {
+            if (purchasePriceChanged || wholesalePriceChanged || retailPriceChanged) {
               await db.insert(priceHistory).values({
                 userId: ctx.user.id,
                 itemId: input.id,
                 purchasePrice: input.purchasePrice || oldItem.purchasePrice,
-                sellingPrice: input.sellingPrice || oldItem.sellingPrice,
+                sellingPrice: input.wholesalePrice || oldItem.wholesalePrice,
                 changedAt: new Date(),
               });
             }
@@ -282,7 +288,8 @@ export const appRouter = router({
           itemCode: input.itemCode,
           name: input.name,
           category: input.category,
-          sellingPrice: input.sellingPrice,
+          wholesalePrice: input.wholesalePrice,
+          retailPrice: input.retailPrice,
           purchasePrice: input.purchasePrice,
           availableQty: input.availableQty,
           openingStock: input.openingStock,
@@ -310,7 +317,7 @@ export const appRouter = router({
         }
         return raw as {
           category?: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
-          priceType: 'selling' | 'purchase' | 'both';
+          priceType: 'wholesale' | 'retail' | 'purchase' | 'all';
           adjustmentType: 'percentage' | 'fixed';
           adjustmentValue: number;
         };
@@ -355,14 +362,21 @@ export const appRouter = router({
         for (const item of itemsToUpdate) {
           const updates: any = {};
           
-          if (input.priceType === 'selling' || input.priceType === 'both') {
-            const newPrice = adjustment(item.sellingPrice as any);
+          if (input.priceType === 'wholesale' || input.priceType === 'all') {
+            const newPrice = adjustment(item.wholesalePrice as any);
             if (newPrice !== null) {
-              updates.sellingPrice = newPrice;
+              updates.wholesalePrice = newPrice;
             }
           }
           
-          if (input.priceType === 'purchase' || input.priceType === 'both') {
+          if (input.priceType === 'retail' || input.priceType === 'all') {
+            const newPrice = adjustment(item.retailPrice as any);
+            if (newPrice !== null) {
+              updates.retailPrice = newPrice;
+            }
+          }
+          
+          if (input.priceType === 'purchase' || input.priceType === 'all') {
             const newPrice = adjustment(item.purchasePrice as any);
             if (newPrice !== null) {
               updates.purchasePrice = newPrice;
@@ -579,7 +593,8 @@ export const appRouter = router({
           item: item.name,
           category: item.category,
           available: item.availableQty || 0,
-          sellingPrice: item.sellingPrice,
+          wholesalePrice: item.wholesalePrice,
+          retailPrice: item.retailPrice,
           purchasePrice: item.purchasePrice,
         }));
 
@@ -644,7 +659,8 @@ Keep the response concise, actionable, and focused on business decisions.`;
             category: item.category,
             availableQty: item.availableQty || 0,
             purchasePrice: item.purchasePrice,
-            sellingPrice: item.sellingPrice,
+            wholesalePrice: item.wholesalePrice,
+            retailPrice: item.retailPrice,
           }))
           .sort((a, b) => a.availableQty - b.availableQty)
           .slice(0, 10);
@@ -655,11 +671,11 @@ Keep the response concise, actionable, and focused on business decisions.`;
       const allItems = await getUserItems(ctx.user.id);
       
       const itemsWithMargin = allItems
-        .filter(item => item.purchasePrice && item.sellingPrice)
+        .filter(item => item.purchasePrice && item.wholesalePrice)
         .map(item => {
-          const sellingPrice = parseFloat(item.sellingPrice as any);
+          const wholesalePrice = parseFloat(item.wholesalePrice as any);
           const purchasePrice = parseFloat(item.purchasePrice as any);
-          const margin = sellingPrice - purchasePrice;
+          const margin = wholesalePrice - purchasePrice;
           const marginPercent = (margin / purchasePrice) * 100;
           return {
             id: item.id,
@@ -667,7 +683,8 @@ Keep the response concise, actionable, and focused on business decisions.`;
             name: item.name,
             category: item.category,
             purchasePrice: item.purchasePrice!,
-            sellingPrice: item.sellingPrice!,
+            wholesalePrice: item.wholesalePrice!,
+            retailPrice: item.retailPrice,
             margin,
             marginPercent: parseFloat(marginPercent.toFixed(2)),
           };
@@ -799,7 +816,8 @@ Keep the response concise, actionable, and focused on business decisions.`;
           name: item.name,
           category: item.category,
           purchasePrice: item.purchasePrice,
-          sellingPrice: item.sellingPrice,
+          wholesalePrice: item.wholesalePrice,
+          retailPrice: item.retailPrice,
           ...(input.includeQty ? { availableQty: item.availableQty } : {}),
         }));
       }),

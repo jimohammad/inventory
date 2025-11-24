@@ -13,7 +13,7 @@ import { toast } from "sonner";
 export default function BulkPriceUpdate() {
   const [, setLocation] = useLocation();
   const [category, setCategory] = useState<string>("all");
-  const [priceType, setPriceType] = useState<"selling" | "purchase" | "both">("selling");
+  const [priceType, setPriceType] = useState<"wholesale" | "retail" | "purchase" | "all">("wholesale");
   const [adjustmentType, setAdjustmentType] = useState<"percentage" | "fixed">("percentage");
   const [adjustmentValue, setAdjustmentValue] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);

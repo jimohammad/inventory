@@ -28,7 +28,7 @@ export default function BulkMessaging() {
   const { user, loading: authLoading } = useAuth();
   const [selectedCustomers, setSelectedCustomers] = useState<number[]>([]);
   const [message, setMessage] = useState("");
-  const [catalogType, setCatalogType] = useState<"public" | "internal">("public");
+  const [catalogType, setCatalogType] = useState<"public" | "internal" | "retail">("public");
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
@@ -250,7 +250,15 @@ export default function BulkMessaging() {
                   onClick={() => setCatalogType("public")}
                   className="flex-1"
                 >
-                  Public
+                  Public (Wholesale)
+                </Button>
+                <Button
+                  variant={catalogType === "retail" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setCatalogType("retail")}
+                  className="flex-1"
+                >
+                  Retail Shop
                 </Button>
                 <Button
                   variant={catalogType === "internal" ? "default" : "outline"}
@@ -261,6 +269,11 @@ export default function BulkMessaging() {
                   Internal
                 </Button>
               </div>
+              <p className="text-xs text-muted-foreground">
+                {catalogType === "public" && "Wholesale prices for wholesale customers"}
+                {catalogType === "retail" && "Retail shop prices for retail shops"}
+                {catalogType === "internal" && "Wholesale prices with stock quantities for internal use"}
+              </p>
             </div>
 
             <div className="space-y-2">

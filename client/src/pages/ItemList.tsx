@@ -158,7 +158,7 @@ export default function ItemList() {
                     </div>
                     <div className="text-right ml-6">
                       <div className="text-xl font-bold text-teal-600 dark:text-emerald-400">
-                        KWD {parseFloat(item.sellingPrice || "0").toFixed(3)}
+                        KWD {parseFloat(item.wholesalePrice || "0").toFixed(3)}
                       </div>
                       <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">
                         {item.availableQty} units
@@ -221,10 +221,16 @@ export default function ItemList() {
                             <span className="font-mono text-slate-300">{item.itemCode}</span>
                           </div>
                         )}
-                        {item.sellingPrice && (
+                        {item.wholesalePrice && (
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-slate-400">Selling Price</span>
-                            <span className="font-medium text-emerald-400">KWD {parseFloat(item.sellingPrice.toString()).toFixed(3)}</span>
+                            <span className="text-slate-400">Wholesale Price</span>
+                            <span className="font-medium text-emerald-400">KWD {parseFloat(item.wholesalePrice.toString()).toFixed(3)}</span>
+                          </div>
+                        )}
+                        {item.retailPrice && (
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-400">Retail Price</span>
+                            <span className="font-medium text-amber-400">KWD {parseFloat(item.retailPrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
                         {item.purchasePrice && (

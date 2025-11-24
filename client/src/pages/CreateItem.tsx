@@ -15,7 +15,8 @@ export default function CreateItem() {
   const [itemCode, setItemCode] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState<"Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor" | "">("");
-  const [sellingPrice, setSellingPrice] = useState("");
+  const [wholesalePrice, setWholesalePrice] = useState("");
+  const [retailPrice, setRetailPrice] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
   const [openingStock, setOpeningStock] = useState("0");
@@ -80,7 +81,8 @@ export default function CreateItem() {
       itemCode: itemCode.trim(),
       name: name.trim(),
       category: category as "Motorola" | "Samsung" | "Redmi" | "Realme" | "Meizu" | "Honor",
-      sellingPrice: sellingPrice || undefined,
+      wholesalePrice: wholesalePrice || undefined,
+      retailPrice: retailPrice || undefined,
       purchasePrice: purchasePrice || undefined,
       availableQty: parseInt(availableQty) || 0,
       openingStock: parseInt(openingStock) || 0,
@@ -203,14 +205,26 @@ export default function CreateItem() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="sellingPrice">Selling Price</Label>
+              <Label htmlFor="wholesalePrice">Wholesale Price</Label>
               <Input
-                id="sellingPrice"
+                id="wholesalePrice"
                 type="number"
-                value={sellingPrice}
-                onChange={(e) => setSellingPrice(e.target.value)}
+                value={wholesalePrice}
+                onChange={(e) => setWholesalePrice(e.target.value)}
                 placeholder="e.g., 100"
               />
+              <p className="text-xs text-muted-foreground">Price for wholesale customers</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="retailPrice">Retail Shop Price</Label>
+              <Input
+                id="retailPrice"
+                type="number"
+                value={retailPrice}
+                onChange={(e) => setRetailPrice(e.target.value)}
+                placeholder="e.g., 120"
+              />
+              <p className="text-xs text-muted-foreground">Price for retail shops</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="availableQty">Available Quantity</Label>

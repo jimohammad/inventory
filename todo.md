@@ -1158,3 +1158,22 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add delete button for each saved template
 - [x] Test saving, loading, and deleting templates
 - [x] Ensure templates work with catalog link insertion
+
+## Dual Pricing System (Wholesale & Retail)
+
+- [x] Add retailPrice column to items table in database schema
+- [x] Rename sellingPrice column to wholesalePrice in items table
+- [x] Update backend item procedures to handle both price fields
+- [x] Update Items page to show both wholesale and retail prices
+- [x] Update Add/Edit Item forms to include both price fields
+- [x] Update Dashboard to display both pricing tiers
+- [x] Update Orders page to show appropriate price based on customer type
+- [x] Update Inventory Analysis to calculate margins for both price tiers
+- [x] Test adding new items with both prices
+- [x] Test editing existing items with new pricing structure
+- [x] Verify all calculations work correctly with dual pricing
+
+- [x] Add third catalog type "retail" for retail shop pricing
+- [x] Update catalog URL routing to support /catalog/:userId/retail
+- [x] Update BulkMessaging to include retail catalog link option
+- [x] Test all three catalog types (internal, public, retail)

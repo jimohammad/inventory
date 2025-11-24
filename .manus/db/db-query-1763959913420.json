@@ -1,0 +1,24 @@
+{
+  "query": "SELECT * FROM items LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT * FROM items LIMIT 1;",
+  "rows": [
+    {
+      "id": "330001",
+      "userId": "1",
+      "category": "Honor",
+      "purchasePrice": "67.390",
+      "sellingPrice": "70.000",
+      "openingStock": "8",
+      "createdAt": "2025-11-20 16:40:34",
+      "updatedAt": "2025-11-24 01:01:10",
+      "itemCode": "HO-X9C5G12256",
+      "name": "Honor X9C 5G 12GB/256GB NFC",
+      "availableQty": "0",
+      "lastSoldDate": "2025-11-24 01:01:11"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tcategory\tpurchasePrice\tsellingPrice\topeningStock\tcreatedAt\tupdatedAt\titemCode\tname\tavailableQty\tlastSoldDate\n330001\t1\tHonor\t67.390\t70.000\t8\t2025-11-20 16:40:34\t2025-11-24 01:01:10\tHO-X9C5G12256\tHonor X9C 5G 12GB/256GB NFC\t0\t2025-11-24 01:01:11\n",
+  "stderr": "",
+  "execution_time_ms": 1573
+}
