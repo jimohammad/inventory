@@ -1314,3 +1314,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Check dashboard stock value calculation logic
 - [x] Debug why value shows 0 - was using non-existent sellingPrice field
 - [x] Fix calculation to use purchasePrice and test
+
+## Update Low Stock Indicator Styling
+
+- [x] Find moderate color from stock history page - text-yellow-400
+- [x] Change "Only X left" text to yellow-400 color
+- [x] Increase blinking dot size from h-2 w-2 to h-2.5 w-2.5
+- [x] Test updated styling
