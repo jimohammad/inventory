@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 import { trpc } from "@/lib/trpc";
 import { Loader2, Pencil, Plus, Trash2, Upload, Users } from "lucide-react";
+import { useLocation } from "wouter";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -46,6 +47,7 @@ const AREAS = [
 
 export default function Customers() {
   const { user, loading: authLoading } = useAuth();
+  const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -215,7 +217,7 @@ export default function Customers() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setImportDialogOpen(true)} variant="outline">
+          <Button onClick={() => setLocation("/customers/import")} variant="outline">
             <Upload className="w-4 h-4 mr-2" />
             Import CSV
           </Button>

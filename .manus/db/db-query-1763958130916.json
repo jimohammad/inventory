@@ -1,0 +1,34 @@
+{
+  "query": "SELECT * FROM customers ORDER BY id DESC",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT * FROM customers ORDER BY id DESC",
+  "rows": [
+    {
+      "id": "30002",
+      "name": "Complete Person",
+      "phone": "+96556789012",
+      "area": "Fahaheel",
+      "createdAt": "2025-11-24 04:21:10",
+      "updatedAt": "2025-11-24 04:21:10"
+    },
+    {
+      "id": "30001",
+      "name": "Fatima Hassan",
+      "phone": "+96551234567",
+      "area": "Hawally",
+      "createdAt": "2025-11-24 04:21:09",
+      "updatedAt": "2025-11-24 04:21:09"
+    },
+    {
+      "id": "1",
+      "name": "Ahmed Al-Sayed",
+      "phone": "+96550123456",
+      "area": "Salmiya",
+      "createdAt": "2025-11-24 03:25:51",
+      "updatedAt": "2025-11-24 03:25:51"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tphone\tarea\tcreatedAt\tupdatedAt\n30002\tComplete Person\t+96556789012\tFahaheel\t2025-11-24 04:21:10\t2025-11-24 04:21:10\n30001\tFatima Hassan\t+96551234567\tHawally\t2025-11-24 04:21:09\t2025-11-24 04:21:09\n1\tAhmed Al-Sayed\t+96550123456\tSalmiya\t2025-11-24 03:25:51\t2025-11-24 03:25:51\n",
+  "stderr": "",
+  "execution_time_ms": 1604
+}

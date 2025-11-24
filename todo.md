@@ -1130,3 +1130,19 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Test complete bulk messaging flow with multiple customers
 - [x] Add navigation menu item for Bulk Messaging
 - [x] Add navigation menu item for Message History
+
+## CSV Customer Import (Phase 1-4)
+
+- [x] Create CSV import UI component with file upload button
+- [x] Add CSV file validation (check file type and size)
+- [x] Implement CSV parsing with Papa Parse library
+- [x] Add data validation (required fields, phone format, valid areas)
+- [x] Display preview table showing parsed data before import
+- [x] Add backend importFromCsv procedure with duplicate detection
+- [x] Show import progress and results (success/failed counts)
+- [x] Add sample CSV template download button
+- [x] Handle errors gracefully with detailed error messages
+- [x] Test CSV import with various data scenarios
+- [x] Fix area enum mismatch between frontend and database schema
+- [x] Add Import CSV button to Customers page
+- [x] Add route for /customers/import page

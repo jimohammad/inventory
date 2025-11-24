@@ -27,6 +27,7 @@ import OrderDetail from "@/pages/OrderDetail";
 import Customers from "@/pages/Customers";
 import BulkMessaging from "@/pages/BulkMessaging";
 import MessageHistory from "@/pages/MessageHistory";
+import CustomerImport from "@/pages/CustomerImport";
 
 function Router() {
   const [location] = useLocation();
@@ -141,6 +142,13 @@ function Router() {
         <DashboardLayout>
           <PageTransition>
             <MessageHistory />
+          </PageTransition>
+        </DashboardLayout>
+      )} />
+      <Route path="/customers/import" component={() => (
+        <DashboardLayout>
+          <PageTransition>
+            <CustomerImport />
           </PageTransition>
         </DashboardLayout>
       )} />
