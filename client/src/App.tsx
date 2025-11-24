@@ -5,7 +5,6 @@ import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import DashboardLayout from "./components/DashboardLayout";
-import Dashboard from "./pages/Dashboard";
 import { AnimatePresence } from "framer-motion";
 import { PageTransition } from "./components/PageTransition";
 
@@ -50,9 +49,7 @@ function Router() {
       
       <Route path="/" component={() => (
         <DashboardLayout>
-          <PageTransition>
-            <Dashboard />
-          </PageTransition>
+          <ItemList />
         </DashboardLayout>
       )} />
 

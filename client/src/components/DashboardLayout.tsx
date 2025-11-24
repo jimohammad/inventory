@@ -29,8 +29,7 @@ import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
-  { icon: Package, label: "Items", path: "/items" },
+  { icon: Package, label: "Items", path: "/" },
   { icon: ShoppingCart, label: "Orders", path: "/orders" },
   { icon: Users, label: "Customers", path: "/customers" },
   { icon: Send, label: "Bulk Messaging", path: "/bulk-messaging" },

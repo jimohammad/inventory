@@ -1382,3 +1382,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Position cards at top of Items page
 - [x] Remove cards from Dashboard
 - [x] Test both pages
+
+## Remove Dashboard Page
+
+- [x] Remove Dashboard from DashboardLayout navigation
+- [x] Update default route to redirect to Items page (both / and /items)
+- [x] Delete Dashboard.tsx file
+- [x] Test navigation
