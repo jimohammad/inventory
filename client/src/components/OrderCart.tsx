@@ -64,26 +64,18 @@ export default function OrderCart({ cartItems, onUpdateQuantity, onRemoveItem, o
         })),
       });
 
-      // Generate WhatsApp message
-      const message = generateWhatsAppMessage(result.orderNumber, salesmanName, cartItems, totalValue, notes);
-      
-      // Generate order link
-      const link = `${window.location.origin}/order/${result.orderNumber}`;
-      setOrderLink(link);
-
-      // Copy message to clipboard
-      await navigator.clipboard.writeText(message + "\n\n🔗 " + link);
-      
-      toast.success("Order created! Message copied to clipboard");
+      // Show success message
+      toast.success(`🎉 Order Placed Successfully!\nOrder #${result.orderNumber}`, {
+        duration: 5000,
+      });
       
       // Clear cart and close dialog
       onClearCart();
       setSalesmanName("");
       setNotes("");
+      setIsOpen(false);
       
-      // Open WhatsApp (mobile-friendly)
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message + "\n\n🔗 " + link)}`;
-      window.open(whatsappUrl, "_blank");
+      // Owner will receive WhatsApp notification automatically via backend
       
     } catch (error: any) {
       toast.error(error.message || "Failed to create order");

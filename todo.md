@@ -1067,3 +1067,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add backend procedure to update order status
 - [x] Add status update UI in Orders dashboard
 - [x] Test status workflow (received → delivered)
+
+## Order Submission UX Fix
+
+- [x] Remove WhatsApp redirect after order submission
+- [x] Show "Order Placed Successfully" confirmation message to salesman
+- [x] Keep automatic WhatsApp notification to owner working
+- [x] Test complete order flow
