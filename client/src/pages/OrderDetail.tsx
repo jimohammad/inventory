@@ -20,7 +20,11 @@ export default function OrderDetail() {
 
   const { data: order, isLoading, error } = trpc.orders.getByOrderNumber.useQuery(
     { orderNumber },
-    { enabled: !!orderNumber }
+    { 
+      enabled: !!orderNumber,
+      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+      cacheTime: 1000 * 60 * 10, // Keep in cache for 10 minutes
+    }
   );
 
   if (isLoading) {

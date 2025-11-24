@@ -17,7 +17,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Search, Package, Calendar, User, FileText, ExternalLink } from "lucide-react";
+import { Loader2, Search, Package, Calendar, User, FileText, ExternalLink, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import { useState, useMemo } from "react";
 import { format } from "date-fns";
 
@@ -25,8 +36,23 @@ export default function Orders() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<any>(null);
 
+  const utils = trpc.useUtils();
   const { data: orders, isLoading } = trpc.orders.list.useQuery();
+  
+  const deleteMutation = trpc.orders.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Order deleted successfully");
+      utils.orders.list.invalidate();
+      setDeleteDialogOpen(false);
+      setOrderToDelete(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete order");
+    },
+  });
 
   const filteredOrders = useMemo(() => {
     if (!orders) return [];
@@ -43,6 +69,17 @@ export default function Orders() {
   const handleViewDetails = (order: any) => {
     setSelectedOrder(order);
     setDetailsOpen(true);
+  };
+
+  const handleDeleteClick = (order: any) => {
+    setOrderToDelete(order);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (orderToDelete) {
+      deleteMutation.mutate({ orderId: orderToDelete.id });
+    }
   };
 
   if (isLoading) {
@@ -126,13 +163,23 @@ export default function Orders() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleViewDetails(order)}
-                        >
-                          View Details
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleViewDetails(order)}
+                          >
+                            View Details
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteClick(order)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -240,6 +287,30 @@ export default function Orders() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete order{" "}
+              <span className="font-mono font-semibold">{orderToDelete?.orderNumber}</span>?
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

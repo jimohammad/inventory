@@ -1043,3 +1043,17 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 ## Bug Fixes - Order System
 
 - [x] Fix order detail page not opening from WhatsApp link
+
+## WhatsApp Order Notifications
+
+- [ ] Research available WhatsApp API options (Manus built-in or external)
+- [ ] Implement automatic WhatsApp notification to +96555584488
+- [ ] Format order details for WhatsApp message
+- [ ] Test WhatsApp notification delivery
+
+## Order Management Improvements
+
+- [x] Add delete order functionality to Orders dashboard
+- [x] Add confirmation dialog before deleting orders
+- [x] Optimize order detail page loading performance
+- [x] Test order deletion and page performance
