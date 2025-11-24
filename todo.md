@@ -1235,3 +1235,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Remove "Wholesale Price" and "Retail Shop Price" label lines from catalog cards
 - [x] Test catalog layout with removed labels to verify space savings
+
+## Additional Padding Reduction
+
+- [x] Reduce price box padding from p-1.5 to p-1
+- [x] Reduce card header padding from pt-2/pb-1 to pt-1.5/pb-0.5
+- [x] Reduce card content padding from pt-1/pb-2 to pt-0.5/pb-1.5
+- [x] Test tighter padding layout

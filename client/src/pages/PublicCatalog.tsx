@@ -178,7 +178,7 @@ export default function PublicCatalog() {
               
               return (
                 <Card key={idx} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="pb-1 pt-2 px-2">
+                  <CardHeader className="pb-0.5 pt-1.5 px-2">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <CardTitle className="text-lg truncate">{item.name}</CardTitle>
@@ -187,17 +187,17 @@ export default function PublicCatalog() {
                       <Badge variant="secondary">{item.category}</Badge>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-1 px-2 pb-2">
+                  <CardContent className="pt-0.5 px-2 pb-1.5">
                     <div className="space-y-0">
                       {/* Price display */}
                       {((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
-                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-1.5 border border-green-200">
+                        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-1 border border-green-200">
                           <div className="text-2xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
                         </div>
                       )}
                       {/* Stock availability for internal catalog */}
                       {includeQty && (
-                        <div className={`rounded-lg p-1.5 border ${
+                        <div className={`rounded-lg p-1 border ${
                           (item.availableQty || 0) < 10 
                             ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
                             : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
