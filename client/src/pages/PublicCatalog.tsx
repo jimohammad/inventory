@@ -181,8 +181,8 @@ export default function PublicCatalog() {
                   <CardHeader className="pb-0.5 pt-1.5 px-2">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg truncate">{item.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground mt-0.5">{item.itemCode}</p>
+                        <CardTitle className="text-base truncate">{item.name}</CardTitle>
+                        <p className="text-xs text-muted-foreground mt-0.5">{item.itemCode}</p>
                       </div>
                       <Badge variant="secondary">{item.category}</Badge>
                     </div>

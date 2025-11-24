@@ -1242,3 +1242,9 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Reduce card header padding from pt-2/pb-1 to pt-1.5/pb-0.5
 - [x] Reduce card content padding from pt-1/pb-2 to pt-0.5/pb-1.5
 - [x] Test tighter padding layout
+
+## Font Size Reduction
+
+- [x] Reduce item name font from text-lg to text-base
+- [x] Reduce item code font from text-sm to text-xs
+- [x] Test smaller font sizes for readability
