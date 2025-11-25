@@ -16,7 +16,7 @@ import BulkOpeningStock from "@/pages/BulkOpeningStock";
 import BulkItemImport from "@/pages/BulkItemImport";
 import GoogleSheetsConfig from "@/pages/GoogleSheetsConfig";
 import PublicCatalog from "@/pages/PublicCatalog";
-import WhatsAppContacts from "@/pages/WhatsAppContacts";
+
 import BulkPriceUpdate from "@/pages/BulkPriceUpdate";
 import ReorderAlerts from "@/pages/ReorderAlerts";
 import StockHistory from "@/pages/StockHistory";
@@ -111,13 +111,7 @@ function Router() {
           <GoogleSheetsConfig />
         </DashboardLayout>
       )} />
-      <Route path="/whatsapp-contacts" component={() => (
-        <DashboardLayout>
-          <PageTransition>
-            <WhatsAppContacts />
-          </PageTransition>
-        </DashboardLayout>
-      )} />
+
       <Route path="/customers" component={() => (
         <DashboardLayout>
           <PageTransition>

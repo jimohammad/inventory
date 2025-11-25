@@ -1444,3 +1444,47 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add blinking cursor block (█) indicator next to focused field
 - [x] Make cursor move with TAB navigation
 - [x] Add cursor animation (blinking effect)
+
+## Terminal Crosshair Lines Enhancement
+
+- [x] Add horizontal line across screen at active field height
+- [x] Add vertical line down screen at cursor position
+- [x] Make crosshair lines follow TAB navigation
+- [x] Style crosshair lines with subtle color (dim green/yellow)
+
+## Mobile Optimization for Terminal Crosshair
+
+- [x] Make crosshair lines brighter and thicker for mobile visibility
+- [x] Add touch event handlers to update crosshair on mobile tap
+- [x] Make cursor block larger and more visible on mobile
+- [x] Add onFocus handlers to all input fields for mobile support
+
+## Fix Terminal Crosshair and Keyboard Issues
+
+- [x] Debug why crosshair lines not appearing on desktop
+- [x] Debug why keyboard commands (TAB, F-keys) not working properly
+- [x] Test crosshair visibility in browser
+- [x] Test keyboard event handlers
+
+## Remove WhatsApp Contacts Page
+
+- [x] Remove WhatsApp Contacts from navigation menu
+- [x] Remove WhatsApp Contacts route from App.tsx
+- [x] Delete WhatsAppContacts.tsx file
+
+## Add Foreign Currency Purchase Price Field
+
+- [x] Add foreignCurrencyPrice and foreignCurrency columns to items table schema
+- [x] Update database schema with migration
+- [x] Add foreign currency fields to Add Item form (Items page)
+- [x] Add foreign currency fields to Edit Item form
+- [ ] Add foreign currency fields to Terminal Add Item form (optional)
+- [ ] Add foreign currency fields to Terminal Edit Item form (optional)
+- [x] Update tRPC procedures to handle foreign currency data
+- [ ] Display foreign currency in item details/view pages (optional)
+
+## Fix Category Not Loading in Edit Item Form
+
+- [x] Debug why category field shows blank when editing items
+- [x] Fix category value loading in EditItem useEffect
+- [x] Test category loading with existing items

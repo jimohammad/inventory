@@ -18,6 +18,8 @@ export default function CreateItem() {
   const [wholesalePrice, setWholesalePrice] = useState("");
   const [retailPrice, setRetailPrice] = useState("");
   const [purchasePrice, setPurchasePrice] = useState("");
+  const [foreignCurrency, setForeignCurrency] = useState<"AED" | "USD" | "">("");
+  const [foreignCurrencyPrice, setForeignCurrencyPrice] = useState("");
   const [availableQty, setAvailableQty] = useState("0");
   const [openingStock, setOpeningStock] = useState("0");
   
@@ -84,6 +86,8 @@ export default function CreateItem() {
       wholesalePrice: wholesalePrice || undefined,
       retailPrice: retailPrice || undefined,
       purchasePrice: purchasePrice || undefined,
+      foreignCurrency: foreignCurrency || undefined,
+      foreignCurrencyPrice: foreignCurrencyPrice || undefined,
       availableQty: parseInt(availableQty) || 0,
       openingStock: parseInt(openingStock) || 0,
     });
@@ -193,17 +197,50 @@ export default function CreateItem() {
 
 
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="purchasePrice">Purchase Price</Label>
+              <Label htmlFor="purchasePrice">Purchase Price (Local Currency)</Label>
               <Input
                 id="purchasePrice"
                 type="number"
+                step="0.001"
                 value={purchasePrice}
                 onChange={(e) => setPurchasePrice(e.target.value)}
                 placeholder="e.g., 80"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="foreignCurrency">Foreign Currency</Label>
+              <Select 
+                value={foreignCurrency} 
+                onValueChange={(value) => setForeignCurrency(value as typeof foreignCurrency)}
+              >
+                <SelectTrigger id="foreignCurrency">
+                  <SelectValue placeholder="Select currency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="AED">AED (UAE Dirham)</SelectItem>
+                  <SelectItem value="USD">USD (US Dollar)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">Currency used for purchase</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="foreignCurrencyPrice">Foreign Currency Price</Label>
+              <Input
+                id="foreignCurrencyPrice"
+                type="number"
+                step="0.001"
+                value={foreignCurrencyPrice}
+                onChange={(e) => setForeignCurrencyPrice(e.target.value)}
+                placeholder="e.g., 20.5"
+                disabled={!foreignCurrency}
+              />
+              <p className="text-xs text-muted-foreground">Price in {foreignCurrency || "foreign currency"}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="wholesalePrice">Wholesale Price</Label>
               <Input

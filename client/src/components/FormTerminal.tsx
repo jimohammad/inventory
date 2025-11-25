@@ -18,7 +18,23 @@ const CATEGORIES = ["MOTOROLA", "SAMSUNG", "REDMI", "REALME", "MEIZU", "HONOR"];
 
 // Cursor Block Component
 const CursorBlock = () => (
-  <span className="text-yellow-400 animate-pulse text-xl font-bold">█</span>
+  <span className="text-yellow-400 animate-pulse text-3xl font-bold leading-none inline-block w-6">█</span>
+);
+
+// Crosshair Lines Component
+const Crosshair = ({ top, left }: { top: number; left: number }) => (
+  <>
+    {/* Horizontal line */}
+    <div
+      className="fixed left-0 right-0 h-0.5 bg-yellow-400/60 pointer-events-none z-50 shadow-lg shadow-yellow-400/50"
+      style={{ top: `${top}px` }}
+    />
+    {/* Vertical line */}
+    <div
+      className="fixed top-0 bottom-0 w-0.5 bg-yellow-400/60 pointer-events-none z-50 shadow-lg shadow-yellow-400/50"
+      style={{ left: `${left}px` }}
+    />
+  </>
 );
 
 export function FormTerminal() {
@@ -37,6 +53,7 @@ export function FormTerminal() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const [viewItem, setViewItem] = useState<any>(null);
+  const [fieldPosition, setFieldPosition] = useState<{ top: number; left: number } | null>(null);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const utils = trpc.useUtils();
@@ -79,10 +96,16 @@ export function FormTerminal() {
   });
 
   useEffect(() => {
-    // Focus first field when screen changes
+    // Focus first field and initialize crosshair when screen changes
     if (inputRefs.current[0] && screen !== "menu" && screen !== "search") {
-      inputRefs.current[0]?.focus();
       setFocusedField(0);
+      setTimeout(() => {
+        const firstInput = inputRefs.current[0];
+        if (firstInput) {
+          firstInput.focus();
+          updateCrosshairPosition(firstInput);
+        }
+      }, 100);
     }
   }, [screen]);
 
@@ -153,9 +176,25 @@ export function FormTerminal() {
     }
   };
 
+  const updateCrosshairPosition = (element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    setFieldPosition({
+      top: rect.top + rect.height / 2,
+      left: rect.left + rect.width / 2,
+    });
+  };
+
   useEffect(() => {
-    inputRefs.current[focusedField]?.focus();
-  }, [focusedField]);
+    const currentInput = inputRefs.current[focusedField];
+    currentInput?.focus();
+    
+    // Update crosshair position with a small delay to ensure element is rendered
+    if (currentInput) {
+      setTimeout(() => {
+        updateCrosshairPosition(currentInput);
+      }, 50);
+    }
+  }, [focusedField, screen]);
 
   const showHelp = () => {
     setStatusMessage(
@@ -323,6 +362,8 @@ export function FormTerminal() {
         className="h-screen w-full bg-black text-green-400 font-mono flex flex-col"
         onKeyDown={(e) => handleKeyDown(e, 7)}
       >
+        {/* Crosshair lines */}
+        {fieldPosition && <Crosshair top={fieldPosition.top} left={fieldPosition.left} />}
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-4xl">
             <div className="border-2 border-green-600 p-6">
@@ -343,6 +384,10 @@ export function FormTerminal() {
                     onChange={(e) =>
                       setFormData({ ...formData, itemCode: e.target.value.toUpperCase() })
                     }
+                    onFocus={(e) => {
+                      setFocusedField(0);
+                      updateCrosshairPosition(e.target);
+                    }}
                     className={`col-span-2 bg-black border ${
                       focusedField === 0 ? "border-yellow-400" : "border-green-700"
                     } px-3 py-2 text-green-400 focus:outline-none uppercase`}
@@ -554,6 +599,8 @@ export function FormTerminal() {
         className="h-screen w-full bg-black text-green-400 font-mono flex flex-col"
         onKeyDown={(e) => handleKeyDown(e, fieldCount)}
       >
+        {/* Crosshair lines */}
+        {isEditMode && fieldPosition && <Crosshair top={fieldPosition.top} left={fieldPosition.left} />}
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="w-full max-w-4xl">
             <div className="border-2 border-green-600 p-6">

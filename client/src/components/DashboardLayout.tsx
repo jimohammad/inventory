@@ -36,7 +36,6 @@ const menuItems = [
   { icon: History, label: "Stock History", path: "/stock-history" },
   { icon: Bell, label: "Reorder Alerts", path: "/reorder-alerts" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },
-  { icon: MessageCircle, label: "WhatsApp Contacts", path: "/whatsapp-contacts" },
   { icon: Terminal, label: "Terminal", path: "/form-terminal" },
 ];
 

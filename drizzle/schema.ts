@@ -39,6 +39,8 @@ export const items = mysqlTable("items", {
   retailPrice: decimal("retailPrice", { precision: 10, scale: 3 }),
   openingStock: int("openingStock").default(0),
   purchasePrice: decimal("purchasePrice", { precision: 10, scale: 3 }),
+  foreignCurrency: mysqlEnum("foreignCurrency", ["AED", "USD"]),
+  foreignCurrencyPrice: decimal("foreignCurrencyPrice", { precision: 10, scale: 3 }),
   availableQty: int("availableQty").default(0).notNull(),
   lastSoldDate: timestamp("lastSoldDate"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
