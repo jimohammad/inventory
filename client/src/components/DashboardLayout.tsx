@@ -37,7 +37,7 @@ const menuItems = [
   { icon: Bell, label: "Reorder Alerts", path: "/reorder-alerts" },
   { icon: Sheet, label: "Google Sheets", path: "/google-sheets" },
   { icon: MessageCircle, label: "WhatsApp Contacts", path: "/whatsapp-contacts" },
-  { icon: Terminal, label: "Terminal", path: "/terminal" },
+  { icon: Terminal, label: "Terminal", path: "/form-terminal" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
