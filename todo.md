@@ -1500,3 +1500,15 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 
 - [x] Remove Terminal menu item from DashboardLayout sidebar navigation
 - [x] Test navigation after removal
+
+## Database Performance Optimizations
+
+- [x] Add database indexes on items table (userId, category)
+- [x] Add database indexes on stockHistory table (userId, itemId, changeType, createdAt)
+- [x] Add database indexes on orders tables (userId, status, orderId, itemId)
+- [x] Add database indexes on other tables (customers, messageHistory, etc.)
+- [x] Optimize items.list query to use single JOIN instead of two queries
+- [x] Add client-side caching with staleTime to items list
+- [ ] Add client-side caching to customers list
+- [ ] Add client-side caching to orders list
+- [ ] Test performance improvements

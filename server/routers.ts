@@ -21,59 +21,77 @@ export const appRouter = router({
 
   items: router({
     list: protectedProcedure.query(async ({ ctx }) => {
-      const { getUserItems, getDb } = await import("./db");
-      const allItems = await getUserItems(ctx.user.id);
-      const db = await getDb();
-      
-      if (!db) return allItems;
-      
-      // Calculate sales velocity for each item (last 30 days)
-      const { stockHistory } = await import("../drizzle/schema");
-      const { eq, and, gte, sql } = await import("drizzle-orm");
-      
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      
-      const salesData = await db.select({
-        itemId: stockHistory.itemId,
-        totalSold: sql<number>`SUM(ABS(${stockHistory.quantityChange}))`,
-      })
-      .from(stockHistory)
-      .where(
-        and(
-          eq(stockHistory.userId, ctx.user.id),
-          eq(stockHistory.changeType, "sale"),
-          gte(stockHistory.createdAt, thirtyDaysAgo)
-        )
+  const { getDb } = await import("./db");
+  const db = await getDb();
+  
+  if (!db) return [];
+  
+  // Optimized single query with LEFT JOIN for sales velocity
+  const { items, stockHistory } = await import("../drizzle/schema");
+  const { eq, and, sql } = await import("drizzle-orm");
+  
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  // Single optimized query with aggregation in database
+  const result = await db
+    .select({
+      // Item fields
+      id: items.id,
+      userId: items.userId,
+      itemCode: items.itemCode,
+      name: items.name,
+      category: items.category,
+      wholesalePrice: items.wholesalePrice,
+      retailPrice: items.retailPrice,
+      purchasePrice: items.purchasePrice,
+      foreignCurrency: items.foreignCurrency,
+      foreignCurrencyPrice: items.foreignCurrencyPrice,
+      availableQty: items.availableQty,
+      openingStock: items.openingStock,
+      lastSoldDate: items.lastSoldDate,
+      createdAt: items.createdAt,
+      updatedAt: items.updatedAt,
+      // Aggregated sales data (calculated in database)
+      totalSold: sql<number>`COALESCE(SUM(CASE 
+        WHEN ${stockHistory.changeType} = 'sale' 
+        AND ${stockHistory.createdAt} >= ${thirtyDaysAgo} 
+        THEN ABS(${stockHistory.quantityChange}) 
+        ELSE 0 
+      END), 0)`,
+    })
+    .from(items)
+    .leftJoin(
+      stockHistory,
+      and(
+        eq(items.id, stockHistory.itemId),
+        eq(stockHistory.userId, ctx.user.id)
       )
-      .groupBy(stockHistory.itemId);
-      
-      const salesMap = new Map<number, number>();
-      salesData.forEach(row => {
-        salesMap.set(row.itemId, Number(row.totalSold) || 0);
-      });
-      
-      // Add sales velocity to each item
-      return allItems.map(item => {
-        const soldLast30Days = salesMap.get(item.id) || 0;
-        const salesVelocity = (soldLast30Days / 30) * 7; // units per week
-        
-        let velocityStatus: "fast" | "moderate" | "slow" | "none" = "none";
-        if (salesVelocity >= 3) {
-          velocityStatus = "fast";
-        } else if (salesVelocity >= 1) {
-          velocityStatus = "moderate";
-        } else if (salesVelocity > 0) {
-          velocityStatus = "slow";
-        }
-        
-        return {
-          ...item,
-          salesVelocity: Number(salesVelocity.toFixed(1)),
-          velocityStatus,
-        };
-      });
-    }),
+    )
+    .where(eq(items.userId, ctx.user.id))
+    .groupBy(items.id);
+  
+  // Calculate velocity in single pass
+  return result.map(item => {
+    const soldLast30Days = Number(item.totalSold) || 0;
+    const salesVelocity = (soldLast30Days / 30) * 7; // units per week
+    
+    let velocityStatus: "fast" | "moderate" | "slow" | "none" = "none";
+    if (salesVelocity >= 3) {
+      velocityStatus = "fast";
+    } else if (salesVelocity >= 1) {
+      velocityStatus = "moderate";
+    } else if (salesVelocity > 0) {
+      velocityStatus = "slow";
+    }
+    
+    return {
+      ...item,
+      salesVelocity: Number(salesVelocity.toFixed(1)),
+      velocityStatus,
+    };
+  });
+}),
 
     create: protectedProcedure
       .input((raw: unknown) => {

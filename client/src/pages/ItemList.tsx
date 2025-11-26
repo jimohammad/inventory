@@ -26,7 +26,10 @@ export default function ItemList() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [historyItem, setHistoryItem] = useState<{ id: number; name: string; code: string } | null>(null);
 
-  const { data: items, isLoading } = trpc.items.list.useQuery();
+  const { data: items, isLoading } = trpc.items.list.useQuery(undefined, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+  });
   const utils = trpc.useUtils();
 
   const deleteMutation = trpc.items.delete.useMutation({
