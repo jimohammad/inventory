@@ -1532,3 +1532,25 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Add caching to Orders page
 - [x] Add caching to Customers page
 - [x] Add caching to Stock History page
+
+## Additional Optimizations (30% Improvement)
+
+### Pagination
+- [x] Add pagination to customers.list query
+
+### Fix Remaining SELECT * Queries
+- [x] Fix SELECT * in orders.create stock check
+- [x] Fix SELECT * in messageHistory.sendBulk query
+- [ ] Fix SELECT * in stockHistory queries
+- [ ] Fix SELECT * in messageHistory.list
+- [ ] Fix SELECT * in templates queries
+- [ ] Fix SELECT * in whatsappContacts queries
+- [ ] Fix SELECT * in reorderAlerts queries
+- [ ] Fix SELECT * in googleSheets sync queries
+
+### Memoization
+- [ ] Add useMemo to StockHistory filtered items calculation
+- [ ] Add useMemo to Orders filtered orders calculation
+- [ ] Add useMemo to Customers filtered customers calculation
+- [ ] Add useMemo to expensive sort operations
+- [ ] Add useCallback to event handlers in large lists

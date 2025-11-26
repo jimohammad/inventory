@@ -1196,8 +1196,12 @@ Keep the response concise, actionable, and focused on business decisions.`;
             subtotal: (item.price * item.quantity).toString(),
           });
 
-          // Get current item stock
-          const [currentItem] = await db.select()
+          // Get current item stock (optimized: fetch only needed columns)
+          const [currentItem] = await db.select({
+            id: items.id,
+            userId: items.userId,
+            availableQty: items.availableQty
+          })
             .from(items)
             .where(eq(items.id, item.itemId))
             .limit(1);
@@ -1435,17 +1439,30 @@ Keep the response concise, actionable, and focused on business decisions.`;
   }),
 
   customers: router({
-    list: protectedProcedure.query(async ({ ctx }) => {
-      const { getDb } = await import("./db");
-      const db = await getDb();
-      if (!db) return [];
+    list: protectedProcedure
+      .input(z.object({
+        page: z.number().default(1),
+        pageSize: z.number().default(100)
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        const { getDb } = await import("./db");
+        const db = await getDb();
+        if (!db) return [];
 
-      const { customers } = await import("../drizzle/schema");
-      const { eq } = await import("drizzle-orm");
+        const { customers } = await import("../drizzle/schema");
+        const { desc } = await import("drizzle-orm");
 
-      const result = await db.select().from(customers).orderBy(customers.createdAt);
-      return result;
-    }),
+        const page = input?.page || 1;
+        const pageSize = input?.pageSize || 100;
+
+        // Paginated query (optimized)
+        const result = await db.select()
+          .from(customers)
+          .orderBy(desc(customers.createdAt))
+          .limit(pageSize)
+          .offset((page - 1) * pageSize);
+        return result;
+      }),
 
     create: protectedProcedure
       .input(z.object({
@@ -1603,8 +1620,12 @@ Keep the response concise, actionable, and focused on business decisions.`;
         const { inArray } = await import("drizzle-orm");
         const { sendWhatsAppMessage, delay } = await import("./greenapi");
 
-        // Get selected customers
-        const selectedCustomers = await db.select().from(customers).where(inArray(customers.id, input.customerIds));
+        // Get selected customers (optimized: fetch only needed columns)
+        const selectedCustomers = await db.select({
+          id: customers.id,
+          name: customers.name,
+          phone: customers.phone
+        }).from(customers).where(inArray(customers.id, input.customerIds));
 
         let successCount = 0;
         let failCount = 0;
