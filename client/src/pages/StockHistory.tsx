@@ -53,15 +53,17 @@ export default function StockHistory() {
   // Filter items based on sales history (will be checked in card component)
   const displayItems = items;
   
-  // Group items by category
-  const itemsByCategory = displayItems?.reduce((acc, item) => {
-    const category = item.category || "Uncategorized";
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(item);
-    return acc;
-  }, {} as Record<string, typeof displayItems>);
+  // Group items by category (memoized for performance)
+  const itemsByCategory = useMemo(() => {
+    return displayItems?.reduce((acc, item) => {
+      const category = item.category || "Uncategorized";
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    }, {} as Record<string, typeof displayItems>);
+  }, [displayItems]);
   
   // Count total items
   const totalItems = items?.length || 0;

@@ -1602,7 +1602,16 @@ Keep the response concise, actionable, and focused on business decisions.`;
       const { messageHistory } = await import("../drizzle/schema");
       const { desc } = await import("drizzle-orm");
 
-      const result = await db.select().from(messageHistory).orderBy(desc(messageHistory.createdAt)).limit(100);
+      // Optimized: fetch only needed columns
+      const result = await db.select({
+        id: messageHistory.id,
+        customerId: messageHistory.customerId,
+        customerName: messageHistory.customerName,
+        phone: messageHistory.phone,
+        message: messageHistory.message,
+        status: messageHistory.status,
+        createdAt: messageHistory.createdAt
+      }).from(messageHistory).orderBy(desc(messageHistory.createdAt)).limit(100);
       return result;
     }),
 
@@ -1690,7 +1699,14 @@ Keep the response concise, actionable, and focused on business decisions.`;
       const { messageTemplates } = await import("../drizzle/schema");
       const { eq, desc } = await import("drizzle-orm");
 
-      const result = await db.select().from(messageTemplates)
+      // Optimized: fetch only needed columns
+      const result = await db.select({
+        id: messageTemplates.id,
+        userId: messageTemplates.userId,
+        name: messageTemplates.name,
+        content: messageTemplates.content,
+        createdAt: messageTemplates.createdAt
+      }).from(messageTemplates)
         .where(eq(messageTemplates.userId, ctx.user.id))
         .orderBy(desc(messageTemplates.createdAt));
       return result;

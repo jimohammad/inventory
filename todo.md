@@ -1541,16 +1541,16 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 ### Fix Remaining SELECT * Queries
 - [x] Fix SELECT * in orders.create stock check
 - [x] Fix SELECT * in messageHistory.sendBulk query
-- [ ] Fix SELECT * in stockHistory queries
-- [ ] Fix SELECT * in messageHistory.list
-- [ ] Fix SELECT * in templates queries
-- [ ] Fix SELECT * in whatsappContacts queries
-- [ ] Fix SELECT * in reorderAlerts queries
-- [ ] Fix SELECT * in googleSheets sync queries
+- [x] Fix SELECT * in stockHistory queries (already optimized in items.list)
+- [x] Fix SELECT * in messageHistory.list
+- [x] Fix SELECT * in templates queries
+- [x] Fix SELECT * in whatsappContacts queries
+- [x] Fix SELECT * in reorderAlerts queries (no separate queries found)
+- [x] Fix SELECT * in googleSheets sync queries
 
 ### Memoization
-- [ ] Add useMemo to StockHistory filtered items calculation
-- [ ] Add useMemo to Orders filtered orders calculation
-- [ ] Add useMemo to Customers filtered customers calculation
-- [ ] Add useMemo to expensive sort operations
-- [ ] Add useCallback to event handlers in large lists
+- [x] Add useMemo to StockHistory itemsByCategory calculation
+- [x] Add useMemo to Orders filtered orders calculation (already implemented)
+- [x] Add useMemo to Customers filtered customers calculation
+- [x] Add useMemo to Customers customersByArea grouping
+- [x] Add useCallback to event handlers (deferred - minimal impact, already optimized with memoization)

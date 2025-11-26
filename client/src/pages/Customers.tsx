@@ -29,7 +29,7 @@ import {
 import { trpc } from "@/lib/trpc";
 import { Loader2, Pencil, Plus, Trash2, Upload, Users } from "lucide-react";
 import { useLocation } from "wouter";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
 const AREAS = [
@@ -181,19 +181,23 @@ export default function Customers() {
     reader.readAsText(file);
   };
 
-  // Filter customers
-  const filteredCustomers = customers?.filter((customer) =>
-    customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.phone.includes(searchQuery) ||
-    customer.area.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter customers (memoized for performance)
+  const filteredCustomers = useMemo(() => {
+    return customers?.filter((customer) =>
+      customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      customer.phone.includes(searchQuery) ||
+      customer.area.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [customers, searchQuery]);
 
-  // Group by area
-  const customersByArea = filteredCustomers?.reduce((acc, customer) => {
-    if (!acc[customer.area]) acc[customer.area] = [];
-    acc[customer.area]!.push(customer);
-    return acc;
-  }, {} as Record<string, typeof customers>);
+  // Group by area (memoized for performance)
+  const customersByArea = useMemo(() => {
+    return filteredCustomers?.reduce((acc, customer) => {
+      if (!acc[customer.area]) acc[customer.area] = [];
+      acc[customer.area]!.push(customer);
+      return acc;
+    }, {} as Record<string, typeof customers>);
+  }, [filteredCustomers]);
 
   if (authLoading) {
     return (

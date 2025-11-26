@@ -183,7 +183,17 @@ export async function getGoogleSheetConfig(userId: number) {
   const db = await getDb();
   if (!db) return undefined;
   const { googleSheetConfig } = await import("../drizzle/schema");
-  const result = await db.select().from(googleSheetConfig).where(eq(googleSheetConfig.userId, userId)).limit(1);
+  // Optimized: fetch only needed columns
+  const result = await db.select({
+    id: googleSheetConfig.id,
+    userId: googleSheetConfig.userId,
+    spreadsheetId: googleSheetConfig.spreadsheetId,
+    sheetName: googleSheetConfig.sheetName,
+    serviceAccountKey: googleSheetConfig.serviceAccountKey,
+    isActive: googleSheetConfig.isActive,
+    createdAt: googleSheetConfig.createdAt,
+    updatedAt: googleSheetConfig.updatedAt
+  }).from(googleSheetConfig).where(eq(googleSheetConfig.userId, userId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
 }
 
@@ -289,7 +299,14 @@ export async function getWhatsappContacts(userId: number) {
   const db = await getDb();
   if (!db) return [];
   const { whatsappContacts } = await import("../drizzle/schema");
-  return await db.select().from(whatsappContacts)
+  // Optimized: fetch only needed columns
+  return await db.select({
+    id: whatsappContacts.id,
+    userId: whatsappContacts.userId,
+    name: whatsappContacts.name,
+    phone: whatsappContacts.phone,
+    createdAt: whatsappContacts.createdAt
+  }).from(whatsappContacts)
     .where(eq(whatsappContacts.userId, userId))
     .orderBy(desc(whatsappContacts.createdAt));
 }
