@@ -1488,3 +1488,33 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Debug why category field shows blank when editing items
 - [x] Fix category value loading in EditItem useEffect
 - [x] Test category loading with existing items
+
+## Remove Terminal Page
+
+- [x] Remove Terminal from navigation menu
+- [x] Remove Terminal routes from App.tsx
+- [x] Delete TerminalPage.tsx file
+- [x] Delete FormTerminalPage.tsx file
+- [x] Delete Terminal.tsx component
+- [x] Delete FormTerminal.tsx component
+
+## Display Foreign Currency on Stock History Page
+
+- [x] Update Stock History page to show foreign currency purchase price on item cards
+- [x] Display currency type (AED/USD) and price if available
+- [x] Format foreign currency price with 3 decimal places
+- [x] Test display with items that have foreign currency data
+
+## Fix Foreign Currency Data Not Saving
+
+- [x] Investigate items.update mutation in backend
+- [x] Check if foreign currency fields are included in update data
+- [x] Fix updateItem function in db.ts to save foreign currency
+- [x] Test editing item with foreign currency data
+- [x] Verify data persists in database after save
+
+## Fix Category Validation Bug in EditItem
+
+- [x] Investigate why category shows as "required" even when selected
+- [x] Fix category validation logic in EditItem form
+- [x] Test that form saves successfully with category selected

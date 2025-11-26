@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, name, itemCode, foreignCurrency, foreignCurrencyPrice FROM items WHERE name LIKE '%X9C%'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2CUNeJnYnTRxHkL.275a04e24557 --database RJnuvqs68igmigugNEp5S4 --execute SELECT id, name, itemCode, foreignCurrency, foreignCurrencyPrice FROM items WHERE name LIKE '%X9C%'",
+  "rows": [
+    {
+      "id": "330001",
+      "name": "Honor X9C 5G 12GB/256GB NFC",
+      "itemCode": "HO-X9C5G12256",
+      "foreignCurrency": "AED",
+      "foreignCurrencyPrice": "25.500"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\titemCode\tforeignCurrency\tforeignCurrencyPrice\n330001\tHonor X9C 5G 12GB/256GB NFC\tHO-X9C5G12256\tAED\t25.500\n",
+  "stderr": "",
+  "execution_time_ms": 1550
+}
