@@ -1488,3 +1488,10 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Debug why category field shows blank when editing items
 - [x] Fix category value loading in EditItem useEffect
 - [x] Test category loading with existing items
+
+## Display Foreign Currency on Items Page
+
+- [x] Add foreign currency display to item cards on Items page
+- [x] Show currency type (AED/USD) and price
+- [x] Format with 3 decimal places
+- [x] Test display with items that have foreign currency data

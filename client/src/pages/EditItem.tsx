@@ -37,11 +37,24 @@ export default function EditItem() {
     if (item) {
       setItemCode(item.itemCode || "");
       setName(item.name);
-      // Capitalize first letter of category to match dropdown options
-      const categoryValue = item.category 
-        ? (item.category.charAt(0).toUpperCase() + item.category.slice(1)) as typeof category
-        : "";
-      setCategory(categoryValue);
+      // Ensure category matches dropdown options
+      if (item.category) {
+        const normalized = item.category.toLowerCase();
+        const categoryMap: Record<string, typeof category> = {
+          'motorola': 'Motorola',
+          'samsung': 'Samsung',
+          'redmi': 'Redmi',
+          'realme': 'Realme',
+          'meizu': 'Meizu',
+          'honor': 'Honor'
+        };
+        const categoryValue = categoryMap[normalized] || item.category as typeof category;
+        setCategory(categoryValue);
+      } else {
+        setCategory("");
+      }
+      // Clear all errors when item loads
+      setErrors({ itemCode: "", name: "", category: "" });
       setWholesalePrice(item.wholesalePrice?.toString() || "");
       setRetailPrice(item.retailPrice?.toString() || "");
       setPurchasePrice(item.purchasePrice?.toString() || "");
@@ -213,7 +226,7 @@ export default function EditItem() {
                 value={category} 
                 onValueChange={(value) => {
                   setCategory(value as typeof category);
-                  validateCategory(value);
+                  setErrors(prev => ({ ...prev, category: "" }));
                 }}
               >
                 <SelectTrigger 
@@ -231,9 +244,6 @@ export default function EditItem() {
                   <SelectItem value="Honor">Honor</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.category && (
-                <p className="text-xs text-red-500">{errors.category}</p>
-              )}
             </div>
           </div>
 

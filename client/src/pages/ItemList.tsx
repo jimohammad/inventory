@@ -308,6 +308,12 @@ export default function ItemList() {
                             <span className="font-medium text-blue-400">KWD {parseFloat(item.purchasePrice.toString()).toFixed(3)}</span>
                           </div>
                         )}
+                        {item.foreignCurrency && item.foreignCurrencyPrice && (
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-400">Foreign Price</span>
+                            <span className="font-medium text-purple-400">{item.foreignCurrency} {parseFloat(item.foreignCurrencyPrice.toString()).toFixed(3)}</span>
+                          </div>
+                        )}
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-slate-400">Available</span>
                           <span className="font-semibold text-emerald-400">{item.availableQty || 0} pcs</span>
