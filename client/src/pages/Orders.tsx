@@ -40,7 +40,10 @@ export default function Orders() {
   const [orderToDelete, setOrderToDelete] = useState<any>(null);
 
   const utils = trpc.useUtils();
-  const { data: orders, isLoading } = trpc.orders.list.useQuery();
+  const { data: orders, isLoading } = trpc.orders.list.useQuery(undefined, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false,
+  });
   
   const deleteMutation = trpc.orders.delete.useMutation({
     onSuccess: () => {

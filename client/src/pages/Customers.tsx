@@ -64,7 +64,10 @@ export default function Customers() {
   });
 
   // Queries
-  const { data: customers, isLoading, refetch } = trpc.customers.list.useQuery();
+  const { data: customers, isLoading, refetch } = trpc.customers.list.useQuery(undefined, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false,
+  });
 
   // Mutations
   const createMutation = trpc.customers.create.useMutation({

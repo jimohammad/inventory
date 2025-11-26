@@ -224,9 +224,18 @@ export default function StockHistory() {
 
 function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: FilterType }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId });
-  const { data: priceHistory, isLoading: isPriceLoading } = trpc.items.getPriceHistory.useQuery({ itemId });
-  const { data: items } = trpc.items.list.useQuery();
+  const { data: historyData, isLoading } = trpc.items.getHistory.useQuery({ itemId }, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false,
+  });
+  const { data: priceHistory, isLoading: isPriceLoading } = trpc.items.getPriceHistory.useQuery({ itemId }, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false,
+  });
+  const { data: items } = trpc.items.list.useQuery(undefined, {
+    staleTime: 30000, // Cache for 30 seconds
+    refetchOnWindowFocus: false,
+  });
   
   const item = items?.find(i => i.id === itemId);
   if (!item) return null;

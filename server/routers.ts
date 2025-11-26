@@ -114,10 +114,14 @@ export const appRouter = router({
         const { items } = await import("../drizzle/schema");
         const { eq, or } = await import("drizzle-orm");
         
-        // Check for duplicates
+        // Check for duplicates (optimized: fetch only needed columns)
         const db = await getDb();
         if (db) {
-          const existing = await db.select().from(items)
+          const existing = await db.select({
+            id: items.id,
+            itemCode: items.itemCode,
+            name: items.name
+          }).from(items)
             .where(or(
               eq(items.itemCode, input.itemCode),
               eq(items.name, input.name)
@@ -174,11 +178,14 @@ export const appRouter = router({
           throw new Error("Database not available");
         }
 
-        // Check for duplicates in the database
+        // Check for duplicates in the database (optimized: fetch only needed columns)
         const allCodes = input.items.map(item => item.itemCode);
         const allNames = input.items.map(item => item.name);
         
-        const existingItems = await db.select().from(items)
+        const existingItems = await db.select({
+          itemCode: items.itemCode,
+          name: items.name
+        }).from(items)
           .where(or(
             inArray(items.itemCode, allCodes),
             inArray(items.name, allNames)
@@ -268,10 +275,15 @@ export const appRouter = router({
         const { items, priceHistory } = await import("../drizzle/schema");
         const { eq } = await import("drizzle-orm");
         
-        // Get current item data before update
+        // Get current item data before update (optimized: fetch only price columns)
         const db = await getDb();
         if (db) {
-          const currentItem = await db.select().from(items)
+          const currentItem = await db.select({
+            id: items.id,
+            purchasePrice: items.purchasePrice,
+            wholesalePrice: items.wholesalePrice,
+            retailPrice: items.retailPrice
+          }).from(items)
             .where(eq(items.id, input.id))
             .limit(1);
           
@@ -1251,7 +1263,11 @@ Keep the response concise, actionable, and focused on business decisions.`;
       }),
 
     list: protectedProcedure
-      .query(async ({ ctx }) => {
+      .input(z.object({
+        page: z.number().default(1),
+        pageSize: z.number().default(50)
+      }).optional())
+      .query(async ({ ctx, input }) => {
         const { getDb } = await import("./db");
         const db = await getDb();
         if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
@@ -1259,11 +1275,16 @@ Keep the response concise, actionable, and focused on business decisions.`;
         const { orders, orderItems } = await import("../drizzle/schema");
         const { eq, desc } = await import("drizzle-orm");
 
-        // Get all orders for the user
+        const page = input?.page || 1;
+        const pageSize = input?.pageSize || 50;
+
+        // Get paginated orders for the user (optimized)
         const allOrders = await db.select()
           .from(orders)
           .where(eq(orders.userId, ctx.user.id))
-          .orderBy(desc(orders.createdAt));
+          .orderBy(desc(orders.createdAt))
+          .limit(pageSize)
+          .offset((page - 1) * pageSize);
 
         // Get order items for each order
         const ordersWithItems = await Promise.all(
