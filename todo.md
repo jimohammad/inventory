@@ -1495,3 +1495,8 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Show currency type (AED/USD) and price
 - [x] Format with 3 decimal places
 - [x] Test display with items that have foreign currency data
+
+## Remove Terminal Menu
+
+- [x] Remove Terminal menu item from DashboardLayout sidebar navigation
+- [x] Test navigation after removal
