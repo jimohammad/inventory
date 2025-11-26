@@ -269,14 +269,9 @@ function StockHistoryCard({ itemId, filterType }: { itemId: number; filterType: 
               {item.itemCode} • {item.category}
             </p>
           </div>
-          <div className="text-right space-y-1">
+          <div className="text-right">
             <div className="text-sm text-slate-400">Current Stock</div>
             <div className="text-2xl font-bold text-emerald-400">{currentStock} pcs</div>
-            {item.foreignCurrency && item.foreignCurrencyPrice && (
-              <div className="text-xs text-blue-400 font-medium">
-                {item.foreignCurrency} {parseFloat(item.foreignCurrencyPrice).toFixed(3)}
-              </div>
-            )}
           </div>
         </div>
       </CardHeader>

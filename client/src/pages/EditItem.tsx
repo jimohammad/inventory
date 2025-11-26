@@ -49,8 +49,6 @@ export default function EditItem() {
       setForeignCurrencyPrice(item.foreignCurrencyPrice?.toString() || "");
       setAvailableQty(item.availableQty?.toString() || "0");
       setOpeningStock(item.openingStock?.toString() || "0");
-      // Clear all errors when item loads
-      setErrors({ itemCode: "", name: "", category: "" });
     }
   }, [item]);
 
@@ -83,7 +81,7 @@ export default function EditItem() {
   };
 
   const validateCategory = (value: string) => {
-    if (!value || value === "") {
+    if (!value) {
       setErrors(prev => ({ ...prev, category: "Category is required" }));
       return false;
     }
@@ -111,7 +109,7 @@ export default function EditItem() {
       wholesalePrice: wholesalePrice || undefined,
       retailPrice: retailPrice || undefined,
       purchasePrice: purchasePrice || undefined,
-      foreignCurrency: foreignCurrency ? (foreignCurrency as "AED" | "USD") : undefined,
+      foreignCurrency: foreignCurrency || undefined,
       foreignCurrencyPrice: foreignCurrencyPrice || undefined,
       availableQty: parseInt(availableQty) || 0,
       openingStock: parseInt(openingStock) || 0,
@@ -215,7 +213,7 @@ export default function EditItem() {
                 value={category} 
                 onValueChange={(value) => {
                   setCategory(value as typeof category);
-                  setErrors(prev => ({ ...prev, category: "" }));
+                  validateCategory(value);
                 }}
               >
                 <SelectTrigger 
@@ -233,7 +231,7 @@ export default function EditItem() {
                   <SelectItem value="Honor">Honor</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.category && !category && (
+              {errors.category && (
                 <p className="text-xs text-red-500">{errors.category}</p>
               )}
             </div>

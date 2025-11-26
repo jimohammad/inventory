@@ -86,7 +86,7 @@ export default function CreateItem() {
       wholesalePrice: wholesalePrice || undefined,
       retailPrice: retailPrice || undefined,
       purchasePrice: purchasePrice || undefined,
-      foreignCurrency: foreignCurrency ? (foreignCurrency as "AED" | "USD") : undefined,
+      foreignCurrency: foreignCurrency || undefined,
       foreignCurrencyPrice: foreignCurrencyPrice || undefined,
       availableQty: parseInt(availableQty) || 0,
       openingStock: parseInt(openingStock) || 0,

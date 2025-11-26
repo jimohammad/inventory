@@ -85,8 +85,6 @@ export const appRouter = router({
           name: string;
           category: 'Motorola' | 'Samsung' | 'Redmi' | 'Realme' | 'Meizu' | 'Honor';
           purchasePrice?: string;
-          foreignCurrency?: "AED" | "USD";
-          foreignCurrencyPrice?: string;
           wholesalePrice?: string;
           retailPrice?: string;
           availableQty?: number;
@@ -243,8 +241,6 @@ export const appRouter = router({
           wholesalePrice?: string;
           retailPrice?: string;
           purchasePrice?: string;
-          foreignCurrency?: "AED" | "USD";
-          foreignCurrencyPrice?: string;
           availableQty?: number;
           openingStock?: number;
         };
@@ -295,8 +291,6 @@ export const appRouter = router({
           wholesalePrice: input.wholesalePrice,
           retailPrice: input.retailPrice,
           purchasePrice: input.purchasePrice,
-          foreignCurrency: input.foreignCurrency,
-          foreignCurrencyPrice: input.foreignCurrencyPrice,
           availableQty: input.availableQty,
           openingStock: input.openingStock,
         });
