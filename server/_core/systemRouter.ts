@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
+import { sendTestEmail } from "./dailyEmailScheduler";
 
 export const systemRouter = router({
   health: publicProcedure
@@ -24,6 +25,14 @@ export const systemRouter = router({
       const delivered = await notifyOwner(input);
       return {
         success: delivered,
+      } as const;
+    }),
+
+  sendTestEmail: adminProcedure
+    .mutation(async () => {
+      const success = await sendTestEmail();
+      return {
+        success,
       } as const;
     }),
 });

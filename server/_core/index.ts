@@ -66,6 +66,10 @@ async function startServer() {
     // Start Google Sheets sync scheduler
     const { startSyncScheduler } = await import('../syncScheduler');
     startSyncScheduler();
+    
+    // Start daily email scheduler
+    const { startDailyEmailScheduler } = await import('./dailyEmailScheduler');
+    startDailyEmailScheduler();
   });
 }
 

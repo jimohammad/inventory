@@ -10,4 +10,10 @@ export const ENV = {
   greenApiUrl: process.env.GREEN_API_URL ?? "",
   greenApiInstanceId: process.env.GREEN_API_INSTANCE_ID ?? "",
   greenApiToken: process.env.GREEN_API_TOKEN ?? "",
+  ownerEmail: process.env.OWNER_EMAIL ?? "",
+  smtpHost: process.env.SMTP_HOST ?? "",
+  smtpPort: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
+  smtpUser: process.env.SMTP_USER ?? "",
+  smtpPassword: process.env.SMTP_PASSWORD ?? "",
+  smtpFrom: process.env.SMTP_FROM ?? "",
 };
