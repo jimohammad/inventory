@@ -121,3 +121,73 @@ View order details at your dashboard.`;
 
   return result.success;
 }
+
+/**
+ * Send daily sales summary notification to configured WhatsApp number
+ * @param summaryData - Sales summary information
+ */
+export async function sendDailySalesSummaryWhatsApp(summaryData: {
+  date: string;
+  totalItemsSold: number;
+  totalRevenue: number;
+  topSellingItems: Array<{
+    name: string;
+    code: string;
+    quantitySold: number;
+    revenue: number;
+  }>;
+  lowStockItems: Array<{
+    name: string;
+    code: string;
+    availableQty: number;
+  }>;
+}): Promise<boolean> {
+  const notificationNumber = process.env.WHATSAPP_NOTIFICATION_NUMBER;
+
+  if (!notificationNumber) {
+    console.error('[WhatsApp] Notification number not configured for daily summary');
+    return false;
+  }
+
+  // Format top selling items
+  const topSellersText = summaryData.topSellingItems.length > 0
+    ? summaryData.topSellingItems
+        .slice(0, 5)
+        .map(
+          (item, index) =>
+            `${index + 1}. ${item.name}\n   ${item.code} | ${item.quantitySold} sold | KWD ${item.revenue.toFixed(3)}`
+        )
+        .join('\n\n')
+    : 'No sales recorded today';
+
+  // Format low stock items
+  const lowStockText = summaryData.lowStockItems.length > 0
+    ? summaryData.lowStockItems
+        .slice(0, 5)
+        .map(
+          (item) =>
+            `⚠️ ${item.name}\n   ${item.code} | Only ${item.availableQty} left`
+        )
+        .join('\n\n')
+    : 'All items have sufficient stock';
+
+  // Build message
+  const message = `📊 *DAILY SALES SUMMARY*
+📅 ${summaryData.date}
+
+💰 *Today's Performance:*
+• Total Items Sold: ${summaryData.totalItemsSold}
+• Total Revenue: KWD ${summaryData.totalRevenue.toFixed(3)}
+
+🏆 *Top Selling Items:*
+${topSellersText}
+
+${summaryData.lowStockItems.length > 0 ? `📦 *Low Stock Alerts:*\n${lowStockText}\n\n` : ''}✅ Full report sent to your email.`;
+
+  const result = await sendWhatsAppMessage({
+    phoneNumber: notificationNumber,
+    message,
+  });
+
+  return result.success;
+}

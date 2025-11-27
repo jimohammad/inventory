@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sendWhatsAppMessage } from "./whatsappNotification";
+import { sendWhatsAppMessage, sendDailySalesSummaryWhatsApp } from "./whatsappNotification";
 
 describe("WhatsApp Notification", () => {
   it("should have Green API credentials configured", () => {
@@ -34,4 +34,55 @@ describe("WhatsApp Notification", () => {
       data.stateInstance
     );
   }, 10000); // 10 second timeout for API call
+
+  it("should send daily sales summary via WhatsApp", async () => {
+    const testSummaryData = {
+      date: new Date().toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'Asia/Kuwait',
+      }),
+      totalItemsSold: 25,
+      totalRevenue: 650.500,
+      topSellingItems: [
+        {
+          name: 'Samsung Galaxy A17 5G',
+          code: 'SAM-A17-256',
+          quantitySold: 8,
+          revenue: 200.400,
+        },
+        {
+          name: 'Xiaomi Redmi Note 12',
+          code: 'XIA-RN12-128',
+          quantitySold: 6,
+          revenue: 150.300,
+        },
+        {
+          name: 'Honor X9C',
+          code: 'HON-X9C-256',
+          quantitySold: 5,
+          revenue: 125.250,
+        },
+      ],
+      lowStockItems: [
+        {
+          name: 'Honor X9C',
+          code: 'HON-X9C-256',
+          availableQty: 7,
+        },
+        {
+          name: 'Samsung F16 8GB',
+          code: 'SAM-F16-8GB',
+          availableQty: 12,
+        },
+      ],
+    };
+
+    const success = await sendDailySalesSummaryWhatsApp(testSummaryData);
+    
+    expect(success).toBe(true);
+    console.log('[WhatsAppTest] Daily sales summary WhatsApp sent successfully');
+  }, 30000); // 30 second timeout for WhatsApp sending
 });

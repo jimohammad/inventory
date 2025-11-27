@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { calculateDailySalesSummary } from './salesSummaryService';
 import { sendDailySalesSummary } from './emailService';
+import { sendDailySalesSummaryWhatsApp } from './whatsappNotification';
 
 /**
  * Daily email scheduler
@@ -22,7 +23,7 @@ export function startDailyEmailScheduler() {
   // Cron format: second minute hour day month weekday
   // 0 0 19 * * * = Every day at 7 PM UTC (10 PM Kuwait time)
   scheduledTask = cron.schedule('0 0 19 * * *', async () => {
-    console.log('[DailyEmailScheduler] Running daily sales summary email job...');
+    console.log('[DailyEmailScheduler] Running daily sales summary job...');
     
     try {
       // Calculate today's sales summary
@@ -34,15 +35,24 @@ export function startDailyEmailScheduler() {
       }
       
       // Send email
-      const success = await sendDailySalesSummary(summary);
+      const emailSuccess = await sendDailySalesSummary(summary);
       
-      if (success) {
+      if (emailSuccess) {
         console.log('[DailyEmailScheduler] Daily sales summary email sent successfully');
       } else {
         console.error('[DailyEmailScheduler] Failed to send daily sales summary email');
       }
+      
+      // Send WhatsApp notification
+      const whatsappSuccess = await sendDailySalesSummaryWhatsApp(summary);
+      
+      if (whatsappSuccess) {
+        console.log('[DailyEmailScheduler] Daily sales summary WhatsApp sent successfully');
+      } else {
+        console.error('[DailyEmailScheduler] Failed to send daily sales summary WhatsApp');
+      }
     } catch (error) {
-      console.error('[DailyEmailScheduler] Error in daily email job:', error);
+      console.error('[DailyEmailScheduler] Error in daily summary job:', error);
     }
   }, {
     timezone: 'UTC',
@@ -84,7 +94,7 @@ export function stopDailyEmailScheduler() {
  * Send test email immediately (for testing purposes)
  */
 export async function sendTestEmail() {
-  console.log('[DailyEmailScheduler] Sending test email...');
+  console.log('[DailyEmailScheduler] Sending test notifications...');
   
   try {
     const summary = await calculateDailySalesSummary();
@@ -94,17 +104,27 @@ export async function sendTestEmail() {
       return false;
     }
     
-    const success = await sendDailySalesSummary(summary);
+    // Send email
+    const emailSuccess = await sendDailySalesSummary(summary);
     
-    if (success) {
+    if (emailSuccess) {
       console.log('[DailyEmailScheduler] Test email sent successfully');
     } else {
       console.error('[DailyEmailScheduler] Failed to send test email');
     }
     
-    return success;
+    // Send WhatsApp
+    const whatsappSuccess = await sendDailySalesSummaryWhatsApp(summary);
+    
+    if (whatsappSuccess) {
+      console.log('[DailyEmailScheduler] Test WhatsApp sent successfully');
+    } else {
+      console.error('[DailyEmailScheduler] Failed to send test WhatsApp');
+    }
+    
+    return emailSuccess && whatsappSuccess;
   } catch (error) {
-    console.error('[DailyEmailScheduler] Error sending test email:', error);
+    console.error('[DailyEmailScheduler] Error sending test notifications:', error);
     return false;
   }
 }
