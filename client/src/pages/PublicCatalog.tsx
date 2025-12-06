@@ -12,8 +12,9 @@ import { toast } from "sonner";
 export default function PublicCatalog() {
   const [, params] = useRoute("/catalog/:userId/:type");
   const userId = params?.userId ? parseInt(params.userId) : 0;
-  const catalogType = params?.type || "public"; // "internal", "public", or "retail"
+  const catalogType = params?.type || "public"; // "internal", "public", "retail", or "basic"
   const includeQty = catalogType === "internal";
+  const isBasicCatalog = catalogType === "basic"; // No prices, just item info
   
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -24,6 +25,7 @@ export default function PublicCatalog() {
   const { data: items, isLoading } = trpc.items.getPublicCatalog.useQuery({
     userId,
     includeQty,
+    catalogType: isBasicCatalog ? 'basic' : 'full',
   });
 
   const categories = useMemo(() => {
@@ -60,6 +62,12 @@ export default function PublicCatalog() {
   };
 
   const handleAddToCart = (item: any) => {
+    // Basic catalog doesn't support ordering
+    if (isBasicCatalog) {
+      toast.info("This catalog is for viewing only. Contact the owner to place an order.");
+      return;
+    }
+    
     const quantity = getItemQuantity(item.id);
     const existingItem = cartItems.find(ci => ci.id === item.id);
     
@@ -199,8 +207,8 @@ export default function PublicCatalog() {
                   </CardHeader>
                   <CardContent className="pt-0.5 px-2 pb-1.5">
                     <div className="space-y-0">
-                      {/* Price display */}
-                      {((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
+                      {/* Price display - hidden for basic catalog */}
+                      {!isBasicCatalog && ((catalogType === "retail" && item.retailPrice) || (catalogType !== "retail" && item.wholesalePrice)) && (
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-1 border border-green-200">
                           <div className="text-xl font-bold text-green-700">KWD {parseFloat((catalogType === "retail" ? item.retailPrice : item.wholesalePrice) as any).toFixed(3)}</div>
                         </div>
@@ -218,8 +226,8 @@ export default function PublicCatalog() {
                         </div>
                       )}
 
-                      {/* Add to Cart and Quantity Selector */}
-                      <div className="flex gap-2">
+                      {/* Add to Cart and Quantity Selector - hidden for basic catalog */}
+                      {!isBasicCatalog && <div className="flex gap-2">
                         <Button
                           className={`flex-1 h-10 text-white transition-all duration-300 ${
                             addedItems.has(item.id)
@@ -268,7 +276,7 @@ export default function PublicCatalog() {
                             +
                           </Button>
                         </div>
-                      </div>
+                      </div>}
 
                       {/* Stock Indicators - below Add to Cart */}
                       {/* New Stock Indicator - for 50+ quantity */}

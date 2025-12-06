@@ -831,6 +831,7 @@ Keep the response concise, actionable, and focused on business decisions.`;
         return raw as {
           userId: number;
           includeQty?: boolean;
+          catalogType?: 'full' | 'basic'; // 'full' includes prices, 'basic' excludes prices
         };
       })
       .query(async ({ input }) => {
@@ -840,6 +841,20 @@ Keep the response concise, actionable, and focused on business decisions.`;
         // Filter out items with zero stock
         const availableItems = allItems.filter(item => item.availableQty > 0);
         
+        const catalogType = input.catalogType || 'full';
+        
+        if (catalogType === 'basic') {
+          // Basic catalog: no prices, just item info
+          return availableItems.map(item => ({
+            id: item.id,
+            itemCode: item.itemCode,
+            name: item.name,
+            category: item.category,
+            availableQty: input.includeQty ? item.availableQty : undefined,
+          }));
+        }
+        
+        // Full catalog: includes all prices
         return availableItems.map(item => ({
           id: item.id,
           itemCode: item.itemCode,

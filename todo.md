@@ -1575,3 +1575,13 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Send WhatsApp message to owner's phone number
 - [x] Test WhatsApp notification delivery (test passed - message sent successfully)
 - [x] Commit to GitHub
+
+
+## Catalog Without Prices Feature
+
+- [x] Update backend getPublicCatalog to support 'basic' catalog type
+- [x] Update PublicCatalog page to hide prices for basic catalog
+- [x] Add 'Basic Catalog (No Prices)' option to share dialog
+- [x] Update WhatsApp broadcast to include basic catalog option
+- [x] Test catalog without prices functionality
+- [x] Commit to GitHub
