@@ -2,6 +2,7 @@ import { z } from "zod";
 import { notifyOwner } from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 import { sendTestEmail } from "./dailyEmailScheduler";
+import { triggerManualSync } from "../syncScheduler";
 
 export const systemRouter = router({
   health: publicProcedure
@@ -34,5 +35,20 @@ export const systemRouter = router({
       return {
         success,
       } as const;
+    }),
+
+  triggerGoogleSheetSync: adminProcedure
+    .mutation(async () => {
+      try {
+        await triggerManualSync();
+        return {
+          success: true,
+        } as const;
+      } catch (error) {
+        console.error('[SystemRouter] Manual sync failed:', error);
+        return {
+          success: false,
+        } as const;
+      }
     }),
 });

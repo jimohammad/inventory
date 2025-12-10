@@ -1585,3 +1585,14 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Update WhatsApp broadcast to include basic catalog option
 - [x] Test catalog without prices functionality
 - [x] Commit to GitHub
+
+
+## Fix Google Sheets Daily Sync Issue
+
+- [x] Investigate sync scheduler configuration (found timezone calculation bug)
+- [x] Check cron schedule timing and timezone (replaced setTimeout with cron)
+- [x] Verify sync function is being called correctly (working)
+- [x] Add better error logging for sync failures (added manual trigger endpoint)
+- [x] Test manual sync trigger (endpoint added to system router)
+- [x] Test automated daily sync (scheduler running, next sync: 2 AM Kuwait time)
+- [x] Commit to GitHub

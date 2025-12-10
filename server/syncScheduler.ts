@@ -1,3 +1,4 @@
+import cron from 'node-cron';
 import { importFromGoogleSheet } from './googleSheets';
 import { getGoogleSheetConfig, updateLastSyncTime, createSyncLog, updateItemQuantity } from './db';
 
@@ -102,41 +103,64 @@ export async function syncAllUsers(): Promise<void> {
   }
 }
 
+let scheduledTask: cron.ScheduledTask | null = null;
+
 /**
  * Start the daily sync scheduler
- * Runs every day at 2 AM Kuwait time (UTC+3)
+ * Runs every day at 2 AM Kuwait time (11 PM UTC, which is 2 AM Kuwait time UTC+3)
  */
 export function startSyncScheduler(): void {
-  // Calculate time until next 2 AM Kuwait time
+  // Stop existing scheduler if running
+  if (scheduledTask) {
+    scheduledTask.stop();
+  }
+
+  // Schedule for 2 AM Kuwait time (11 PM UTC = 2 AM Kuwait time)
+  // Cron format: second minute hour day month weekday
+  // 0 0 23 * * * = Every day at 11 PM UTC (2 AM Kuwait time)
+  scheduledTask = cron.schedule('0 0 23 * * *', async () => {
+    console.log('[SyncScheduler] Running scheduled daily sync...');
+    await syncAllUsers();
+  }, {
+    timezone: 'UTC',
+  });
+
+  scheduledTask.start();
+  
+  // Calculate next run time for logging
   const now = new Date();
+  const nextRun = new Date(now);
+  nextRun.setUTCHours(23, 0, 0, 0);
   
-  // Get current time in Kuwait (UTC+3)
-  const kuwaitOffset = 3 * 60; // Kuwait is UTC+3
-  const localOffset = now.getTimezoneOffset(); // Server's offset from UTC in minutes
-  const kuwaitTime = new Date(now.getTime() + (kuwaitOffset + localOffset) * 60 * 1000);
-  
-  // Set target time to 2 AM Kuwait time
-  const next2AMKuwait = new Date(kuwaitTime);
-  next2AMKuwait.setHours(2, 0, 0, 0);
-  
-  // If it's already past 2 AM today in Kuwait, schedule for tomorrow
-  if (kuwaitTime > next2AMKuwait) {
-    next2AMKuwait.setDate(next2AMKuwait.getDate() + 1);
+  // If we've passed 11 PM UTC today, schedule for tomorrow
+  if (now.getUTCHours() >= 23) {
+    nextRun.setDate(nextRun.getDate() + 1);
   }
   
-  // Convert back to server time
-  const next2AMServer = new Date(next2AMKuwait.getTime() - (kuwaitOffset + localOffset) * 60 * 1000);
-  const msUntil2AM = next2AMServer.getTime() - now.getTime();
+  const kuwaitTime = nextRun.toLocaleString('en-US', {
+    timeZone: 'Asia/Kuwait',
+    dateStyle: 'full',
+    timeStyle: 'short',
+  });
+  
+  console.log(`[SyncScheduler] Scheduler started. Next sync at ${kuwaitTime} Kuwait time (${nextRun.toISOString()} UTC)`);
+}
 
-  console.log(`[SyncScheduler] Scheduler started. Next sync at ${next2AMKuwait.toISOString()} Kuwait time (${next2AMServer.toISOString()} server time)`);
+/**
+ * Stop the sync scheduler
+ */
+export function stopSyncScheduler(): void {
+  if (scheduledTask) {
+    scheduledTask.stop();
+    scheduledTask = null;
+    console.log('[SyncScheduler] Scheduler stopped');
+  }
+}
 
-  // Schedule first run
-  setTimeout(() => {
-    syncAllUsers();
-    
-    // Then run every 24 hours
-    setInterval(() => {
-      syncAllUsers();
-    }, 24 * 60 * 60 * 1000);
-  }, msUntil2AM);
+/**
+ * Trigger manual sync immediately (for testing)
+ */
+export async function triggerManualSync(): Promise<void> {
+  console.log('[SyncScheduler] Manual sync triggered');
+  await syncAllUsers();
 }
