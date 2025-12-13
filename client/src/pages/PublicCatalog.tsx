@@ -12,8 +12,8 @@ import { toast } from "sonner";
 export default function PublicCatalog() {
   const [, params] = useRoute("/catalog/:userId/:type");
   const userId = params?.userId ? parseInt(params.userId) : 0;
-  const catalogType = params?.type || "public"; // "internal", "public", "retail", or "basic"
-  const includeQty = catalogType === "internal";
+  const catalogType = params?.type || "public"; // "internal", "public", "retail", "basic", or "with-qty"
+  const includeQty = catalogType === "internal" || catalogType === "with-qty";
   const isBasicCatalog = catalogType === "basic"; // No prices, just item info
   
   const [searchQuery, setSearchQuery] = useState("");

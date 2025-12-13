@@ -1596,3 +1596,12 @@ Also reduced shadow intensity from shadow-lg to shadow-md for softer appearance.
 - [x] Test manual sync trigger (endpoint added to system router)
 - [x] Test automated daily sync (scheduler running, next sync: 2 AM Kuwait time)
 - [x] Commit to GitHub
+
+
+## Fix Public Catalog Visibility Issue
+
+- [x] Investigate why public catalog is not accessible (production using old deployment)
+- [x] Check route configuration in App.tsx (route is correct)
+- [x] Verify public catalog URL format (fixed 'with-qty' type handling)
+- [x] Test catalog access without login (working on dev server)
+- [x] Commit to GitHub
