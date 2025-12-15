@@ -824,16 +824,11 @@ Keep the response concise, actionable, and focused on business decisions.`;
       }),
 
     getPublicCatalog: publicProcedure
-      .input((raw: unknown) => {
-        if (typeof raw !== "object" || raw === null) {
-          throw new Error("Invalid input");
-        }
-        return raw as {
-          userId: number;
-          includeQty?: boolean;
-          catalogType?: 'full' | 'basic'; // 'full' includes prices, 'basic' excludes prices
-        };
-      })
+      .input(z.object({
+        userId: z.number(),
+        includeQty: z.boolean().optional(),
+        catalogType: z.enum(['full', 'basic']).optional(),
+      }))
       .query(async ({ input }) => {
         const { getUserItems } = await import("./db");
         const allItems = await getUserItems(input.userId);
